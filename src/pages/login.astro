@@ -1,0 +1,692 @@
+---
+---
+
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/images/ku_favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="เข้าสู่ระบบ PMS KASETSART ระบบบริหารโครงการ เพื่อขับเคลื่อนยุทธศาสตร์ มหาวิทยาลัยเกษตรศาสตร์" />
+    <title>เข้าสู่ระบบ — PMS KASETSART</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --teal:        #006664;
+        --teal-dark:   #004847;
+        --teal-mid:    #007a78;
+        --teal-light:  #e0f2f1;
+        --gold:        #C9A84C;
+        --gold-light:  #fdf3d7;
+        --text:        #1a2e2e;
+        --text-mid:    #3d5555;
+        --text-muted:  #7a9898;
+        --border:      #d0e0e0;
+        --white:       #ffffff;
+        --cream:       #f7fafa;
+        --radius:      16px;
+      }
+
+      html, body {
+        height: 100%;
+        font-family: 'Sarabun', 'Inter', system-ui, sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        overflow: hidden;
+      }
+
+      /* ── Layout ── */
+      .page {
+        display: grid;
+        grid-template-columns: 1fr 480px;
+        min-height: 100vh;
+      }
+
+      /* ══════════════════════════════
+         LEFT PANEL — Photo + Overlay
+      ══════════════════════════════ */
+      .left-panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        overflow: hidden;
+      }
+
+      /* Slideshow */
+      .slide {
+        position: absolute; inset: 0;
+        background-size: cover;
+        background-position: center 40%;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transform: scale(1.06);
+        transition: opacity 1.5s ease, transform 8s ease;
+      }
+      .slide.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .slide-1 { background-image: url('/images/ku_city.jpg'); }
+      .slide-2 { background-image: url('/images/ku_city2.jpg'); }
+      .slide-3 { background-image: url('/images/ku_city3.jpg'); }
+      .slide-4 { background-image: url('/images/ku_city4.jpg'); }
+      .slide-5 { background-image: url('/images/ku_city5.jpg'); }
+      .slide-6 { background-image: url('/images/ku_city6.jpg'); }
+      .slide-7 { background-image: url('/images/ku_city7.jpg'); }
+      .slide-8 { background-image: url('/images/ku_city8.jpg'); }
+
+      /* Gradient overlay — light & airy at top, semi-dark at bottom for text */
+      .left-panel__overlay {
+        position: absolute; inset: 0;
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.08)  0%,
+            rgba(0,72,71,0.18)      35%,
+            rgba(0,60,58,0.72)      75%,
+            rgba(0,40,38,0.90)     100%
+          );
+      }
+
+      /* Gold top bar */
+      .left-panel__topbar {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--gold), #e8c96a, var(--gold));
+      }
+
+      /* Content at bottom */
+      .left-panel__content {
+        position: relative;
+        z-index: 2;
+        padding: 48px 56px;
+      }
+
+      .lp-kite {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        backdrop-filter: blur(8px);
+        border-radius: 50px;
+        padding: 6px 18px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        letter-spacing: 0.5px;
+        margin-bottom: 24px;
+        width: fit-content;
+      }
+      .lp-kite::before {
+        content: '';
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: #7effda;
+        box-shadow: 0 0 8px #7effda;
+        animation: blink 2.5s ease-in-out infinite;
+      }
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+      .lp-title {
+        font-size: clamp(30px, 3.2vw, 46px);
+        font-weight: 800;
+        line-height: 1.15;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 16px rgba(0,0,0,0.35);
+      }
+      .lp-title span {
+        color: #ffd97d;
+        display: block;
+        font-size: 0.6em;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 1.5;
+        margin-top: 4px;
+        text-shadow: none;
+      }
+
+      .lp-desc {
+        font-size: 15px;
+        font-weight: 400;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.7;
+        max-width: 420px;
+        margin-bottom: 36px;
+      }
+
+      .lp-features {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+      .lp-feat {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: rgba(255,255,255,0.8);
+      }
+      .lp-feat-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #ffd97d;
+        flex-shrink: 0;
+      }
+
+      /* KU seal watermark */
+      .lp-seal {
+        position: absolute;
+        top: 40px; right: 48px;
+        width: 88px; height: 88px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(6px);
+        display: grid;
+        place-items: center;
+        flex-direction: column;
+        text-align: center;
+        z-index: 2;
+      }
+      .lp-seal-text {
+        font-size: 22px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .lp-seal-year {
+        font-size: 9px;
+        color: rgba(255,255,255,0.65);
+        letter-spacing: 1px;
+        margin-top: 3px;
+      }
+
+      /* ══════════════════════════════
+         RIGHT PANEL — Form
+      ══════════════════════════════ */
+      .right-panel {
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 52px;
+        border-left: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Subtle decorative circle top-right */
+      .right-panel::before {
+        content: '';
+        position: absolute;
+        top: -120px; right: -120px;
+        width: 280px; height: 280px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,102,100,0.07), transparent 70%);
+        pointer-events: none;
+      }
+      /* Bottom-left circle */
+      .right-panel::after {
+        content: '';
+        position: absolute;
+        bottom: -100px; left: -100px;
+        width: 240px; height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(201,168,76,0.07), transparent 70%);
+        pointer-events: none;
+      }
+
+      /* Gold top bar (matching left) */
+      .right-panel__topbar {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--teal), var(--gold));
+      }
+
+      .card {
+        width: 100%;
+        max-width: 368px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Logo section */
+      .card-logo-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+      .card-logo {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, var(--teal-dark), var(--teal));
+        display: grid;
+        place-items: center;
+        font-size: 36px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -1px;
+        box-shadow:
+          0 0 0 8px rgba(0,102,100,0.08),
+          0 8px 32px rgba(0,102,100,0.22);
+        margin-bottom: 16px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      /* Gold ring */
+      .card-logo::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(201,168,76,0.5);
+      }
+      .card-logo::after {
+        content: '';
+        position: absolute;
+        left: 11px;
+        right: 11px;
+        bottom: 18px;
+        height: 4px;
+        background: #b2bb1e; /* underline color matching text */
+        border-radius: 1px;
+      }
+      .card-logo-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.3px;
+        margin-bottom: 4px;
+        text-align: center;
+      }
+      .card-logo-sub {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        text-align: center;
+        letter-spacing: 0.3px;
+      }
+
+      /* Divider */
+      .divider-line {
+        width: 48px; height: 2px;
+        background: linear-gradient(90deg, var(--teal), var(--gold));
+        border-radius: 2px;
+        margin: 20px auto;
+      }
+
+      /* Form */
+      .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 7px;
+      }
+      .form-group { margin-bottom: 18px; }
+
+      .input-wrap { position: relative; }
+      .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%; transform: translateY(-50%);
+        font-size: 16px;
+        pointer-events: none;
+        color: var(--text-muted);
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 14px 12px 42px;
+        background: var(--cream);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 14.5px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      }
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(0,102,100,0.12);
+        background: #fff;
+      }
+      input::placeholder { color: #c0cece; }
+
+      .toggle-pw {
+        position: absolute;
+        right: 12px; top: 50%;
+        transform: translateY(-50%);
+        background: none; border: none;
+        cursor: pointer; font-size: 16px;
+        color: var(--text-muted);
+        padding: 4px;
+        transition: color 0.2s;
+      }
+      .toggle-pw:hover { color: var(--teal); }
+
+      /* Error */
+      .alert-error {
+        display: none;
+        background: #fff5f5;
+        border: 1.5px solid #fcc;
+        border-radius: 10px;
+        padding: 11px 16px;
+        font-size: 13.5px;
+        color: #c0392b;
+        margin-bottom: 18px;
+        align-items: center;
+        gap: 8px;
+      }
+      .alert-error.visible { display: flex; }
+
+      /* Button */
+      .btn-login {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+        color: #fff;
+        font-size: 15.5px;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.3px;
+        transition: transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 18px rgba(0,102,100,0.28), 0 1px 3px rgba(0,0,0,0.08);
+      }
+      .btn-login::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+        pointer-events: none;
+      }
+      .btn-login:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0,102,100,0.36), 0 2px 6px rgba(0,0,0,0.1);
+      }
+      .btn-login:active:not(:disabled) { transform: translateY(0); }
+      .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+      .btn-text { position: relative; z-index: 1; }
+      .spinner {
+        display: none;
+        width: 17px; height: 17px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        position: absolute; right: 16px; top: 50%;
+        transform: translateY(-50%);
+      }
+      @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+      .btn-login.loading .spinner { display: block; }
+
+      /* Footer links */
+      .footer-note {
+        text-align: center;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-top: 24px;
+        line-height: 1.7;
+      }
+      .footer-note a { color: var(--teal); text-decoration: none; font-weight: 600; }
+      .footer-note a:hover { text-decoration: underline; }
+
+      /* Version stamp */
+      .version-stamp {
+        position: absolute;
+        bottom: 20px;
+        left: 50%; transform: translateX(-50%);
+        font-size: 11px;
+        color: #c5d8d8;
+        letter-spacing: 0.4px;
+        white-space: nowrap;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 900px) {
+        .page { grid-template-columns: 1fr; }
+        .left-panel { display: none; }
+        .right-panel { min-height: 100vh; border-left: none; }
+        html, body { overflow: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- ══ LEFT PANEL ══ -->
+      <div class="left-panel">
+        <div class="slide slide-1 active" id="slide1"></div>
+        <div class="slide slide-2" id="slide2"></div>
+        <div class="slide slide-3" id="slide3"></div>
+        <div class="slide slide-4" id="slide4"></div>
+        <div class="slide slide-5" id="slide5"></div>
+        <div class="slide slide-6" id="slide6"></div>
+        <div class="slide slide-7" id="slide7"></div>
+        <div class="slide slide-8" id="slide8"></div>
+        <div class="left-panel__overlay"></div>
+        <div class="left-panel__topbar"></div>
+
+        <!-- KU seal top-right -->
+        <div class="lp-seal">
+          <img src="/images/logo_green_ku.png" alt="KU Logo" style="width: 82px; height: 82px; " />
+        </div>
+
+        <div class="left-panel__content">
+          <div class="lp-kite">ระบบบริหารโครงการ | Project Management System</div>
+
+          <h1 class="lp-title">
+            PMS KASETSART
+            <span>ระบบบริหารโครงการ เพื่อขับเคลื่อนยุทธศาสตร์<br>มหาวิทยาลัยเกษตรศาสตร์</span>
+          </h1>
+
+          <p class="lp-desc">
+            เครื่องมือบริหารจัดการโครงการระดับมหาวิทยาลัยที่ออกแบบมาเพื่อ
+            ขับเคลื่อนยุทธศาสตร์และเป้าหมายองค์กรอย่างมีประสิทธิภาพ
+          </p>
+
+          <div class="lp-features">
+            <div class="lp-feat"><div class="lp-feat-dot"></div>ติดตามความคืบหน้าโครงการแบบเรียลไทม์</div>
+            <div class="lp-feat"><div class="lp-feat-dot"></div>บริหารทีมงานและทรัพยากรอย่างเป็นระบบ</div>
+            <div class="lp-feat"><div class="lp-feat-dot"></div>รายงานผลการดำเนินงานสู่ผู้บริหาร</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ RIGHT PANEL ══ -->
+      <div class="right-panel">
+        <div class="right-panel__topbar"></div>
+
+        <div class="card">
+          <!-- Logo -->
+          <div class="card-logo-wrap">
+            <div class="card-logo">KU</div>
+            <div class="card-logo-title">เข้าสู่ระบบ</div>
+            <div class="card-logo-sub">PMS KASETSART · Project Management System</div>
+          </div>
+
+          <div class="divider-line"></div>
+
+          <!-- Error alert -->
+          <div class="alert-error" id="alertError" role="alert">
+            <span>⚠️</span>
+            <span id="alertMsg">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span>
+          </div>
+
+          <!-- Form -->
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="username">ชื่อผู้ใช้ / อีเมล</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M14.502 8a5 5 0 1 0-10 0a5 5 0 0 0 10 0m1.735 7.674v-1.422a1.752 1.752 0 0 1 3.505 0v1.422M16.307 21h3.386c.997 0 1.805-.807 1.805-1.802v-1.504c0-.995-.808-1.801-1.805-1.801h-3.386c-.997 0-1.805.806-1.805 1.801v1.504c0 .995.808 1.802 1.805 1.802"/><path d="M2.502 20a7 7 0 0 1 11-5.745"/></g>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="username หรือ email"
+                  autocomplete="username"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  maxlength="150"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">รหัสผ่าน</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+                      <path d="M24 3c11.598 0 21 9.402 21 21s-9.402 21-21 21S3 35.598 3 24S12.402 3 24 3"/>
+                      <path d="M27.505 25.194a6.6 6.6 0 1 0-7.008 0l-1.643 7.392c-.206.925.28 1.847 1.208 2.042c.913.192 2.225.372 3.938.372s3.026-.18 3.939-.372c.928-.195 1.414-1.117 1.208-2.042z"/></g>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  maxlength="25"
+                  required
+                />
+                <button type="button" class="toggle-pw" id="togglePw" aria-label="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">
+              <span class="btn-text">เข้าสู่ระบบ</span>
+              <span class="spinner"></span>
+            </button>
+          </form>
+
+          <div class="footer-note">
+            มีปัญหาการเข้าสู่ระบบ? ติดต่อ
+            <a href="mailto:support@ku.th">ผู้ดูแลระบบ</a>
+            <br/>
+            <a href="/" style="color:var(--text-muted); font-weight:400;">← กลับหน้าหลัก</a>
+          </div>
+        </div>
+
+        <div class="version-stamp">PMS KASETSART v2.0 · มหาวิทยาลัยเกษตรศาสตร์</div>
+      </div>
+    </div>
+
+    <script>
+      // ── Redirect if already authenticated ──
+      (function () {
+        if (localStorage.getItem('ku_access_token')) {
+          window.location.replace('/dashboard');
+        }
+      })();
+
+      // ── Slideshow: สลับภาพทุก 60 วินาที ──
+      (function () {
+        const totalSlides = 8;
+        let current = 1;
+        setInterval(() => {
+          const prevSlide = document.getElementById(`slide${current}`);
+          current = (current % totalSlides) + 1;
+          const nextSlide = document.getElementById(`slide${current}`);
+          
+          prevSlide.classList.remove('active');
+          nextSlide.classList.add('active');
+        }, 60000); // 1 นาที
+      })();
+
+      // ── Toggle password visibility ──
+      const pwInput   = document.getElementById('password');
+      const toggleBtn = document.getElementById('togglePw');
+      toggleBtn.addEventListener('click', () => {
+        const isText = pwInput.type === 'text';
+        pwInput.type = isText ? 'password' : 'text';
+        toggleBtn.textContent = isText ? '👁️' : '🙈';
+      });
+
+      // ── Login ──
+      const form     = document.getElementById('loginForm');
+      const btnLogin = document.getElementById('btnLogin');
+      const alertBox = document.getElementById('alertError');
+      const alertMsg = document.getElementById('alertMsg');
+
+      // ── Prevent Thai characters in input fields ──
+      function stripThaiChars(input) {
+        // remove any Thai unicode range (ก-๛)
+        input.value = input.value.replace(/[ก-๛]/g, '');
+      }
+      const userInput = document.getElementById('username');
+      const pwdInput  = document.getElementById('password');
+      userInput.addEventListener('input', () => {
+        stripThaiChars(userInput);
+        if (userInput.value.length > 150) userInput.value = userInput.value.slice(0,150);
+      });
+      pwdInput.addEventListener('input', () => {
+        stripThaiChars(pwdInput);
+        if (pwdInput.value.length > 25) pwdInput.value = pwdInput.value.slice(0,25);
+      });
+
+      function showError(msg) { alertMsg.textContent = msg; alertBox.classList.add('visible'); }
+      function hideError()    { alertBox.classList.remove('visible'); }
+      function setLoading(on) {
+        btnLogin.disabled = on;
+        btnLogin.classList.toggle('loading', on);
+        btnLogin.querySelector('.btn-text').textContent = on ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ';
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        if (!username || !password) { showError('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'); return; }
+        setLoading(true);
+        try {
+          const res  = await fetch('http://localhost:3000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) { showError(data.message || 'เข้าสู่ระบบไม่สำเร็จ'); return; }
+          localStorage.setItem('ku_access_token',       data.accessToken);
+          localStorage.setItem('ku_refresh_token',      data.refreshToken);
+          localStorage.setItem('ku_user',               JSON.stringify(data.user));
+          localStorage.setItem('ku_active_affiliation', JSON.stringify(data.activeAffiliation ?? null));
+          window.location.replace('/dashboard');
+        } catch {
+          showError('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
+        } finally {
+          setLoading(false);
+        }
+      });
+    </script>
+  </body>
+</html>

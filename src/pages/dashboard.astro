@@ -1,0 +1,798 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="แผงควบคุม">
+
+  <!-- ═══════════════════════════════════════════════
+       HERO BANNER — Welcome & KPIs
+  ════════════════════════════════════════════════ -->
+  <div class="relative rounded-sm overflow-hidden mb-6 shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #0a4068 45%, #006664 100%);">
+    <!-- KU lime top accent bar -->
+    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #006664, #d4de3a, #b2bb1e);"></div>
+    <!-- Decorative glows -->
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(178,187,30,0.12) 0%, transparent 65%);"></div>
+    <div class="absolute left-1/3 -bottom-10 w-56 h-56 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);"></div>
+    <!-- Diagonal stripe texture -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+
+    <div class="relative z-10 p-5 sm:p-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+        <!-- ── LEFT: Identity Block ── -->
+        <div class="flex items-start gap-4 min-w-0">
+          <!-- KU Logo box -->
+          <div class="mt-3 w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-md p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class=" w-24 h-24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M15.71 12.71a6 6 0 1 0-7.42 0a10 10 0 0 0-6.22 8.18a1 1 0 0 0 2 .22a8 8 0 0 1 15.9 0a1 1 0 0 0 1 .89h.11a1 1 0 0 0 .88-1.1a10 10 0 0 0-6.25-8.19M12 12a4 4 0 1 1 4-4a4 4 0 0 1-4 4"/>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <!-- System label -->
+            <p class="text-[#b2bb1e] text-lg font-semibold tracking-widest uppercase mb-1">
+              KU · Project Management System
+            </p>
+            <!-- Welcome -->
+            <h2 class="text-white text-base sm:text-lg font-bold leading-tight" id="welcomeText">
+              ยินดีต้อนรับ
+            </h2>
+            <p class="text-white/80 text-sm truncate mt-0.5" id="facultyInfo">สังกัดหน่วยงาน: —</p>
+
+            <!-- Status row -->
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3">
+              <span class="flex items-center gap-1.5 text-xs font-medium text-white/90">
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: #b2bb1e;"></span>
+                ระบบพร้อมใช้งาน
+              </span>
+              <span class="flex items-center gap-1.5 text-xs text-white/50">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                ผู้ใช้ออนไลน์: <span class="text-white/80 ml-0.5" id="onlineCount">0</span>
+              </span>
+              <span class="flex items-center gap-1.5 text-xs text-white/50">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                เข้าสู่ระบบล่าสุด: <span class="text-white/80 ml-0.5" id="lastLogin">—</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── RIGHT: KPI Stat Cards ── -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 lg:min-w-110 xl:min-w-150">
+
+          <!-- โครงการทั้งหมด -->
+          <div class="relative bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200/60 rounded-xs shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group">
+            <!-- Status Indicator -->
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-slate-700 to-slate-900"></div>
+            <!-- Content -->
+            <div class="px-3 pt-3 pb-2.5">
+              <div class="flex items-center justify-between mb-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm bg-gradient-to-br from-slate-600 to-slate-800 border border-slate-700/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 24 24">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M11.007 21H9.605c-3.585 0-5.377 0-6.491-1.135S2 16.903 2 13.25s0-5.48 1.114-6.615S6.02 5.5 9.605 5.5h3.803c3.585 0 5.378 0 6.492 1.135c.857.873 1.054 2.156 1.1 4.365"/><path d="M17.5 22a4.5 4.5 0 1 0 0-9a4.5 4.5 0 0 0 0 9Z"/><path stroke-linejoin="round" d="m19.5 18l-.586.554c-.667.63-1 .946-1.414.946m-2-1.5l.586.554c.667.63 1 .946 1.414.946m0 0v-4M16 5.5l-.1-.31c-.494-1.54-.742-2.31-1.331-2.75C13.979 2 13.197 2 11.632 2h-.264c-1.565 0-2.348 0-2.937.44c-.59.44-.837 1.21-1.332 2.75L7 5.5"/></g>
+                  </svg>
+                </div>
+                <div class="text-[12px] font-semibold text-slate-600 uppercase tracking-wider">ทั้งหมด</div>
+              </div>
+              <div class="text-2xl font-bold tracking-tight text-slate-900 mb-1" id="statTotal">0</div>
+              <div class="text-[12px] font-semibold text-slate-600 uppercase tracking-wider">โครงการทั้งหมด</div>
+            </div>
+          </div>
+
+          <!-- รออนุมัติ -->
+          <div class="relative bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-xs shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group">
+            <!-- Status Indicator -->
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+            <!-- Content -->
+            <div class="px-3 pt-3 pb-2.5">
+              <div class="flex items-center justify-between mb-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm bg-gradient-to-br from-amber-500 to-orange-600 border border-amber-600/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 48 48">
+                    <path fill="currentColor" d="M21.616 3.366a1.25 1.25 0 0 1 1.768 0l5.25 5.25a1.25 1.25 0 0 1 0 1.768l-5.25 5.25a1.25 1.25 0 0 1-1.768-1.768l3.337-3.337q-.473-.03-.953-.029c-8.56 0-15.5 6.94-15.5 15.5S15.44 41.5 24 41.5c8.14 0 14.814-6.274 15.45-14.25c.055-.688.61-1.25 1.3-1.25s1.255.561 1.207 1.25C41.315 36.608 33.521 44 24 44c-9.941 0-18-8.059-18-18S14.059 8 24 8q.245 0 .489.007l-2.873-2.873a1.25 1.25 0 0 1 0-1.768m11.268 18.768a1.25 1.25 0 0 0-1.768-1.768L22.5 28.982l-3.366-3.366a1.25 1.25 0 0 0-1.768 1.768l4.25 4.25a1.25 1.25 0 0 0 1.768 0z"/>
+                  </svg>
+                </div>
+                <div class="text-[12px] font-semibold text-amber-600 uppercase tracking-wider">รอดำเนินการ</div>
+              </div>
+              <div class="text-2xl font-bold tracking-tight text-amber-900 mb-1" id="statPending">0</div>
+              <div class="text-[12px] font-semibold text-amber-600 uppercase tracking-wider">รออนุมัติ</div>
+            </div>
+          </div>
+
+          <!-- อนุมัติแล้ว -->
+          <div class="relative bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200/60 rounded-xs shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group">
+            <!-- Status Indicator -->
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 to-green-600"></div>
+            <!-- Content -->
+            <div class="px-3 pt-3 pb-2.5">
+              <div class="flex items-center justify-between mb-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm bg-gradient-to-br from-emerald-500 to-green-600 border border-emerald-600/20">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="text-[12px] font-semibold text-emerald-600 uppercase tracking-wider">สำเร็จ</div>
+              </div>
+              <div class="text-2xl font-bold tracking-tight text-emerald-900 mb-1" id="statApproved">0</div>
+              <div class="text-[12px] font-semibold text-emerald-600 uppercase tracking-wider">อนุมัติแล้ว</div>
+            </div>
+          </div>
+
+          <!-- กำลังดำเนินการ -->
+          <div class="relative bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 rounded-xs shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group">
+            <!-- Status Indicator -->
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            <!-- Content -->
+            <div class="px-3 pt-3 pb-2.5">
+              <div class="flex items-center justify-between mb-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-600/20">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                <div class="text-[12px] font-semibold text-blue-600 uppercase tracking-wider">ดำเนินการ</div>
+              </div>
+              <div class="text-2xl font-bold tracking-tight text-blue-900 mb-1" id="statInProgress">0</div>
+              <div class="text-[12px] font-semibold text-blue-600 uppercase tracking-wider">กำลังดำเนินการ</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TOOLBAR — Date / Filter / Actions
+  ════════════════════════════════════════════════ -->
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-3 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <!-- Left: Breadcrumb + DateTime -->
+    <div>
+      <div class="flex items-center gap-2 text-xs text-gray-600 mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M20.913 5.889c.337.504.337 1.206.337 2.611v12.75h.5a.75.75 0 0 1 0 1.5h-20a.75.75 0 1 1 0-1.5h.5V8.5c0-1.405 0-2.107.337-2.611a2 2 0 0 1 .552-.552c.441-.295 2.537-.332 3.618-.336q-.005.437-.004.91V7.25H4.25a.75.75 0 1 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v6.5h10v-6.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 0 0 0-1.5h-2.497V5.91q.001-.471-.004-.91c1.081.005 3.17.042 3.612.337a2 2 0 0 1 .552.552" opacity=".5"/><path fill="currentColor" fill-rule="evenodd" d="M10.75 2h2c1.886 0 2.828 0 3.414.586S16.75 4.114 16.75 6v15.25h5a.75.75 0 0 1 0 1.5h-20a.75.75 0 0 1 0-1.5h5V6c0-1.886 0-2.828.586-3.414S8.864 2 10.75 2m1 16.25a.75.75 0 0 1 .75.75v2.25H11V19a.75.75 0 0 1 .75-.75m-2-4.25a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zM9 11.75a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m.75-3.25a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zM9 6.25a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 6.25" clip-rule="evenodd"/>
+        </svg>
+        <span class=" font-bold text-[#b2bb1e]">หน้าแรก</span>
+        <span class="text-gray-300">›</span>
+        <span class="text-gray-600 font-medium">แผงควบคุม</span>
+      </div>
+      <p class="text-xs text-gray-400">ข้อมูล ณ วันที่ <span class="text-gray-600 font-medium" id="currentDateTime">—</span></p>
+    </div>
+
+    <!-- Right: Controls -->
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-500 hidden sm:inline whitespace-nowrap">ช่วงเวลา:</span>
+        <select class="border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#0f2d5e]/30 focus:border-[#0f2d5e]">
+          <option>30 วันล่าสุด</option>
+          <option>7 วันล่าสุด</option>
+          <option>90 วันล่าสุด</option>
+          <option>ทั้งหมด</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none">
+        <input type="checkbox" class="rounded border-gray-300 text-[#0f2d5e]">
+        โครงการของฉัน
+      </label>
+      <button class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-gray-600 rounded-lg text-xs hover:border-[#0f2d5e] hover:text-[#0f2d5e] transition-colors" id="refreshBtn">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        รีเฟรช
+      </button>
+      <button class="flex items-center gap-1.5 px-4 py-1.5 bg-[#0f2d5e] text-white rounded-lg text-xs font-medium hover:bg-[#0a1f3d] transition-colors shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        <span class="hidden sm:inline">สร้างโครงการใหม่</span>
+        <span class="sm:hidden">สร้าง</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION TITLE: ภาพรวมระบบ
+  ════════════════════════════════════════════════ -->
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-1 h-6 bg-[#0f2d5e] rounded-full"></div>
+    <h2 class="text-base font-bold text-[#0a1f3d] tracking-wide">ภาพรวมระบบ</h2>
+    <div class="flex-1 border-t border-gray-200"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MANAGEMENT CARDS — Row 1 (4 columns)
+  ════════════════════════════════════════════════ -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
+
+    <!-- จัดการโครงการ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-200 group-hover:bg-amber-100 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-amber-600" viewBox="0 0 24 24">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M11.007 21H9.605c-3.585 0-5.377 0-6.491-1.135S2 16.903 2 13.25s0-5.48 1.114-6.615S6.02 5.5 9.605 5.5h3.803c3.585 0 5.378 0 6.492 1.135c.857.873 1.054 2.156 1.1 4.365"/><path d="M17.5 22a4.5 4.5 0 1 0 0-9a4.5 4.5 0 0 0 0 9Z"/><path stroke-linejoin="round" d="m19.5 18l-.586.554c-.667.63-1 .946-1.414.946m-2-1.5l.586.554c.667.63 1 .946 1.414.946m0 0v-4M16 5.5l-.1-.31c-.494-1.54-.742-2.31-1.331-2.75C13.979 2 13.197 2 11.632 2h-.264c-1.565 0-2.348 0-2.937.44c-.59.44-.837 1.21-1.332 2.75L7 5.5"/></g>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardProjectCount">0</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">จัดการโครงการ</h3>
+        <p class="text-xs text-gray-500">ดูและจัดการโครงการทั้งหมดในระบบ</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- การอนุมัติ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-emerald-50 rounded-lg flex items-center justify-center border border-emerald-200 group-hover:bg-emerald-100 transition-colors">
+            <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardApprovalCount">0</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">การอนุมัติโครงการ</h3>
+        <p class="text-xs text-gray-500">อนุมัติหรือปฏิเสธโครงการในระบบ</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- แจ้งเตือนสิ้นสุดโครงการ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-red-50 rounded-lg flex items-center justify-center border border-red-200 group-hover:bg-red-100 transition-colors">
+            <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardAlertCount">0</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">แจ้งเตือนสิ้นสุดโครงการ</h3>
+        <p class="text-xs text-gray-500">โครงการที่ใกล้ถึงกำหนดส่งหรือสิ้นสุด</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- รายงานและสถิติ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-sky-50 rounded-lg flex items-center justify-center border border-sky-200 group-hover:bg-sky-100 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-sky-600" viewBox="0 0 16 16">
+              <path fill="currentColor" fill-rule="evenodd" d="M8.5 1H9a6 6 0 0 1 6 6v.5H8.5zM7.497 1v7.503h7.504l-.09.576A6.998 6.998 0 0 1 1 8.004a7 7 0 0 1 5.921-6.915zm-1 7.84V2.196a6 6 0 0 0-2.585 10.198zM4.7 13.013a6 6 0 0 0 9.106-3.51H7.252z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]">&nbsp;</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">รายงานและสถิติ</h3>
+        <p class="text-xs text-gray-500">รายงานและสถิติแบบรายไตรมาส</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MANAGEMENT CARDS — Row 2 (4 columns) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4 lg:mb-7">
+
+    <!-- จัดการผู้ใช้ระบบ -->
+    <a href="/users" class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group block no-underline">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-violet-50 rounded-lg flex items-center justify-center border border-violet-200 group-hover:bg-violet-100 transition-colors">
+            <svg class="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardUserCount">0</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">จัดการผู้ใช้ระบบ (ส่วนงาน)</h3>
+        <p class="text-xs text-gray-500">เพิ่ม แก้ไข และลบผู้ใช้งานในหน่วยงาน</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- ยุทธศาสตร์ มก. และ ส่วนงาน -->
+    <a href="/strategy" class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group block no-underline">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-lime-50 rounded-lg flex items-center justify-center border border-[#b2bb1e] group-hover:bg-slate-100 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-[#006664]" viewBox="0 0 26 26">
+              <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M7.5 7v6h10.159l-1.197-1.71a2.25 2.25 0 0 1 0-2.58L17.659 7zm-1-2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h13.08a1 1 0 0 0 .819-1.573L18.1 10.143a.25.25 0 0 1 0-.286l2.3-3.284A1 1 0 0 0 19.579 5z"/><path d="M6.5 6a1 1 0 0 1 1 1v13a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1"/><path d="M13 24c6.075 0 11-4.925 11-11S19.075 2 13 2S2 6.925 2 13s4.925 11 11 11m0 2c7.18 0 13-5.82 13-13S20.18 0 13 0S0 5.82 0 13s5.82 13 13 13"/></g>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]">&nbsp;</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">ยุทธศาสตร์ของมหาวิทยาลัยและส่วนงาน</h3>
+        <p class="text-xs text-gray-500">กำหนดและจัดการยุทธศาสตร์ มก. และส่วนงาน</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- SDG -->
+    <a href="/sdg" class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group block no-underline">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-emerald-50 rounded-lg flex items-center justify-center border border-emerald-200 group-hover:bg-emerald-100 transition-colors">
+            <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]">&nbsp;</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">
+          เป้าหมายการพัฒนาที่ยั่งยืน (SDGs)
+        </h3>
+        <p class="text-xs text-gray-500">กำหนดและจัดการ SDGs</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- การบำรุงรักษาระบบ -->
+    <a href="/maintenance" class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group block no-underline">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 bg-orange-50 rounded-lg flex items-center justify-center border border-orange-200 group-hover:bg-orange-100 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-orange-600" viewBox="0 0 16 16">
+              <g fill="currentColor"><path d="M12.496 8a4.5 4.5 0 0 1-1.703 3.526L9.497 8.5l2.959-1.11q.04.3.04.61"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-1 0a7 7 0 1 0-13.202 3.249l1.988-1.657a4.5 4.5 0 0 1 7.537-4.623L7.497 6.5l1 2.5l1.333 3.11c-.56.251-1.18.39-1.833.39a4.5 4.5 0 0 1-1.592-.29L4.747 14.2A7 7 0 0 0 15 8m-8.295.139a.25.25 0 0 0-.288-.376l-1.5.5l.159.474l.808-.27l-.595.894a.25.25 0 0 0 .287.376l.808-.27l-.595.894a.25.25 0 0 0 .287.376l1.5-.5l-.159-.474l-.808.27l.596-.894a.25.25 0 0 0-.288-.376l-.808.27z"/></g>
+            </svg>
+          </div>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]">&nbsp;</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">การบำรุงรักษาระบบ</h3>
+        <p class="text-xs text-gray-500">บำรุงรักษาและเพิ่มประสิทธิภาพระบบ</p>
+      </div>
+      <div class="border-t border-gray-100 px-4 sm:px-5 py-2 flex items-center justify-between">
+        <span class="text-xs text-[#0f2d5e] font-medium">เข้าสู่โมดูล</span>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#0f2d5e] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION TITLE: วิเคราะห์ข้อมูล
+  ════════════════════════════════════════════════ -->
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-1 h-6 bg-[#0f2d5e] rounded-full"></div>
+    <h2 class="text-base font-bold text-[#0a1f3d] tracking-wide">วิเคราะห์ข้อมูลโครงการ</h2>
+    <div class="flex-1 border-t border-gray-200"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       PIE CHARTS
+  ════════════════════════════════════════════════ -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-7">
+
+    <!-- สถานะโครงการ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+        <h3 class="text-sm font-semibold text-[#0a1f3d]">สถานะโครงการ</h3>
+        <div class="flex items-center gap-1.5 text-xs text-gray-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="chart-update-time">—</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-center py-4">
+        <svg class="w-40 h-40 sm:w-44 sm:h-44" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="28"></circle>
+          <text x="100" y="94" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Sarabun,sans-serif">โครงการรวม</text>
+          <text x="100" y="114" text-anchor="middle" fill="#0a1f3d" font-size="14" font-weight="bold" font-family="Sarabun,sans-serif">0 โครงการ</text>
+        </svg>
+      </div>
+      <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-gray-500 mt-1">
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-gray-300 rounded-sm shrink-0"></span>ร่าง</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-amber-400 rounded-sm shrink-0"></span>รออนุมัติ</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm shrink-0"></span>อนุมัติแล้ว</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-sky-500 rounded-sm shrink-0"></span>กำลังดำเนินการ</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-violet-500 rounded-sm shrink-0"></span>เสร็จสิ้น</span>
+      </div>
+    </div>
+
+    <!-- งบประมาณโครงการ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+        <h3 class="text-sm font-semibold text-[#0a1f3d]">งบประมาณโครงการ</h3>
+        <div class="flex items-center gap-1.5 text-xs text-gray-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="chart-update-time">—</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-center py-4">
+        <svg class="w-40 h-40 sm:w-44 sm:h-44" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="28"></circle>
+          <text x="100" y="94" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Sarabun,sans-serif">งบประมาณรวม</text>
+          <text x="100" y="114" text-anchor="middle" fill="#0a1f3d" font-size="14" font-weight="bold" font-family="Sarabun,sans-serif">฿0</text>
+        </svg>
+      </div>
+      <div class="grid grid-cols-1 gap-y-1.5 text-xs text-gray-500 mt-1">
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm shrink-0"></span>ไม่ระบุประเภท</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-red-500 rounded-sm shrink-0"></span>ค่าใช้จ่ายเงินอุดหนุนฯ</span>
+        <span class="text-gray-400">1/4 ›</span>
+      </div>
+    </div>
+
+    <!-- การใช้จ่ายแยกตามกลุ่มงบประมาณ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5 md:col-span-2 lg:col-span-1">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+        <h3 class="text-sm font-semibold text-[#0a1f3d]">การใช้จ่ายแยกตามกลุ่มงบประมาณ</h3>
+      </div>
+      <div class="flex items-center justify-center py-4">
+        <svg class="w-40 h-40 sm:w-44 sm:h-44" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="28"></circle>
+          <text x="100" y="94" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Sarabun,sans-serif">งบประมาณรวม</text>
+          <text x="100" y="114" text-anchor="middle" fill="#0a1f3d" font-size="14" font-weight="bold" font-family="Sarabun,sans-serif">฿0</text>
+        </svg>
+      </div>
+      <div class="grid grid-cols-1 gap-y-1.5 text-xs text-gray-500 mt-1">
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm shrink-0"></span>ไม่ระบุกลุ่ม</span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-red-500 rounded-sm shrink-0"></span>ค่าใช้จ่ายเงินอุดหนุนโครงการฯ</span>
+        <span class="text-gray-400">1/12 ›</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION TITLE: กิจกรรมล่าสุด
+  ════════════════════════════════════════════════ -->
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-1 h-6 bg-[#0f2d5e] rounded-full"></div>
+    <h2 class="text-base font-bold text-[#0a1f3d] tracking-wide">กิจกรรมล่าสุด</h2>
+    <div class="flex-1 border-t border-gray-200"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       RECENT PROJECTS + ANNOUNCEMENTS
+  ════════════════════════════════════════════════ -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 mb-7">
+
+    <!-- โครงการล่าสุด -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-[#0f2d5e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <h3 class="text-sm font-semibold text-[#0a1f3d]">โครงการล่าสุด</h3>
+        </div>
+        <a href="#" class="text-xs text-[#0f2d5e] hover:underline font-medium">ดูทั้งหมด →</a>
+      </div>
+      <div class="p-6 sm:p-8 text-center">
+        <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500 font-medium">ยังไม่มีโครงการ</p>
+        <p class="text-xs text-gray-400 mt-1">สร้างโครงการใหม่เพื่อเริ่มต้นใช้งานระบบ</p>
+      </div>
+    </div>
+
+    <!-- ประกาศสำคัญ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-[#0f2d5e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+          <h3 class="text-sm font-semibold text-[#0a1f3d]">ประกาศสำคัญ</h3>
+        </div>
+        <a href="/maintenance" class="text-xs text-[#0f2d5e] hover:underline font-medium">จัดการประกาศ →</a>
+      </div>
+      <!-- Loading state -->
+      <div id="dashAnnLoading" class="p-6 text-center text-xs text-gray-400 flex items-center justify-center gap-2">
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        กำลังโหลด...
+      </div>
+      <!-- Empty state -->
+      <div id="dashAnnEmpty" class="hidden p-6 sm:p-8 text-center">
+        <div class="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500 font-medium">ไม่มีประกาศใหม่</p>
+        <p class="text-xs text-gray-400 mt-1">ประกาศจากมหาวิทยาลัยจะแสดงที่นี่</p>
+      </div>
+      <!-- Announcements list -->
+      <ul id="dashAnnList" class="hidden divide-y divide-gray-50"></ul>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION TITLE: สถิติการใช้งาน
+  ════════════════════════════════════════════════ -->
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-1 h-6 bg-[#0f2d5e] rounded-full"></div>
+    <h2 class="text-base font-bold text-[#0a1f3d] tracking-wide">สถิติการเข้าใช้งานระบบ</h2>
+    <div class="flex-1 border-t border-gray-200"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SYSTEM USAGE STATISTICS
+  ════════════════════════════════════════════════ -->
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 sm:mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-b border-gray-100">
+      <div>
+        <p class="text-xs text-gray-400 mt-0.5">การเข้าถึงระบบแยกตาม 10 หน่วยงาน</p>
+      </div>
+      <button class="flex items-center gap-2 px-4 py-2 bg-[#0f2d5e] text-white rounded-lg text-xs font-medium hover:bg-[#0a1f3d] transition-colors self-start sm:self-auto">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        ดูรายละเอียด
+      </button>
+    </div>
+
+    <!-- Summary KPI Strip -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+      <div class="px-4 sm:px-6 py-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-sky-50 rounded-lg flex items-center justify-center border border-sky-100 shrink-0">
+          <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">จำนวนครั้งทั้งหมด</p>
+          <p class="text-2xl font-bold text-[#0a1f3d]">0</p>
+          <p class="text-xs text-gray-400">ครั้งการเข้าถึง</p>
+        </div>
+      </div>
+      <div class="px-4 sm:px-6 py-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center border border-emerald-100 shrink-0">
+          <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs text-gray-500">หน่วยงานสูงสุด</p>
+          <p class="text-base font-bold text-[#0a1f3d] truncate">—</p>
+          <p class="text-xs text-gray-400">0 ครั้ง</p>
+        </div>
+      </div>
+      <div class="px-4 sm:px-6 py-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-100 shrink-0">
+          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">เฉลี่ยต่อหน่วยงาน</p>
+          <p class="text-2xl font-bold text-[#0a1f3d]">0</p>
+          <p class="text-xs text-gray-400">ครั้งต่อหน่วยงาน</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State for bar chart -->
+    <div class="px-4 sm:px-6 pb-6 pt-4 border-t border-gray-100">
+      <div class="text-center py-8">
+        <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500 font-medium">ยังไม่มีข้อมูลสถิติการเข้าใช้งาน</p>
+        <p class="text-xs text-gray-400 mt-1">ข้อมูลจะแสดงเมื่อมีการใช้งานระบบ</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER TIMESTAMP
+  ════════════════════════════════════════════════ -->
+  <div class="flex items-center justify-center gap-2 text-xs text-gray-400 pb-4">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    อัปเดตล่าสุด: <span class="font-medium" id="footerTimestamp">—</span>
+  </div>
+
+  <script>
+    const API = import.meta.env.PUBLIC_API_URL;
+    document.addEventListener('DOMContentLoaded', () => {
+      // แสดงชื่อจาก localStorage ก่อน (fast initial render)
+      const userStr = localStorage.getItem('ku_user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const welcomeEl = document.getElementById('welcomeText');
+          if (welcomeEl) welcomeEl.textContent = `ยินดีต้อนรับ, ${user.nameTh || user.nameEn || user.username}`;
+        } catch (e) { /* ignore */ }
+      }
+
+      // Fetch /api/auth/me พร้อม auto-refresh เมื่อ token หมดอายุ
+      async function fetchMe() {
+        let token = localStorage.getItem('ku_access_token');
+        if (!token) return null;
+
+        let res = await fetch(`${API}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // ถ้า 401 → ลอง refresh token
+        if (res.status === 401) {
+          const refreshToken = localStorage.getItem('ku_refresh_token');
+          if (!refreshToken) { window.location.replace('/login'); return null; }
+
+          const refreshRes = await fetch(`${API}/api/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken }),
+          });
+          const refreshData = await refreshRes.json();
+
+          if (!refreshData.success) { window.location.replace('/login'); return null; }
+
+          // บันทึก token ใหม่
+          localStorage.setItem('ku_access_token', refreshData.accessToken);
+          localStorage.setItem('ku_refresh_token', refreshData.refreshToken);
+          if (refreshData.user) localStorage.setItem('ku_user', JSON.stringify(refreshData.user));
+
+          // retry /me ด้วย token ใหม่
+          res = await fetch(`${API}/api/auth/me`, {
+            headers: { Authorization: `Bearer ${refreshData.accessToken}` },
+          });
+        }
+
+        const data = await res.json();
+        return data.success ? data : null;
+      }
+
+      fetchMe().then((data) => {
+        if (!data) return;
+
+        const welcomeEl = document.getElementById('welcomeText');
+        if (welcomeEl) {
+          const u = data.user;
+          welcomeEl.textContent = `ยินดีต้อนรับ, ${u.nameTh || u.nameEn || u.username}`;
+        }
+
+        const facultyEl = document.getElementById('facultyInfo');
+        if (facultyEl) {
+          const org = data.activeAffiliation?.organization;
+          // ถ้าสังกัด department → ใช้ parent (faculty) เป็นหน่วยงานหลัก
+          const mainOrg = (org?.orgLevel === 'department' && org?.parent) ? org.parent : org;
+          const orgName = mainOrg?.nameTh;
+          facultyEl.textContent = orgName ? `สังกัดหน่วยงานหลัก: ${orgName}` : '';
+        }
+      }).catch(() => { /* ปล่อยให้แสดงค่าจาก localStorage */ });
+
+      // Date/time strings
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('th-TH', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+      const timestampStr = now.toLocaleDateString('th-TH', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+
+      const dateTimeEl = document.getElementById('currentDateTime');
+      if (dateTimeEl) dateTimeEl.textContent = dateStr + ' น.';
+
+      const lastLoginEl = document.getElementById('lastLogin');
+      if (lastLoginEl) lastLoginEl.textContent = dateStr;
+
+      const lastLoginMobileEl = document.getElementById('lastLoginMobile');
+      if (lastLoginMobileEl) lastLoginMobileEl.textContent = dateStr;
+
+      const footerEl = document.getElementById('footerTimestamp');
+      if (footerEl) footerEl.textContent = timestampStr + ' น.';
+
+      document.querySelectorAll('.chart-update-time').forEach(el => {
+        el.textContent = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+      });
+
+      // โหลดประกาศสำคัญ
+      loadDashboardAnnouncements();
+    });
+
+    async function loadDashboardAnnouncements() {
+      const loading = document.getElementById('dashAnnLoading');
+      const empty = document.getElementById('dashAnnEmpty');
+      const list = document.getElementById('dashAnnList');
+      if (!loading || !empty || !list) return;
+
+      try {
+        const token = localStorage.getItem('ku_access_token');
+        const res = await fetch(`${API}/api/maintenance/announcements`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        loading.classList.add('hidden');
+
+        if (!data.success || !data.data?.length) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        const typeConfig: Record<string, { dot: string; badge: string }> = {
+          info:    { dot: 'bg-blue-500',  badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+          warning: { dot: 'bg-amber-500', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+          success: { dot: 'bg-green-500', badge: 'bg-green-50 text-green-700 border-green-200' },
+          danger:  { dot: 'bg-red-500',   badge: 'bg-red-50 text-red-700 border-red-200' },
+        };
+
+        list.innerHTML = data.data.slice(0, 5).map((ann: any) => {
+          const cfg = typeConfig[ann.type] ?? typeConfig.info;
+          const date = new Date(ann.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+          return `
+            <li class="px-4 sm:px-6 py-3 flex items-start gap-3">
+              <div class="mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${cfg.dot}"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-[#0a1f3d] line-clamp-1">${ann.title}</p>
+                <p class="text-xs text-gray-500 line-clamp-2 mt-0.5">${ann.content}</p>
+                <p class="text-xs text-gray-400 mt-1">${date}</p>
+              </div>
+            </li>
+          `;
+        }).join('');
+
+        list.classList.remove('hidden');
+      } catch {
+        loading?.classList.add('hidden');
+        empty?.classList.remove('hidden');
+      }
+    }
+  </script>
+
+</AuthLayout>

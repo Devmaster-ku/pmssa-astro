@@ -1,0 +1,895 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="จัดการผู้ใช้งานระบบ">
+
+  <!-- PAGE HEADER -->
+  <div class="relative rounded-sm overflow-hidden mb-6 shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #0a4068 45%, #4c1d95 100%);">
+    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #4c1d95, #7c3aed, #b2bb1e);"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 65%);"></div>
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+    <div class="relative z-10 p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-start gap-4">
+          <div class="mt-2 w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center border border-white/20 shrink-0">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <div>
+            <nav class="flex items-center gap-1.5 text-white/90 text-xs mb-1">
+              <a href="/dashboard" class="hover:text-white transition-colors">แผงควบคุม</a>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <span class="text-white/80">จัดการผู้ใช้งานระบบ</span>
+            </nav>
+            <h1 class="text-white text-lg font-bold leading-tight">จัดการผู้ใช้งานระบบ (ส่วนงาน)</h1>
+            <p class="text-white/80 text-sm mt-1">เพิ่ม แก้ไข และจัดการสิทธิ์ผู้ใช้งานในหน่วยงานของคุณ</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-5">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 bg-violet-50 rounded-lg flex items-center justify-center border border-violet-200 shrink-0">
+        <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">ผู้ใช้ทั้งหมด</p>
+        <p class="text-2xl font-bold text-[#0a1f3d]" id="statTotal">—</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center border border-emerald-200 shrink-0">
+        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">ใช้งานอยู่</p>
+        <p class="text-2xl font-bold text-emerald-700" id="statActive">—</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center border border-red-200 shrink-0">
+        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">ระงับแล้ว</p>
+        <p class="text-2xl font-bold text-red-600" id="statInactive">—</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH + FILTER -->
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-4">
+    <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+      <!-- Search Input -->
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="searchInput" type="text" placeholder="ค้นหาชื่อ, username, email..."
+          class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+      </div>
+      <!-- Right Toolbar -->
+      <div class="flex items-center gap-2">
+        <select id="filterOrg" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow w-full sm:w-auto min-w-[150px] max-w-full">
+          <option value="">ทุกหน่วยงาน</option>
+        </select>
+        <select id="filterStatus" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow w-full sm:w-auto min-w-[120px] max-w-full">
+          <option value="">ทุกสถานะ</option>
+          <option value="active">ใช้งานอยู่</option>
+          <option value="inactive">ระงับแล้ว</option>
+        </select>
+        <button id="btnAddUser" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-violet-500 hover:bg-violet-600 rounded-lg transition-colors shadow-md ml-auto sm:ml-0 shrink-0 whitespace-nowrap">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          เพิ่มผู้ใช้ใหม่
+        </button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-200 bg-gray-50/80">
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide w-8">#</th>
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">ผู้ใช้งาน</th>
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide hidden md:table-cell">หน่วยงานหลัก</th>
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">ตำแหน่ง</th>
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">ระดับสิทธิ์</th>
+            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">สถานะ</th>
+            <th class="text-center px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide w-24">จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody" class="divide-y divide-gray-100">
+          <tr id="loadingRow">
+            <td colspan="7" class="px-4 py-12 text-center align-top">
+              <div class="flex flex-col items-center gap-2 text-gray-400">
+                <svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                <p class="text-sm">กำลังโหลดข้อมูล...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINATION FOOTER -->
+    <div class="px-4 py-3 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-gray-400" id="paginationInfo">— รายการ</p>
+      <div class="flex items-center gap-1" id="paginationControls"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ ADD USER MODAL ══════════ -->
+  <div id="addUserModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="addUserBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 rounded-t-2xl"
+           style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          <h2 class="text-white font-bold text-base">เพิ่มผู้ใช้ใหม่</h2>
+        </div>
+        <button id="addUserClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="addUserForm" class="overflow-y-auto px-6 py-5 space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (ไทย) <span class="text-red-500">*</span></label>
+            <input id="addNameTh" type="text" placeholder="ชื่อภาษาไทย"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (อังกฤษ)</label>
+            <input id="addNameEn" type="text" placeholder="Name in English"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">Username <span class="text-red-500">*</span></label>
+          <input id="addUsername" type="text" placeholder="เช่น john.doe"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">Email <span class="text-red-500">*</span></label>
+          <input id="addEmail" type="email" placeholder="example@ku.th"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">เบอร์โทร</label>
+            <input id="addPhone" type="text" placeholder="0xx-xxx-xxxx"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">รหัสผ่าน</label>
+            <input id="addPassword" type="password" placeholder="(ไม่บังคับ)"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+        </div>
+        <div class="border-t border-gray-100 pt-3">
+          <p class="text-xs font-semibold text-gray-600 mb-2">สังกัดเริ่มต้น (ถ้ามี)</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">หน่วยงาน</label>
+              <select id="addOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="">-- ไม่ระบุ --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">บทบาท</label>
+              <select id="addRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="staff">Staff (อาจารย์/เจ้าหน้าที่)</option>
+                <option value="project_lead">Project Lead (หัวหน้าโครงการ)</option>
+                <option value="org_admin">Org Admin (ผู้ดูแลระบบส่วนงาน)</option>
+                <option value="faculty_executive">Faculty Executive (ผู้บริหารหน่วยงาน)</option>
+                <option value="unit_head">Unit Head (หัวหน้าหน่วยงานย่อย)</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-2">
+            <label class="block text-xs text-gray-500 mb-1">ตำแหน่ง</label>
+            <input id="addPositionTitle" type="text" placeholder="เช่น อาจารย์, นักวิชาการ"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+        </div>
+        <div id="addUserError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        <div class="flex justify-end gap-2 pt-1">
+          <button type="button" id="addUserCancel" class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">ยกเลิก</button>
+          <button type="submit" id="addUserSubmit" class="px-5 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg transition-colors">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════ EDIT USER MODAL ══════════ -->
+  <div id="editUserModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="editUserBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 rounded-t-2xl"
+           style="background: linear-gradient(135deg, #0c2957, #0a4068);">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          <h2 class="text-white font-bold text-base">แก้ไขข้อมูลผู้ใช้</h2>
+        </div>
+        <button id="editUserClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="editUserForm" class="px-6 py-5 space-y-4">
+        <input type="hidden" id="editUserId"/>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (ไทย) <span class="text-red-500">*</span></label>
+            <input id="editNameTh" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (อังกฤษ)</label>
+            <input id="editNameEn" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">Email</label>
+          <input id="editEmail" type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">เบอร์โทร</label>
+          <input id="editPhone" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+        </div>
+        <div id="editUserError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        <div class="flex justify-end gap-2 pt-1">
+          <button type="button" id="editUserCancel" class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">ยกเลิก</button>
+          <button type="submit" id="editUserSubmit" class="px-5 py-2 text-sm bg-[#0c2957] hover:bg-[#0a2040] text-white font-semibold rounded-lg transition-colors">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════ MANAGE AFFILIATIONS MODAL ══════════ -->
+  <div id="affModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="affBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 rounded-t-2xl"
+           style="background: linear-gradient(135deg, #065f46, #059669);">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <h2 class="text-white font-bold text-base">จัดการสังกัด — <span id="affUserName" class="font-normal"></span></h2>
+        </div>
+        <button id="affClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="overflow-y-auto px-6 py-4 space-y-3">
+        <input type="hidden" id="affUserId"/>
+        <div id="affList" class="space-y-2"></div>
+        <!-- Add affiliation form -->
+        <div class="border-t border-gray-100 pt-3">
+          <p class="text-xs font-semibold text-gray-600 mb-2">เพิ่มสังกัดใหม่</p>
+          <div class="grid grid-cols-2 gap-2">
+            <select id="affNewOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
+              <option value="">-- เลือกหน่วยงาน --</option>
+            </select>
+            <select id="affNewRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
+              <option value="staff">Staff</option>
+              <option value="project_lead">Project Lead</option>
+              <option value="org_admin">Org Admin</option>
+              <option value="faculty_executive">Faculty Executive</option>
+              <option value="unit_head">Unit Head</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <input id="affNewPosition" type="text" placeholder="ตำแหน่ง (ถ้ามี)" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"/>
+          </div>
+          <button id="btnAddAff" class="mt-2 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-600 hover:text-white transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            เพิ่มสังกัด
+          </button>
+        </div>
+        <div id="affError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+      </div>
+      <div class="shrink-0 px-6 py-3 border-t border-gray-100">
+        <button id="affDone" class="w-full py-2 text-sm font-semibold text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[100] hidden">
+    <div id="toastInner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white min-w-56 max-w-xs">
+      <svg id="toastIcon" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+      <span id="toastMsg"></span>
+    </div>
+  </div>
+
+  <script>
+    const API = import.meta.env.PUBLIC_API_URL;
+    let allUsers: any[] = [];
+    let currentPage = 1;
+    const PAGE_SIZE = 15;
+    let orgList: any[] = [];
+
+    // ──────────── helpers ────────────
+    function token() { return localStorage.getItem('ku_access_token') || ''; }
+
+    // apiFetch — fetch ด้วย Authorization header + auto-refresh เมื่อ 401
+    async function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
+      const headers: Record<string, string> = {
+        ...(options.headers as Record<string, string> || {}),
+        Authorization: `Bearer ${token()}`,
+      };
+
+      let res = await fetch(url, { ...options, headers });
+
+      // ถ้า 401 → ลอง refresh token แล้ว retry
+      if (res.status === 401) {
+        const refreshToken = localStorage.getItem('ku_refresh_token');
+        if (!refreshToken) { window.location.replace('/login'); return res; }
+
+        const refreshRes = await fetch(`${API}/api/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken }),
+        });
+        const refreshData = await refreshRes.json();
+
+        if (!refreshData.success) { window.location.replace('/login'); return res; }
+
+        // บันทึก token ใหม่
+        localStorage.setItem('ku_access_token', refreshData.accessToken);
+        localStorage.setItem('ku_refresh_token', refreshData.refreshToken);
+        if (refreshData.user) localStorage.setItem('ku_user', JSON.stringify(refreshData.user));
+
+        // retry request ด้วย token ใหม่
+        headers.Authorization = `Bearer ${refreshData.accessToken}`;
+        res = await fetch(url, { ...options, headers });
+      }
+
+      return res;
+    }
+
+    function showToast(msg: string, ok = true) {
+      const t = document.getElementById('toast')!;
+      const inner = document.getElementById('toastInner')!;
+      const icon = document.getElementById('toastIcon')!;
+      const msgEl = document.getElementById('toastMsg')!;
+      inner.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white min-w-56 max-w-xs ${ok ? 'bg-emerald-600' : 'bg-red-600'}`;
+      icon.innerHTML = ok
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+      msgEl.textContent = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    function roleBadge(role: string) {
+      const map: Record<string, { label: string; cls: string }> = {
+        super_admin:       { label: 'ผู้ดูแลระบบสูงสุด', cls: 'bg-red-100 text-red-700' },
+        univ_executive:    { label: 'ผู้บริหาร ม.', cls: 'bg-indigo-100 text-indigo-700' },
+        univ_officer:      { label: 'เจ้าหน้าที่ ม.', cls: 'bg-sky-100 text-sky-700' },
+        campus_executive:  { label: 'ผู้บริหารวิทยาเขต', cls: 'bg-teal-100 text-teal-700' },
+        campus_officer:    { label: 'เจ้าหน้าที่วิทยาเขต', cls: 'bg-cyan-100 text-cyan-700' },
+        faculty_executive: { label: 'ผู้บริหารคณะ', cls: 'bg-amber-100 text-amber-700' },
+        unit_head:         { label: 'หัวหน้าหน่วยงาน', cls: 'bg-orange-100 text-orange-700' },
+        org_admin:         { label: 'ผู้ดูแล (หน่วยงาน)', cls: 'bg-violet-100 text-violet-700' },
+        project_lead:      { label: 'หัวหน้าโครงการ', cls: 'bg-blue-100 text-blue-700' },
+        staff:             { label: 'อาจารย์/เจ้าหน้าที่', cls: 'bg-gray-100 text-gray-600' },
+      };
+      const item = map[role] || { label: role, cls: 'bg-gray-100 text-gray-600' };
+      return `<span class="inline-flex items-center px-2 py-0.5 rounded text-[13px] font-semibold ${item.cls}">${item.label}</span>`;
+    }
+
+    // ──────────── fetch users ────────────
+    async function loadUsers() {
+      const tbody = document.getElementById('userTableBody')!;
+      tbody.innerHTML = `<tr id="loadingRow"><td colspan="7" class="px-4 py-12 text-center"><div class="flex flex-col items-center gap-2 text-gray-400"><svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg><p class="text-sm">กำลังโหลด...</p></div></td></tr>`;
+      try {
+        const res = await apiFetch(`${API}/api/users`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        allUsers = data.data || [];
+        currentPage = 1;
+        renderTable();
+      } catch (e: any) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-sm text-red-500">${e.message}</td></tr>`;
+      }
+    }
+
+    function getOrgInfo(affs: any[]) {
+      if (!affs || !affs.length) return { primary: null, sub: null, position: null, role: '' };
+      // primary = isPrimary:true or first
+      const primary = affs.find((a: any) => a.isPrimary) || affs[0];
+      // sub = any affiliation that is NOT the primary and has a different org (sub-level)
+      const sub = affs.find((a: any) => a.id !== primary.id && a.organization?.id !== primary.organization?.id) || null;
+      return {
+        primary: primary?.organization || null,
+        sub: sub?.organization || null,
+        position: primary?.positionTitle || sub?.positionTitle || null,
+        role: primary?.role || '',
+      };
+    }
+
+    function renderTable() {
+      const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
+      const status = (document.getElementById('filterStatus') as HTMLSelectElement).value;
+      const orgId = (document.getElementById('filterOrg') as HTMLSelectElement).value;
+
+      let filtered = allUsers.filter(u => {
+        const matchSearch = !search || u.nameTh?.toLowerCase().includes(search) || u.username?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search);
+        const matchStatus = !status || (status === 'active' && u.isActive) || (status === 'inactive' && !u.isActive);
+        const matchOrg = !orgId || u.affiliations?.some((a: any) =>
+          String(a.organization?.id).trim() === String(orgId).trim() ||
+          (a.subDep && String(a.subDep?.id).trim() === String(orgId).trim())
+        );
+        return matchSearch && matchStatus && matchOrg;
+      });
+
+      const active = allUsers.filter(u => u.isActive).length;
+      (document.getElementById('statTotal') as HTMLElement).textContent = String(allUsers.length);
+      (document.getElementById('statActive') as HTMLElement).textContent = String(active);
+      (document.getElementById('statInactive') as HTMLElement).textContent = String(allUsers.length - active);
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+      (document.getElementById('paginationInfo') as HTMLElement).textContent =
+        filtered.length
+          ? `แสดง ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} จาก ${filtered.length} รายการ (ทั้งหมด ${allUsers.length})`
+          : `ไม่พบรายการ`;
+
+      renderPagination(totalPages, filtered.length);
+
+      const tbody = document.getElementById('userTableBody')!;
+      if (!pageItems.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-12 text-center text-sm text-gray-400">ไม่พบผู้ใช้งาน</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map((u, i) => {
+        const { primary, sub, position, role } = getOrgInfo(u.affiliations || []);
+        const rowNum = start + i + 1;
+        const statusBadge = u.isActive
+          ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[12px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>ใช้งาน</span>'
+          : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[12px] font-medium bg-red-50 text-red-600 border border-red-200"><span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>ระงับ</span>';
+        const primaryCell = primary
+          ? `<p class="text-xs font-medium text-gray-700 leading-tight">${primary.nameTh}</p>`
+          : `<p class="text-xs text-gray-400 italic">ไม่ระบุ</p>`;
+        const positionsCell = (() => {
+          const affs: any[] = u.affiliations || [];
+          const withPos = affs.filter((a: any) => a.positionTitle);
+          if (!withPos.length) return `<p class="text-xs text-gray-300">—</p>`;
+          return withPos.map((a: any, idx: number) => {
+            const isPrimary = a.isPrimary;
+            const dot = isPrimary
+              ? `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#006664;margin-right:4px;flex-shrink:0;margin-top:3px"></span>`
+              : `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#d1d5db;margin-right:4px;flex-shrink:0;margin-top:3px"></span>`;
+            return `<div class="flex items-start gap-0 ${idx > 0 ? 'mt-1.5' : ''}">` +
+              dot +
+              `<div>` +
+              `<p class="text-xs font-medium text-gray-700 leading-tight">${a.positionTitle}</p>` +
+              `<p class="text-[11px] text-gray-400 leading-tight">${a.organization?.nameTh || ''}</p>` +
+              `</div></div>`;
+          }).join('');
+        })();
+        const affsAll: any[] = u.affiliations || [];
+
+        // Build inline affiliation list for user cell
+        const affInline = affsAll.length
+          ? affsAll.map((a: any) => {
+              const dotColor = a.isPrimary ? '#006664' : '#9ca3af';
+              const pos = a.positionTitle || '';
+              const org = a.organization?.nameTh || '';
+              return `<div style="display:flex;align-items:flex-start;gap:5px;margin-top:3px">` +
+                `<span style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-top:3px"></span>` +
+                `<span style="font-size:13px;color:#374151;line-height:1.3">` +
+                (pos ? `<span style="font-weight:500">${pos}</span>` : '') +
+                (pos && org ? `<span style="color:#9ca3af"> · </span>` : '') +
+                (org ? `<span style="color:#6b7280">${org}</span>` : '') +
+                `</span></div>`;
+            }).join('')
+          : `<span style="font-size:13px;color:#d1d5db">—</span>`;
+
+        return `
+          <tr class="hover:bg-violet-50/30 transition-colors border-b border-gray-100" style="vertical-align: top !important;">
+            <td class="px-4 py-4 text-xs text-gray-400 align-top">
+              <div class="flex flex-col justify-start pt-1">${rowNum}</div>
+            </td>
+            <td class="px-4 py-4 align-top">
+              <div class="flex items-start gap-3">
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-[#0a1f3d] leading-tight">${u.nameTh || '—'}</p>
+                  <p class="text-[13px] text-gray-500 mt-0.5">${u.username === u.email ? u.email : (u.username + ' · ' + u.email)}</p>
+                  <div class="mt-2 text-[14px] flex flex-col gap-1.5">${affInline}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-4 hidden md:table-cell align-top text-[14px]">
+              <div class="flex flex-col justify-start pt-1">${primaryCell}</div>
+            </td>
+            <td class="px-4 py-4 hidden lg:table-cell max-w-[220px] align-top text-[14px]">
+              <div class="flex flex-col justify-start pt-1">${positionsCell}</div>
+            </td>
+            <td class="px-4 py-4 align-top">
+              <div class="flex flex-col justify-start pt-1">${roleBadge(role)}</div>
+            </td>
+            <td class="px-4 py-4 align-top">
+              <div class="flex flex-col justify-start pt-1">${statusBadge}</div>
+            </td>
+            <td class="px-4 py-4 align-top">
+              <div class="flex flex-wrap items-center gap-2 pt-0.5">
+                <button onclick="openEditUser(${u.id})"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded-lg transition-all" title="แก้ไข">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  แก้ไข
+                </button>
+                <button onclick="openAffModal(${u.id}, '${(u.nameTh || u.username).replace(/'/g, "\\'")}')" 
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all" title="จัดการสังกัด">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  สังกัด
+                </button>
+                <button onclick="toggleActive(${u.id}, ${u.isActive})" 
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold ${u.isActive ? 'text-red-500 bg-red-50 hover:bg-red-100' : 'text-emerald-600 bg-emerald-50 hover:bg-emerald-100'} rounded-lg transition-all" title="${u.isActive ? 'ระงับบัญชี' : 'เปิดใช้งาน'}">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${u.isActive ? 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636' : 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'}"/></svg>
+                  ${u.isActive ? 'ระงับ' : 'เปิด'}
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderPagination(totalPages: number, total: number) {
+      const ctrl = document.getElementById('paginationControls')!;
+      if (totalPages <= 1) { ctrl.innerHTML = ''; return; }
+
+      const pageBtn = (p: number, isActive: boolean) => {
+        const activeStyle = 'border:2px solid #B2BB1E; color:#006664; font-weight:600; background:#fff;';
+        const normalStyle = 'border:1px solid #e5e7eb; color:#4b5563; background:#fff;';
+        return `<button onclick="goPage(${p})"
+          style="padding:4px 10px; font-size:12px; border-radius:8px; cursor:pointer; transition:all .15s; ${isActive ? activeStyle : normalStyle}"
+          onmouseover="if(!${isActive})this.style.borderColor='#B2BB1E'"
+          onmouseout="if(!${isActive})this.style.borderColor='#e5e7eb'"
+        >${p}</button>`;
+      };
+
+      const arrowBtn = (icon: string, page: number, disabled: boolean) => {
+        const disStyle = 'border:1px solid #f3f4f6; color:#d1d5db; background:#f9fafb; cursor:not-allowed;';
+        const enStyle  = 'border:1px solid #e5e7eb; color:#4b5563; background:#fff; cursor:pointer;';
+        return `<button ${disabled ? 'disabled' : `onclick="goPage(${page})"`}
+          style="padding:4px 8px; font-size:12px; border-radius:8px; transition:all .15s; ${disabled ? disStyle : enStyle}"
+        >${icon}</button>`;
+      };
+
+      // Build page number list with ellipsis
+      const pages: (number|'...')[] = [];
+      for (let p = 1; p <= totalPages; p++) {
+        if (p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)) {
+          pages.push(p);
+        } else if (pages[pages.length - 1] !== '...') {
+          pages.push('...');
+        }
+      }
+
+      ctrl.innerHTML = [
+        arrowBtn(`<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>`,
+          currentPage - 1, currentPage === 1),
+        ...pages.map(p =>
+          p === '...'
+            ? `<span style="font-size:12px;color:#9ca3af;padding:0 4px">…</span>`
+            : pageBtn(p as number, p === currentPage)
+        ),
+        arrowBtn(`<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>`,
+          currentPage + 1, currentPage === totalPages),
+      ].join('');
+    }
+
+    // ──────────── fetch orgs ────────────
+    function populateSelect(sel: HTMLSelectElement, defaultLabel: string, items: any[]) {
+      // ล้าง options เดิมทั้งหมด
+      while (sel.options.length > 0) sel.remove(0);
+      // เพิ่ม default option
+      const def = document.createElement('option');
+      def.value = '';
+      def.textContent = defaultLabel;
+      sel.appendChild(def);
+      // เพิ่ม options จากข้อมูล (ใช้ DOM API เพื่อป้องกัน HTML injection)
+      for (const o of items) {
+        const opt = document.createElement('option');
+        opt.value = String(o.id);
+        opt.textContent = o.nameTh;
+        sel.appendChild(opt);
+      }
+    }
+
+    async function loadOrgs() {
+      try {
+        const res = await apiFetch(`${API}/api/organizations`);
+        const data = await res.json();
+        orgList = data.data || data.organizations || [];
+
+        ['addOrgId', 'affNewOrgId'].forEach(selId => {
+          const sel = document.getElementById(selId) as HTMLSelectElement;
+          if (sel) populateSelect(sel, '-- เลือกหน่วยงาน --', orgList);
+        });
+
+        const filterSel = document.getElementById('filterOrg') as HTMLSelectElement;
+        if (filterSel) populateSelect(filterSel, 'ทุกหน่วยงาน', orgList);
+      } catch {}
+    }
+
+    // ──────────── Add User ────────────
+    function openAddUserModal() {
+      (document.getElementById('addUserForm') as HTMLFormElement).reset();
+      document.getElementById('addUserError')!.classList.add('hidden');
+      showModal('addUserModal');
+    }
+
+    document.getElementById('addUserForm')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('addUserError')!;
+      errEl.classList.add('hidden');
+      const btn = document.getElementById('addUserSubmit') as HTMLButtonElement;
+      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+      try {
+        const orgId = (document.getElementById('addOrgId') as HTMLSelectElement).value;
+        const body: any = {
+          username: (document.getElementById('addUsername') as HTMLInputElement).value.trim(),
+          email: (document.getElementById('addEmail') as HTMLInputElement).value.trim(),
+          nameTh: (document.getElementById('addNameTh') as HTMLInputElement).value.trim(),
+          nameEn: (document.getElementById('addNameEn') as HTMLInputElement).value.trim() || undefined,
+          phone: (document.getElementById('addPhone') as HTMLInputElement).value.trim() || undefined,
+          password: (document.getElementById('addPassword') as HTMLInputElement).value || undefined,
+          role: (document.getElementById('addRole') as HTMLSelectElement).value,
+          positionTitle: (document.getElementById('addPositionTitle') as HTMLInputElement).value.trim() || undefined,
+        };
+        if (orgId) body.orgId = Number(orgId);
+        const res = await apiFetch(`${API}/api/users`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        hideModal('addUserModal');
+        showToast('สร้างผู้ใช้สำเร็จ');
+        await loadUsers();
+      } catch (ex: any) {
+        errEl.textContent = ex.message; errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'บันทึก';
+      }
+    });
+
+    // ──────────── Edit User ────────────
+    function openEditUser(id: number) {
+      const u = allUsers.find(x => x.id === id);
+      if (!u) return;
+      (document.getElementById('editUserId') as HTMLInputElement).value = String(id);
+      (document.getElementById('editNameTh') as HTMLInputElement).value = u.nameTh || '';
+      (document.getElementById('editNameEn') as HTMLInputElement).value = u.nameEn || '';
+      (document.getElementById('editEmail') as HTMLInputElement).value = u.email || '';
+      (document.getElementById('editPhone') as HTMLInputElement).value = u.phone || '';
+      document.getElementById('editUserError')!.classList.add('hidden');
+      showModal('editUserModal');
+    }
+
+    document.getElementById('editUserForm')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = (document.getElementById('editUserId') as HTMLInputElement).value;
+      const errEl = document.getElementById('editUserError')!;
+      errEl.classList.add('hidden');
+      const btn = document.getElementById('editUserSubmit') as HTMLButtonElement;
+      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+      try {
+        const res = await apiFetch(`${API}/api/users/${id}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nameTh: (document.getElementById('editNameTh') as HTMLInputElement).value.trim(),
+            nameEn: (document.getElementById('editNameEn') as HTMLInputElement).value.trim() || undefined,
+            email: (document.getElementById('editEmail') as HTMLInputElement).value.trim(),
+            phone: (document.getElementById('editPhone') as HTMLInputElement).value.trim() || undefined,
+          }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        hideModal('editUserModal');
+        showToast('แก้ไขข้อมูลสำเร็จ');
+        await loadUsers();
+      } catch (ex: any) {
+        errEl.textContent = ex.message; errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'บันทึก';
+      }
+    });
+
+    // ──────────── Toggle Active ────────────
+    async function toggleActive(id: number, currentStatus: boolean) {
+      const action = currentStatus ? 'ระงับบัญชีนี้' : 'เปิดใช้งานบัญชีนี้';
+      if (!confirm(`ต้องการ${action}?`)) return;
+      try {
+        const res = await apiFetch(`${API}/api/users/${id}/toggle-active`, {
+          method: 'PATCH',
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        showToast(data.message);
+        await loadUsers();
+      } catch (ex: any) {
+        showToast(ex.message, false);
+      }
+    }
+
+    // ──────────── Affiliations Modal ────────────
+    async function openAffModal(userId: number, userName: string) {
+      (document.getElementById('affUserId') as HTMLInputElement).value = String(userId);
+      document.getElementById('affUserName')!.textContent = userName;
+      document.getElementById('affError')!.classList.add('hidden');
+      showModal('affModal');
+      await loadAffiliations(userId);
+    }
+
+    async function loadAffiliations(userId: number) {
+      const list = document.getElementById('affList')!;
+      list.innerHTML = '<p class="text-xs text-gray-400 animate-pulse">กำลังโหลด...</p>';
+      try {
+        const res = await apiFetch(`${API}/api/users/${userId}`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        const affs = data.affiliations || [];
+        if (!affs.length) {
+          list.innerHTML = '<p class="text-xs text-gray-400 italic">ยังไม่มีสังกัด</p>';
+          return;
+        }
+        list.innerHTML = affs.map((a: any) => `
+          <div class="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-semibold text-gray-700 truncate">${a.organization?.nameTh || '—'}</p>
+              <div class="flex items-center gap-1.5 mt-0.5">${roleBadge(a.role)}${a.positionTitle ? `<span class="text-[11px] text-gray-400">${a.positionTitle}</span>` : ''}</div>
+            </div>
+            <button onclick="removeAffiliation(${a.id}, ${userId})"
+              class="ml-2 p-1 rounded text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0" title="ลบสังกัด">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          </div>`).join('');
+      } catch (ex: any) {
+        list.innerHTML = `<p class="text-xs text-red-500">${ex.message}</p>`;
+      }
+    }
+
+    async function removeAffiliation(affId: number, userId: number) {
+      if (!confirm('ต้องการลบสังกัดนี้?')) return;
+      try {
+        const res = await apiFetch(`${API}/api/admin/affiliations/${affId}`, {
+          method: 'DELETE',
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        showToast('ลบสังกัดสำเร็จ');
+        await loadAffiliations(userId);
+        await loadUsers();
+      } catch (ex: any) {
+        showToast(ex.message, false);
+      }
+    }
+
+    document.getElementById('btnAddAff')!.addEventListener('click', async () => {
+      const userId = Number((document.getElementById('affUserId') as HTMLInputElement).value);
+      const orgId = Number((document.getElementById('affNewOrgId') as HTMLSelectElement).value);
+      const role = (document.getElementById('affNewRole') as HTMLSelectElement).value;
+      const positionTitle = (document.getElementById('affNewPosition') as HTMLInputElement).value.trim();
+      const errEl = document.getElementById('affError')!;
+      errEl.classList.add('hidden');
+      if (!orgId) { errEl.textContent = 'กรุณาเลือกหน่วยงาน'; errEl.classList.remove('hidden'); return; }
+      try {
+        const res = await apiFetch(`${API}/api/admin/affiliations`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, orgId, role, positionTitle: positionTitle || undefined, isPrimary: false }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        showToast('เพิ่มสังกัดสำเร็จ');
+        (document.getElementById('affNewOrgId') as HTMLSelectElement).value = '';
+        (document.getElementById('affNewPosition') as HTMLInputElement).value = '';
+        await loadAffiliations(userId);
+        await loadUsers();
+      } catch (ex: any) {
+        errEl.textContent = ex.message; errEl.classList.remove('hidden');
+      }
+    });
+
+    // ──────────── modal helpers ────────────
+    function showModal(id: string) {
+      const m = document.getElementById(id)!;
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+    function hideModal(id: string) {
+      const m = document.getElementById(id)!;
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    // wire up close buttons
+    ['addUser', 'editUser', 'aff'].forEach(prefix => {
+      document.getElementById(`${prefix}Close`)?.addEventListener('click', () => hideModal(`${prefix}Modal`));
+      document.getElementById(`${prefix}Cancel`)?.addEventListener('click', () => hideModal(`${prefix}Modal`));
+      document.getElementById(`${prefix}Backdrop`)?.addEventListener('click', () => hideModal(`${prefix}Modal`));
+    });
+    document.getElementById('affDone')?.addEventListener('click', () => hideModal('affModal'));
+
+    // ──────────── init ────────────
+    document.getElementById('btnAddUser')!.addEventListener('click', openAddUserModal);
+    document.getElementById('searchInput')!.addEventListener('input', () => { currentPage = 1; renderTable(); });
+    document.getElementById('filterStatus')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
+    document.getElementById('filterOrg')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
+
+    // expose to inline onclick handlers
+    (window as any).openEditUser = openEditUser;
+    (window as any).openAffModal = openAffModal;
+    (window as any).toggleActive = toggleActive;
+    (window as any).removeAffiliation = removeAffiliation;
+    (window as any).goPage = (p: number) => {
+      const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
+      const status = (document.getElementById('filterStatus') as HTMLSelectElement).value;
+      const orgId = (document.getElementById('filterOrg') as HTMLSelectElement).value;
+      const filtered = allUsers.filter(u => {
+        const matchSearch = !search || u.nameTh?.toLowerCase().includes(search) || u.username?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search);
+        const matchStatus = !status || (status === 'active' && u.isActive) || (status === 'inactive' && !u.isActive);
+        const matchOrg = !orgId || u.affiliations?.some((a: any) =>
+          String(a.organization?.id).trim() === String(orgId).trim() ||
+          (a.subDep && String(a.subDep?.id).trim() === String(orgId).trim())
+        );
+        return matchSearch && matchStatus && matchOrg;
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      currentPage = Math.max(1, Math.min(p, totalPages));
+      renderTable();
+      document.getElementById('userTableBody')?.closest('.overflow-x-auto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadOrgs();   // โหลด org dropdown ก่อนเสมอ
+      await loadUsers();  // จากนั้น load users
+    });
+  </script>
+
+  <style>
+    .dropdown-arrow {
+      position: relative;
+      appearance: none;
+    }
+    
+    .dropdown-arrow::-webkit-calendar-picker-indicator,
+    .dropdown-arrow::-ms-expand,
+    .dropdown-arrow::-moz-focus-inner {
+      display: none;
+    }
+    
+    .dropdown-arrow::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #6b7280;
+      pointer-events: none;
+    }
+
+    #userTableBody tr,
+    #userTableBody td {
+      vertical-align: top !important;
+    }
+  </style>
+
+</AuthLayout>

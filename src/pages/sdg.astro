@@ -1,0 +1,349 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="เป้าหมายการพัฒนาที่ยั่งยืน (SDGs)">
+
+  <!-- ══════════════════════════════════════════════
+       PAGE HEADER
+  ═══════════════════════════════════════════════ -->
+  <div class="relative rounded-sm overflow-hidden mb-6 shadow-lg"
+       style="background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #047857 100%);">
+    <div class="absolute top-0 left-0 right-0 h-1.5"
+         style="background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(52,211,153,0.15) 0%, transparent 65%);"></div>
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+
+    <div class="relative z-10 p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-start gap-4">
+          <div class="mt-2 w-14 h-14 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
+            <img src="/images/sdg-logo.png" alt="SDG Logo" class="w-14 h-14 object-contain" />
+          </div>
+          <div>
+            <nav class="flex items-center gap-1.5 text-white/90 text-xs mb-1">
+              <a href="/dashboard" class="hover:text-white transition-colors">แผงควบคุม</a>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+              <span class="text-white/80">SDGs</span>
+            </nav>
+            <h1 class="text-white text-lg font-bold leading-tight">
+              เป้าหมายการพัฒนาที่ยั่งยืน (SDGs)
+            </h1>
+            <p class="text-white/80 text-sm mt-1">Sustainable Development Goals — 17 เป้าหมายเพื่อการพัฒนาที่ยั่งยืน</p>
+          </div>
+        </div>
+        <div class="shrink-0 flex gap-3">
+          <div class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-center">
+            <p class="text-2xl font-bold text-white" id="statGoals">—</p>
+            <p class="text-xs text-white/70">เป้าหมายหลัก</p>
+          </div>
+          <div class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-center">
+            <p class="text-2xl font-bold text-white" id="statTargets">—</p>
+            <p class="text-xs text-white/70">เป้าหมายย่อย</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CARD (settings-style)
+  ═══════════════════════════════════════════════ -->
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+
+    <!-- Section description -->
+    <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-emerald-50/50 border-b border-emerald-100">
+      <div class="w-8 h-8 rounded-lg bg-[#047857] flex items-center justify-center shrink-0 mt-0.5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-600" viewBox="0 0 14 14">
+          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x=".5" y=".5" rx="1"/><path d="M3 4.5h5"/><circle cx="9.5" cy="4.5" r="1.5"/><path d="M11 9.5H8m-3 0H3"/><circle cx="6.5" cy="9.5" r="1.5"/></g>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-[#047857]">จัดการ SDGs</p>
+        <p class="text-xs text-gray-500 mt-0.5">กำหนดเป้าหมายการพัฒนาที่ยั่งยืน (Sustainable Development Goals) และเป้าหมายย่อยในระบบ</p>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input id="sdgSearchInput" type="text" placeholder="ค้นหา SDG (รหัส, ชื่อ)..."
+          class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#047857]/30 focus:border-[#047857]" />
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="sdgGoalFilter" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#047857]/30 focus:border-[#047857] appearance-none bg-white">
+          <option value="">ทุกเป้าหมาย</option>
+        </select>
+        <button id="btnExpandAll" onclick="expandAll()"
+          class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#047857] bg-[#047857]/10 hover:bg-[#047857]/20 rounded-lg transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          ขยายทั้งหมด
+        </button>
+      </div>
+    </div>
+
+    <!-- Tree container -->
+    <div id="sdgTreeContainer">
+      <div class="flex flex-col items-center gap-2 text-gray-400 py-12">
+        <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+        <p class="text-sm">กำลังโหลดข้อมูล...</p>
+      </div>
+    </div>
+
+  </div>
+
+</AuthLayout>
+
+<script>
+  const API = import.meta.env.PUBLIC_API_URL;
+
+  function authHeaders() {
+    const token = localStorage.getItem('ku_access_token');
+    return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+  }
+
+  // UN Official SDG colors
+  const SDG_COLOR: Record<number, string> = {
+    1:  '#E5243B', 2:  '#DDA63A', 3:  '#4C9F38', 4:  '#C5192D',
+    5:  '#FF3A21', 6:  '#26BDE2', 7:  '#FCC30B', 8:  '#A21942',
+    9:  '#FD6925', 10: '#DD1367', 11: '#FD9D24', 12: '#BF8B2E',
+    13: '#3F7E44', 14: '#0A97D9', 15: '#56C02B', 16: '#00689D',
+    17: '#19486A',
+  };
+
+  interface SDGItem {
+    id: number;
+    code: string;
+    name: string;
+    description: string | null;
+    parentId: number | null;
+    displayName: string | null;
+  }
+
+  let allSDGs: SDGItem[] = [];
+  let collapsedGoals = new Set<number>();
+  let isAllExpanded = false;
+
+  function getGoalNum(code: string): number {
+    return parseInt(code.split('.')[0]) || 0;
+  }
+
+  function hexToRgb(hex: string) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `${r},${g},${b}`;
+  }
+
+  function renderTree(sdgs: SDGItem[], searchTerm: string, filterGoalId: number | null) {
+    const container = document.getElementById('sdgTreeContainer')!;
+    const term = searchTerm.toLowerCase().trim();
+
+    const topLevel = sdgs.filter(s => s.parentId === null).sort((a, b) => a.id - b.id);
+    const childMap = new Map<number, SDGItem[]>();
+    for (const s of [...sdgs].sort((a, b) => a.id - b.id)) {
+      if (s.parentId !== null) {
+        if (!childMap.has(s.parentId)) childMap.set(s.parentId, []);
+        childMap.get(s.parentId)!.push(s);
+      }
+    }
+
+    const rows: string[] = [];
+
+    for (const goal of topLevel) {
+      const goalNum = getGoalNum(goal.code);
+      const color = SDG_COLOR[goalNum] ?? '#6b7280';
+      const rgb = hexToRgb(color);
+      const children = childMap.get(goal.id) ?? [];
+
+      // Apply filter
+      if (filterGoalId !== null && goal.id !== filterGoalId) continue;
+
+      // Apply search
+      const matchedChildren = term
+        ? children.filter(c =>
+            c.code.toLowerCase().includes(term) ||
+            c.name.toLowerCase().includes(term)
+          )
+        : children;
+
+      const goalMatches = !term ||
+        goal.code.toLowerCase().includes(term) ||
+        goal.name.toLowerCase().includes(term) ||
+        matchedChildren.length > 0;
+
+      if (!goalMatches) continue;
+
+      const displayChildren = term ? matchedChildren : children;
+      const isCollapsed = !term && collapsedGoals.has(goal.id);
+      const chevronRot = isCollapsed ? '' : 'rotate-90';
+
+      // Goal row (parent)
+      rows.push(`
+        <div class="flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer select-none"
+             style="min-height:48px;" onclick="toggleGoal(${goal.id})">
+          <!-- Accent bar -->
+          <div style="width:4px;flex-shrink:0;align-self:stretch;background:${color};border-radius:0 2px 2px 0;"></div>
+          <!-- Chevron -->
+          <svg class="w-3.5 h-3.5 flex-shrink-0 transition-transform ml-3 mr-2 ${chevronRot}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:${color};">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+          </svg>
+          <!-- SDG number -->
+          <span class="flex-shrink-0 w-7 text-sm font-bold text-right" style="color:${color};">
+            ${goalNum}.
+          </span>
+          <!-- Name -->
+          <span class="flex-1 min-w-0 text-sm font-semibold text-gray-800 leading-snug px-3 py-3">${goal.name}</span>
+          <!-- Sub-count badge -->
+          <div class="flex-shrink-0 mr-4 text-xs font-medium px-2 py-0.5 rounded-sm mr-1"
+                style="color:${color};background:rgba(${rgb},0.1);border:1px solid rgba(${rgb},0.2);">
+            ${children.length} เป้าหมายย่อย
+          </div>
+        </div>
+      `);
+
+      // Child rows
+      if (!isCollapsed) {
+        for (let i = 0; i < displayChildren.length; i++) {
+          const child = displayChildren[i];
+          rows.push(`
+            <div class="flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100"
+                 style="min-height:40px; background:#fafafa;">
+              <!-- Accent bar faded -->
+              <div style="width:4px;flex-shrink:0;align-self:stretch;background:${color};opacity:0.3;border-radius:0 2px 2px 0;"></div>
+              <!-- Code badge aligned with number column -->
+              <span class="flex-shrink-0 text-right font-mono text-xs font-semibold" style="color:${color};margin-left:3rem;min-width:2rem;">
+                ${child.code}
+              </span>
+              <!-- Name -->
+              <span class="flex-1 min-w-0 text-sm text-gray-600 leading-snug px-3 py-2.5">${child.name}</span>
+            </div>
+          `);
+        }
+      }
+    }
+
+    if (rows.length === 0) {
+      container.innerHTML = `
+        <div class="flex flex-col items-center gap-3 py-12 text-gray-400">
+          <svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+          <p class="text-sm">ไม่พบ SDG ที่ตรงกับคำค้นหา</p>
+        </div>`;
+    } else {
+      container.innerHTML = rows.join('');
+    }
+  }
+
+  (window as any).toggleGoal = function(id: number) {
+    if (collapsedGoals.has(id)) {
+      collapsedGoals.delete(id);
+    } else {
+      collapsedGoals.add(id);
+    }
+    applyFilter();
+  };
+
+  (window as any).expandAll = function() {
+    const topLevel = allSDGs.filter(s => s.parentId === null);
+    if (isAllExpanded) {
+      topLevel.forEach(g => collapsedGoals.add(g.id));
+      isAllExpanded = false;
+      document.getElementById('btnExpandAll')!.innerHTML = `
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>ขยายทั้งหมด`;
+    } else {
+      collapsedGoals.clear();
+      isAllExpanded = true;
+      document.getElementById('btnExpandAll')!.innerHTML = `
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+        </svg>ย่อทั้งหมด`;
+    }
+    applyFilter();
+  };
+
+  function applyFilter() {
+    const term = (document.getElementById('sdgSearchInput') as HTMLInputElement).value;
+    const filterVal = (document.getElementById('sdgGoalFilter') as HTMLSelectElement).value;
+    const filterGoalId = filterVal ? parseInt(filterVal) : null;
+    renderTree(allSDGs, term, filterGoalId);
+  }
+
+  async function loadSDGs() {
+    const container = document.getElementById('sdgTreeContainer')!;
+    try {
+      const res = await fetch(`${API}/api/sdgs`, { headers: authHeaders() });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message ?? 'โหลดข้อมูลไม่สำเร็จ');
+
+      allSDGs = json.data as SDGItem[];
+      const topLevel = allSDGs.filter(s => s.parentId === null);
+      const children = allSDGs.filter(s => s.parentId !== null);
+
+      // Collapse all by default
+      topLevel.forEach(g => collapsedGoals.add(g.id));
+
+      // Update stats
+      document.getElementById('statGoals')!.textContent = String(topLevel.length);
+      document.getElementById('statTargets')!.textContent = String(children.length);
+
+      // Populate filter dropdown
+      const sel = document.getElementById('sdgGoalFilter') as HTMLSelectElement;
+      for (const goal of topLevel) {
+        const goalNum = getGoalNum(goal.code);
+        const opt = document.createElement('option');
+        opt.value = String(goal.id);
+        opt.textContent = `SDG ${goalNum}: ${goal.name.substring(0, 35)}…`;
+        sel.appendChild(opt);
+      }
+
+      applyFilter();
+    } catch (err: any) {
+      container.innerHTML = `
+        <div class="flex flex-col items-center gap-3 py-12 text-red-400">
+          <svg class="w-10 h-10 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <p class="text-sm font-medium">โหลดข้อมูลไม่สำเร็จ</p>
+          <p class="text-xs text-red-300">${err.message ?? 'เกิดข้อผิดพลาด'}</p>
+          <button onclick="loadSDGs()" class="mt-1 px-4 py-2 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors">ลองอีกครั้ง</button>
+        </div>`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const userStr = localStorage.getItem('ku_user');
+    if (!userStr) { window.location.replace('/login'); return; }
+
+    await loadSDGs();
+
+    document.getElementById('sdgSearchInput')!.addEventListener('input', () => {
+      // When searching, expand all to show results
+      if ((document.getElementById('sdgSearchInput') as HTMLInputElement).value.trim()) {
+        collapsedGoals.clear();
+      }
+      applyFilter();
+    });
+    document.getElementById('sdgGoalFilter')!.addEventListener('change', applyFilter);
+  });
+
+  // expose for retry button
+  (window as any).loadSDGs = loadSDGs;
+</script>

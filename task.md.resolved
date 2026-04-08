@@ -1,0 +1,18 @@
+# Redesign AuthenticatedLayout & Dashboard (Tailwind CSS)
+
+## Tasks
+
+- [/] Check Tailwind CSS setup in project
+- [ ] Redesign [AuthenticatedLayout.astro](file:///d:/PROJECT/KU-PMS/new-2026/frontend/src/layouts/AuthenticatedLayout.astro) with Tailwind
+  - [ ] Sidebar with sections: MAIN MENU, FEATURES, GENERAL
+  - [ ] Sidebar search bar
+  - [ ] Header with breadcrumb, icons, user avatar
+  - [ ] White card layout, clean modern design
+- [ ] Redesign [dashboard.astro](file:///d:/PROJECT/KU-PMS/new-2026/frontend/src/pages/dashboard.astro)
+  - [ ] Overview section title + filter controls
+  - [ ] 3 top stat cards (My Balance, Savings, Investment)
+  - [ ] My Wallet section (currency grid)
+  - [ ] Cash Flow chart section
+  - [ ] Recent Activities table
+- [ ] Update [profile.astro](file:///d:/PROJECT/KU-PMS/new-2026/frontend/src/pages/profile.astro) with proper content
+- [ ] Verify Tailwind classes are used properly

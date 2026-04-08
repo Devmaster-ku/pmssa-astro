@@ -1,0 +1,2397 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="ยุทธศาสตร์ของมหาวิทยาลัยและส่วนงาน">
+
+  <!-- ══════════════════════════════════════════════
+       PAGE HEADER
+  ═══════════════════════════════════════════════ -->
+  <div class="relative rounded-sm overflow-hidden mb-6 shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #0a4068 45%, #006664 100%);">
+    <!-- KU lime top accent bar -->
+    <div class="absolute top-0 left-0 right-0 h-1.5"
+         style="background: linear-gradient(90deg, #006664, #d4de3a, #b2bb1e);"></div>
+    <!-- Decorative glows -->
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(178,187,30,0.12) 0%, transparent 65%);"></div>
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+
+    <div class="relative z-10 p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <!-- Breadcrumb + Title -->
+        <div class="flex items-start gap-4">
+          <div class="mt-2 w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center border border-white/20 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#b2bb1e]" viewBox="0 0 26 26">
+              <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M7.5 7v6h10.159l-1.197-1.71a2.25 2.25 0 0 1 0-2.58L17.659 7zm-1-2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h13.08a1 1 0 0 0 .819-1.573L18.1 10.143a.25.25 0 0 1 0-.286l2.3-3.284A1 1 0 0 0 19.579 5z"/>
+                <path d="M6.5 6a1 1 0 0 1 1 1v13a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1"/>
+                <path d="M13 24c6.075 0 11-4.925 11-11S19.075 2 13 2S2 6.925 2 13s4.925 11 11 11m0 2c7.18 0 13-5.82 13-13S20.18 0 13 0S0 5.82 0 13s5.82 13 13 13"/>
+              </g>
+            </svg>
+          </div>
+          <div>
+            <nav class="flex items-center gap-1.5 text-white/90 text-xs mb-1">
+              <a href="/dashboard" class="hover:text-white transition-colors">แผงควบคุม</a>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+              <span class="text-white/80">ยุทธศาสตร์</span>
+            </nav>
+            <h1 class="text-white text-lg font-bold leading-tight">
+              ยุทธศาสตร์ของมหาวิทยาลัยและส่วนงาน
+            </h1>
+            <p class="text-white/80 text-sm mt-1">กำหนดและจัดการยุทธศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ ในทุกระดับ</p>
+          </div>
+        </div>
+
+        <!-- Action button -->
+        <button id="btnAddStrategy"
+          class="shrink-0 flex items-center gap-2 px-4 py-2.5 bg-[#b2bb1e] hover:bg-[#9da61b] text-white text-sm font-semibold rounded-lg transition-colors shadow-md">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          เพิ่มยุทธศาสตร์
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SUMMARY STATS
+  ═══════════════════════════════════════════════ -->
+  <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+    <!-- University -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+           style="background-color: #eef2ff;">
+        <svg class="w-5 h-5 text-[#0c2957]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs text-gray-500">ระดับมหาวิทยาลัย</p>
+        <p class="text-lg font-bold text-[#0c2957] leading-tight" id="statUnivStrategy">—</p>
+        <p class="text-xs text-gray-400" id="statUnivTactic">— กลยุทธ์</p>
+      </div>
+    </div>
+    <!-- Campus -->
+    <div id="cardCampus" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+           style="background-color: #f0fdf4;">
+        <svg class="w-5 h-5 text-[#006664]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs text-gray-500 truncate" id="labelCampus">ระดับวิทยาเขต</p>
+        <p class="text-lg font-bold text-[#006664] leading-tight" id="statCampusStrategy">—</p>
+        <p class="text-xs text-gray-400" id="statCampusTactic">— กลยุทธ์</p>
+      </div>
+    </div>
+    <!-- Division -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+           style="background-color: #fefce8;">
+        <svg class="w-5 h-5 text-[#b2bb1e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs text-gray-500">ระดับส่วนงาน</p>
+        <p class="text-lg font-bold text-[#b2bb1e] leading-tight" id="statDivStrategy">—</p>
+        <p class="text-xs text-gray-400" id="statDivTactic">— กลยุทธ์</p>
+      </div>
+    </div>
+    <!-- Dean -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+           style="background-color: #fdf2f8;">
+        <svg class="w-5 h-5 text-[#9d174d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-xs text-gray-500">ระดับคณบดีส่วนงาน</p>
+        <p class="text-lg font-bold text-[#9d174d] leading-tight" id="statDeanStrategy">—</p>
+        <p class="text-xs text-gray-400" id="statDeanTactic">— กลยุทธ์</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       LEVEL TABS
+  ═══════════════════════════════════════════════ -->
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+
+    <!-- Tab Bar -->
+    <div class="border-b border-gray-200 overflow-x-auto">
+      <div class="flex min-w-max">
+        <!-- Tab 1 -->
+        <button data-tab="university"
+          class="tab-btn active-tab flex items-center gap-2 px-5 py-3.5 text-sm font-semibold border-b-2 border-[#0c2957] text-[#0c2957] whitespace-nowrap transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+          </svg>
+          ระดับมหาวิทยาลัย
+        </button>
+        <!-- Tab 2 -->
+        <button data-tab="campus"
+          class="tab-btn flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-[#006664] hover:border-[#006664] whitespace-nowrap transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          ระดับวิทยาเขต
+        </button>
+        <!-- Tab 3 -->
+        <button data-tab="division"
+          class="tab-btn flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-[#b2bb1e] hover:border-[#b2bb1e] whitespace-nowrap transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          ระดับส่วนงาน
+        </button>
+        <!-- Tab 4 -->
+        <button data-tab="dean"
+          class="tab-btn flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-[#9d174d] hover:border-[#9d174d] whitespace-nowrap transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          ระดับคณบดีส่วนงาน
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Toolbar (Search + Filter) ── -->
+    <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+      <!-- Search -->
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="ค้นหายุทธศาสตร์..."
+          class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+      </div>
+      <!-- Filter by year -->
+      <div class="flex items-center gap-2">
+        <label class="text-xs text-gray-500 whitespace-nowrap">แผนปีงบประมาณ</label>
+        <select id="yearFilter"
+          class="border border-gray-200 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+          <option value="">ทั้งหมด</option>
+          <option value="2568" selected>2568</option>
+          <option value="2567">2567</option>
+          <option value="2566">2566</option>
+        </select>
+        <!-- Status filter -->
+        <select id="statusFilter"
+          class="border border-gray-200 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+          <option value="">ทุกสถานะ</option>
+          <option value="active">ใช้งาน</option>
+          <option value="draft">ร่าง</option>
+          <!-- <option value="archived">เก็บถาวร</option> -->
+        </select>
+      </div>
+    </div>
+
+    <!-- ── Tab Panels ── -->
+
+    <!-- UNIVERSITY PANEL -->
+    <div id="panel-university" class="tab-panel">
+      <!-- Section description -->
+      <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-blue-50/50 border-b border-blue-100">
+        <div class="w-8 h-8 rounded-lg bg-[#0c2957] flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-[#0c2957]">ยุทธศาสตร์ระดับมหาวิทยาลัย</p>
+          <p class="text-xs text-gray-500 mt-0.5">ยุทธศาสตร์หลักของมหาวิทยาลัยเกษตรศาสตร์ กำหนดทิศทางและเป้าหมายในภาพรวมของมหาวิทยาลัย</p>
+        </div>
+      </div>
+
+      <!-- Accordion list -->
+      <div id="univAccordion" class="divide-y divide-gray-100">
+        <!-- Loading state -->
+        <div id="univLoading" class="px-5 py-12 text-center">
+          <div class="flex flex-col items-center gap-2 text-gray-400">
+            <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm">กำลังโหลดข้อมูล...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPUS PANEL -->
+    <div id="panel-campus" class="tab-panel hidden">
+      <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-emerald-50/50 border-b border-emerald-100">
+        <div class="w-8 h-8 rounded-lg bg-[#006664] flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-[#006664]">ยุทธศาสตร์ระดับวิทยาเขต</p>
+          <p class="text-xs text-gray-500 mt-0.5">ยุทธศาสตร์เฉพาะของแต่ละวิทยาเขต สอดคล้องกับยุทธศาสตร์มหาวิทยาลัยและบริบทพื้นที่</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-200 bg-gray-50/80">
+              <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-16">ลำดับ</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">รหัสยุทธศาสตร์</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">ชื่อยุทธศาสตร์</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">วิทยาเขต</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">ปีงบประมาณ</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">สถานะ</th>
+              <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="tableCampus" class="divide-y divide-gray-100">
+            <tr>
+              <td colspan="7" class="px-5 py-12 text-center">
+                <div class="flex flex-col items-center gap-2 text-gray-400">
+                  <svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  <p class="text-sm">กำลังโหลดข้อมูล...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DIVISION PANEL -->
+    <div id="panel-division" class="tab-panel hidden">
+      <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-yellow-50/50 border-b border-yellow-100">
+        <div class="w-8 h-8 rounded-lg bg-[#b2bb1e] flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-[#7d8416]">ยุทธศาสตร์ระดับส่วนงาน</p>
+          <p class="text-xs text-gray-500 mt-0.5">ยุทธศาสตร์ของหน่วยงานที่ผู้ใช้สังกัด สอดคล้องกับยุทธศาสตร์มหาวิทยาลัย</p>
+        </div>
+      </div>
+
+      <!-- Accordion list -->
+      <div id="deptAccordion" class="divide-y divide-gray-100">
+        <!-- Loading state -->
+        <div id="deptLoading" class="px-5 py-12 text-center">
+          <div class="flex flex-col items-center gap-2 text-gray-400">
+            <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm">กำลังโหลดข้อมูล...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEAN PANEL -->
+    <div id="panel-dean" class="tab-panel hidden">
+      <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-pink-50/50 border-b border-pink-100">
+        <div class="w-8 h-8 rounded-lg bg-[#9d174d] flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-[#9d174d]">ยุทธศาสตร์ระดับคณบดีส่วนงาน</p>
+          <p class="text-xs text-gray-500 mt-0.5">ยุทธศาสตร์ที่กำหนดโดยคณบดีของแต่ละส่วนงาน เพื่อขับเคลื่อนพันธกิจเฉพาะ</p>
+        </div>
+      </div>
+
+      <!-- Accordion list -->
+      <div id="deanAccordion" class="divide-y divide-gray-100">
+        <!-- Loading state -->
+        <div id="deanLoading" class="px-5 py-12 text-center">
+          <div class="flex flex-col items-center gap-2 text-gray-400">
+            <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm">กำลังโหลดข้อมูล...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="px-5 py-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <p class="text-xs text-gray-400" id="paginationInfo">— รายการ</p>
+      <div class="flex items-center gap-1">
+        <button class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50 disabled:opacity-40" disabled>ก่อนหน้า</button>
+        <button class="px-3 py-1.5 text-xs border border-[#0c2957] rounded-lg bg-[#0c2957] text-white font-medium">1</button>
+        <button class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50 disabled:opacity-40" disabled>ถัดไป</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       ADD STRATEGY MODAL (NEW DESIGN)
+  ═══════════════════════════════════════════════ -->
+  <div id="strategyAddModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="strategyAddBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0"
+           style="background: linear-gradient(135deg, #0c2957, #006664);">
+        <div class="flex items-center gap-2">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          <h2 class="text-white font-bold text-base">เพิ่มยุทธศาสตร์ใหม่</h2>
+        </div>
+        <button id="strategyAddClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body (scrollable) -->
+      <form id="strategyAddForm" class="flex flex-col overflow-hidden">
+        <div class="overflow-y-auto px-6 py-5 space-y-5">
+          <!-- Row: ลำดับที่ + แผนปีงบประมาณ + ระดับยุทธศาสตร์ -->
+          <div class="flex gap-3 items-start">
+            <div class="w-20 shrink-0">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ลำดับที่</label>
+              <input id="addOrder" type="number" min="1"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+            </div>
+            <div class="w-36 shrink-0">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">แผนปีงบประมาณ</label>
+              <input id="addFiscalPlan" type="text" placeholder="เช่น 2568-2573"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ระดับยุทธศาสตร์ <span class="text-red-500">*</span></label>
+              <select id="addLevel" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+                <option value="university">ระดับมหาวิทยาลัย</option>
+                <option value="campus">ระดับวิทยาเขต</option>
+                <option value="division">ระดับส่วนงาน</option>
+                <option value="dean">ระดับคณบดีส่วนงาน</option>
+              </select>
+            </div>
+          </div>
+          <!-- Level banner -->
+          <div id="addLevelBanner" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium border"></div>
+
+          <!-- ชื่อยุทธศาสตร์ -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อยุทธศาสตร์ <span class="text-red-500">*</span></label>
+            <textarea id="addName" rows="2"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957] resize-none"></textarea>
+          </div>
+          <!-- Tactics section -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-gray-600">กลยุทธ์ภายใต้ยุทธศาสตร์นี้</label>
+              <button type="button" id="btnAddNewTactic"
+                class="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] border border-[#006664]/40 rounded-lg hover:bg-[#006664] hover:text-white transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                เพิ่มกลยุทธ์
+              </button>
+            </div>
+            <div id="addTacticsList" class="space-y-2">
+              <!-- tactic rows rendered by JS -->
+            </div>
+          </div>
+          <div id="strategyAddError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        </div>
+        <!-- Footer -->
+        <div class="shrink-0 flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+          <button type="button" id="strategyAddCancel"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit" id="strategyAddSubmit"
+            class="px-5 py-2 text-sm bg-[#0c2957] hover:bg-[#0a2040] text-white font-semibold rounded-lg transition-colors">
+            บันทึก
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       ADD / EDIT MODAL (legacy – used by editRow)
+  ═══════════════════════════════════════════════ -->
+  <div id="strategyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="modalBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200"
+           style="background: linear-gradient(135deg, #0c2957, #006664);">
+        <h2 class="text-white font-bold text-base" id="modalTitle">เพิ่มยุทธศาสตร์ใหม่</h2>
+        <button id="modalClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <form id="strategyForm" class="px-6 py-5 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">ระดับยุทธศาสตร์ <span class="text-red-500">*</span></label>
+          <select id="formLevel" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+            <option value="university">ระดับมหาวิทยาลัย</option>
+            <option value="campus">ระดับวิทยาเขต</option>
+            <option value="division">ระดับส่วนงาน</option>
+            <option value="dean">ระดับคณบดีส่วนงาน</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">รหัสยุทธศาสตร์ <span class="text-red-500">*</span></label>
+          <input id="formCode" type="text" placeholder="เช่น KU-STG-2568-001"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อยุทธศาสตร์ <span class="text-red-500">*</span></label>
+          <input id="formName" type="text" placeholder="ระบุชื่อยุทธศาสตร์"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">คำอธิบาย</label>
+          <textarea id="formDesc" rows="3" placeholder="อธิบายยุทธศาสตร์โดยย่อ..."
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957] resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ปีงบประมาณ</label>
+            <select id="formYear" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+              <option value="2568">2568</option>
+              <option value="2567">2567</option>
+              <option value="2566">2566</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">สถานะ</label>
+            <select id="formStatus" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+              <option value="active">ใช้งาน</option>
+              <option value="draft">ร่าง</option>
+              <option value="archived">เก็บถาวร</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">แผนปีงบประมาณ</label>
+          <select id="formFiscalPlan" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
+            <option value="">-- ไม่ระบุ --</option>
+            <option value="2568-2573">2568-2573</option>
+            <option value="2567-2571">2567-2571</option>
+            <option value="2566-2570">2566-2570</option>
+            <option value="2565-2569">2565-2569</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="modalCancel"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit"
+            class="px-5 py-2 text-sm bg-[#0c2957] hover:bg-[#0a2040] text-white font-semibold rounded-lg transition-colors">
+            บันทึก
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       EDIT UNIVERSITY STRATEGY MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="univEditModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="univEditBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0"
+           style="background: linear-gradient(135deg, #0c2957, #0a4068);">
+        <div class="flex items-center gap-2">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <h2 class="text-white font-bold text-base">แก้ไขยุทธศาสตร์ระดับมหาวิทยาลัย</h2>
+        </div>
+        <button id="univEditClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body (scrollable) -->
+      <form id="univEditForm" class="flex flex-col overflow-hidden">
+        <div class="overflow-y-auto px-6 py-5 space-y-5">
+          <input type="hidden" id="univEditId" />
+          <!-- Row 1: ลำดับที่ + แผนปีงบประมาณ -->
+          <div class="flex gap-3 items-start">
+            <div class="w-20">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ลำดับที่</label>
+              <input id="univEditOrder" type="number" min="1"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+            </div>
+            <div class="w-1/4">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">แผนปีงบประมาณ</label>
+              <input id="univEditFiscalPlan" type="text" placeholder="เช่น 2568-2573"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]" />
+            </div>
+          </div>
+
+          <!-- Row 2: ชื่อยุทธศาสตร์ -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อยุทธศาสตร์ <span class="text-red-500">*</span></label>
+            <textarea id="univEditName" rows="2"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957] resize-none"></textarea>
+          </div>
+
+          <!-- Tactics section -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-gray-600">กลยุทธ์ภายใต้ยุทธศาสตร์นี้</label>
+              <button type="button" id="btnAddTactic"
+                class="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] border border-[#006664]/40 rounded-lg hover:bg-[#006664] hover:text-white transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                เพิ่มกลยุทธ์
+              </button>
+            </div>
+            <div id="univEditTacticsList" class="space-y-2">
+              <!-- tactic rows rendered by JS -->
+            </div>
+          </div>
+
+          <div id="univEditError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        </div>
+        <!-- Footer -->
+        <div class="shrink-0 flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+          <button type="button" id="univEditCancel"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit" id="univEditSubmit"
+            class="px-5 py-2 text-sm bg-[#0c2957] hover:bg-[#0a2040] text-white font-semibold rounded-lg transition-colors">
+            บันทึกการแก้ไข
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       EDIT DEPARTMENT STRATEGY MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="deptEditModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="deptEditBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0"
+           style="background: linear-gradient(135deg, #7d8416, #b2bb1e);">
+        <div class="flex items-center gap-2">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <h2 class="text-white font-bold text-base">แก้ไขยุทธศาสตร์ระดับส่วนงาน</h2>
+        </div>
+        <button id="deptEditClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body (scrollable) -->
+      <form id="deptEditForm" class="flex flex-col overflow-hidden">
+        <div class="overflow-y-auto px-6 py-5 space-y-5">
+          <input type="hidden" id="deptEditId" />
+          <!-- Row 1: ลำดับที่ + ปีงบประมาณ + แผนปีงบประมาณ -->
+          <div class="flex gap-3 items-start">
+            <div class="w-20">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ลำดับที่</label>
+              <input id="deptEditOrder" type="number" min="1" readonly
+                class="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed" />
+            </div>
+            <div class="w-24">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ปีงบประมาณ</label>
+              <input id="deptEditYear" type="number" min="2500" max="2600" placeholder="เช่น 2568"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b2bb1e]/40 focus:border-[#b2bb1e]" />
+            </div>
+            <div class="w-1/4">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">แผนปีงบประมาณ</label>
+              <input id="deptEditFiscalPlan" type="text" placeholder="เช่น 2568-2573"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b2bb1e]/40 focus:border-[#b2bb1e]" />
+            </div>
+          </div>
+
+          <!-- Row 2: ชื่อยุทธศาสตร์ -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อยุทธศาสตร์ <span class="text-red-500">*</span></label>
+            <textarea id="deptEditName" rows="2"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b2bb1e]/40 focus:border-[#b2bb1e] resize-none"></textarea>
+          </div>
+
+          <!-- Tactics section -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-gray-600">กลยุทธ์ภายใต้ยุทธศาสตร์นี้</label>
+              <button type="button" id="btnAddDeptTactic"
+                class="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#7d8416] border border-[#7d8416]/40 rounded-lg hover:bg-[#b2bb1e] hover:text-white hover:border-[#b2bb1e] transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                เพิ่มกลยุทธ์
+              </button>
+            </div>
+            <div id="deptEditTacticsList" class="space-y-2">
+              <!-- tactic rows rendered by JS -->
+            </div>
+          </div>
+
+          <div id="deptEditError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        </div>
+        <!-- Footer -->
+        <div class="shrink-0 flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+          <button type="button" id="deptEditCancel"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit" id="deptEditSubmit"
+            class="px-5 py-2 text-sm bg-[#7d8416] hover:bg-[#6a7012] text-white font-semibold rounded-lg transition-colors">
+            บันทึกการแก้ไข
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       EDIT DEAN STRATEGY MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="deanEditModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="deanEditBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0"
+           style="background: linear-gradient(135deg, #9d174d, #be185d);">
+        <div class="flex items-center gap-2">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <h2 class="text-white font-bold text-base">แก้ไขยุทธศาสตร์ระดับคณบดีส่วนงาน</h2>
+        </div>
+        <button id="deanEditClose" class="text-white/70 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal body (scrollable) -->
+      <form id="deanEditForm" class="flex flex-col overflow-hidden">
+        <div class="overflow-y-auto px-6 py-5 space-y-5">
+          <input type="hidden" id="deanEditId" />
+          <!-- Row 1: ลำดับที่ + ปีงบประมาณ + แผนปีงบประมาณ -->
+          <div class="flex gap-3 items-start">
+            <div class="w-20">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ลำดับที่</label>
+              <input id="deanEditOrder" type="number" min="1" readonly
+                class="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed" />
+            </div>
+            <div class="w-24">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">ปีงบประมาณ</label>
+              <input id="deanEditYear" type="number" min="2500" max="2600" placeholder="เช่น 2568"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#9d174d]/40 focus:border-[#9d174d]" />
+            </div>
+            <div class="w-1/4">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">แผนปีงบประมาณ</label>
+              <input id="deanEditFiscalPlan" type="text" placeholder="เช่น 2568-2573"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#9d174d]/40 focus:border-[#9d174d]" />
+            </div>
+          </div>
+
+          <!-- Row 2: ชื่อยุทธศาสตร์ -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อยุทธศาสตร์ <span class="text-red-500">*</span></label>
+            <textarea id="deanEditName" rows="2"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#9d174d]/40 focus:border-[#9d174d] resize-none"></textarea>
+          </div>
+
+          <!-- Tactics section -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-gray-600">กลยุทธ์ภายใต้ยุทธศาสตร์นี้</label>
+              <button type="button" id="btnAddDeanTactic"
+                class="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#9d174d] border border-[#9d174d]/40 rounded-lg hover:bg-[#9d174d] hover:text-white hover:border-[#9d174d] transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                เพิ่มกลยุทธ์
+              </button>
+            </div>
+            <div id="deanEditTacticsList" class="space-y-2">
+              <!-- tactic rows rendered by JS -->
+            </div>
+          </div>
+
+          <div id="deanEditError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+        </div>
+        <!-- Footer -->
+        <div class="shrink-0 flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+          <button type="button" id="deanEditCancel"
+            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit" id="deanEditSubmit"
+            class="px-5 py-2 text-sm bg-[#9d174d] hover:bg-[#881340] text-white font-semibold rounded-lg transition-colors">
+            บันทึกการแก้ไข
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       DELETE CONFIRMATION MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="deleteConfirmModal" class="fixed inset-0 z-60 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="deleteConfirmBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+      <div class="flex flex-col items-center text-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-800">ยืนยันการลบยุทธศาสตร์</h3>
+          <p class="text-sm text-gray-500 mt-1">การลบจะไม่สามารถย้อนกลับได้</p>
+          <p class="text-sm font-semibold text-gray-800 mt-3 bg-gray-50 rounded-lg px-3 py-2 leading-snug" id="deleteConfirmName"></p>
+        </div>
+        <div class="flex gap-3 w-full pt-1">
+          <button type="button" id="deleteConfirmCancel"
+            class="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors font-medium">
+            ยกเลิก
+          </button>
+          <button type="button" id="deleteConfirmOk"
+            class="flex-1 px-4 py-2.5 text-sm bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
+            ลบยุทธศาสตร์
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</AuthLayout>
+
+<style>
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 16px 16px;
+    padding-right: 2rem;
+  }
+</style>
+
+<script>
+  // ═══════════════════════════════════════════════
+  //  MOCK DATA
+  // ═══════════════════════════════════════════════
+  type StrategyLevel = 'university' | 'campus' | 'division' | 'dean';
+  type StrategyStatus = 'active' | 'draft' | 'archived';
+
+  interface Strategy {
+    id: number;
+    code: string;
+    name: string;
+    year: string;
+    fiscalPlan?: string;
+    status: StrategyStatus;
+    unit?: string;
+  }
+
+  const mockData: Record<'university' | 'campus' | 'division', Strategy[]> = {
+    university: [
+      { id: 1, code: 'KU-STG-2568-001', name: 'ยกระดับคุณภาพการศึกษาสู่มาตรฐานสากล', year: '2568', status: 'active' },
+      { id: 2, code: 'KU-STG-2568-002', name: 'พัฒนางานวิจัยและนวัตกรรมเพื่อสังคม', year: '2568', status: 'active' },
+      { id: 3, code: 'KU-STG-2568-003', name: 'เสริมสร้างความเป็นเลิศทางวิชาการและวิชาชีพ', year: '2568', status: 'active' },
+      { id: 4, code: 'KU-STG-2568-004', name: 'ส่งเสริมการบริการวิชาการแก่ชุมชนและสังคม', year: '2568', status: 'draft' },
+      { id: 5, code: 'KU-STG-2567-001', name: 'พัฒนาระบบบริหารจัดการองค์กรสมัยใหม่', year: '2567', status: 'archived' },
+    ],
+    campus: [
+      { id: 1, code: 'KPS-STG-2568-001', name: 'พัฒนาวิทยาเขตกำแพงแสนให้เป็นศูนย์กลางเกษตรกรรม', year: '2568', status: 'active', unit: 'วิทยาเขตกำแพงแสน' },
+      { id: 2, code: 'SKN-STG-2568-001', name: 'ยกระดับการศึกษาและวิจัยภาคใต้', year: '2568', status: 'active', unit: 'วิทยาเขตเฉลิมพระเกียรติ จังหวัดสกลนคร' },
+      { id: 3, code: 'CRI-STG-2568-001', name: 'พัฒนานวัตกรรมและเทคโนโลยีเพื่ออุตสาหกรรม', year: '2568', status: 'draft', unit: 'วิทยาเขตศรีราชา' },
+    ],
+    division: [
+      { id: 1, code: 'AGR-STG-2568-001', name: 'ผลิตบัณฑิตด้านเกษตรกรรมที่มีคุณภาพ', year: '2568', status: 'active', unit: 'คณะเกษตร' },
+      { id: 2, code: 'ENG-STG-2568-001', name: 'พัฒนาหลักสูตรวิศวกรรมสู่มาตรฐานสากล', year: '2568', status: 'active', unit: 'คณะวิศวกรรมศาสตร์' },
+      { id: 3, code: 'SCI-STG-2568-001', name: 'ส่งเสริมงานวิจัยวิทยาศาสตร์พื้นฐาน', year: '2568', status: 'active', unit: 'คณะวิทยาศาสตร์' },
+      { id: 4, code: 'VET-STG-2568-001', name: 'ยกระดับบริการสัตวแพทย์ชุมชน', year: '2568', status: 'draft', unit: 'คณะสัตวแพทยศาสตร์' },
+    ],
+  };
+
+  // ═══════════════════════════════════════════════
+  //  STATE
+  // ═══════════════════════════════════════════════
+  type MockLevel = 'university' | 'campus' | 'division';
+  let activeTab: StrategyLevel = 'university';
+  let allData: Record<MockLevel, Strategy[]> = { ...mockData };
+  let currentCampusName: string | null = null; // เก็บชื่อวิทยาเขตของผู้ใช้
+
+  // ═══════════════════════════════════════════════
+  //  HELPERS
+  // ═══════════════════════════════════════════════
+  function statusBadge(status: StrategyStatus): string {
+    const map: Record<StrategyStatus, string> = {
+      active: '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"><span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>ใช้งาน</span>',
+      draft:  '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500 inline-block"></span>ร่าง</span>',
+      archived: '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500"><span class="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span>เก็บถาวร</span>',
+    };
+    return map[status] ?? '';
+  }
+
+  function actionBtns(id: number): string {
+    return `
+      <div class="flex items-center justify-center gap-1">
+        <button onclick="editRow(${id})" title="แก้ไข"
+          class="p-1.5 rounded-lg text-gray-400 hover:text-[#0c2957] hover:bg-blue-50 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+        </button>
+        <button onclick="deleteRow(${id})" title="ลบ"
+          class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </button>
+      </div>`;
+  }
+
+  // ═══════════════════════════════════════════════
+  //  RENDER TABLES
+  // ═══════════════════════════════════════════════
+  function renderAll() {
+    const search = (document.getElementById('searchInput') as HTMLInputElement)?.value.toLowerCase() ?? '';
+    const year = (document.getElementById('yearFilter') as HTMLSelectElement)?.value ?? '';
+    const status = (document.getElementById('statusFilter') as HTMLSelectElement)?.value ?? '';
+
+    function filter(rows: Strategy[]): Strategy[] {
+      return rows.filter(r => {
+        const matchSearch = !search || r.name.toLowerCase().includes(search) || r.code.toLowerCase().includes(search);
+        const matchYear = !year || r.year === year;
+        const matchStatus = !status || r.status === status;
+        return matchSearch && matchYear && matchStatus;
+      });
+    }
+
+    // University — ใช้ accordion (loadUniversityStrategies) ไม่ใช้ mockData
+    // stats cards ถูก update โดย loadSummary() แยกต่างหาก
+
+    // Campus
+    const campusRows = filter(allData.campus);
+    const tCampus = document.getElementById('tableCampus')!;
+    if (campusRows.length === 0) {
+      tCampus.innerHTML = emptyRow(7);
+    } else {
+      tCampus.innerHTML = campusRows.map((r, i) => `
+        <tr class="hover:bg-gray-50/60 transition-colors">
+          <td class="px-5 py-3 text-gray-400 text-xs">${i + 1}</td>
+          <td class="px-4 py-3 font-mono text-xs text-[#006664] font-medium">${r.code}</td>
+          <td class="px-4 py-3 text-gray-800 font-medium">${r.name}</td>
+          <td class="px-4 py-3 text-xs text-gray-600">${r.unit ?? '—'}</td>
+          <td class="px-4 py-3 text-gray-600 text-xs">${r.year}</td>
+          <td class="px-4 py-3">${statusBadge(r.status)}</td>
+          <td class="px-4 py-3">${actionBtns(r.id)}</td>
+        </tr>`).join('');
+    }
+
+    // Pagination info (campus only for now)
+    const campusFiltered = filter(allData.campus);
+    document.getElementById('paginationInfo')!.textContent =
+      activeTab === 'campus'
+        ? `แสดง ${campusFiltered.length} จาก ${allData.campus.length} รายการ`
+        : '—';
+  }
+
+  function emptyRow(cols: number): string {
+    return `<tr><td colspan="${cols}" class="px-5 py-10 text-center text-sm text-gray-400">ไม่พบข้อมูล</td></tr>`;
+  }
+
+  // ═══════════════════════════════════════════════
+  //  TAB SWITCHING
+  // ═══════════════════════════════════════════════
+  const TAB_COLORS: Record<StrategyLevel, string> = {
+    university: '#0c2957',
+    campus: '#006664',
+    division: '#b2bb1e',
+    dean: '#9d174d',
+  };
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = (btn as HTMLElement).dataset.tab as StrategyLevel;
+      activeTab = tab;
+
+      // Update button styles
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        (b as HTMLElement).classList.remove(
+          'active-tab', 'border-[#0c2957]', 'text-[#0c2957]',
+          'border-[#006664]', 'text-[#006664]',
+          'border-[#b2bb1e]', 'text-[#b2bb1e]',
+          'border-[#9d174d]', 'text-[#9d174d]',
+          'font-semibold'
+        );
+        (b as HTMLElement).classList.add('border-transparent', 'text-gray-500', 'font-medium');
+      });
+
+      const color = TAB_COLORS[tab];
+      const activeEl = btn as HTMLElement;
+      activeEl.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
+      activeEl.classList.add('active-tab', 'font-semibold');
+      activeEl.style.borderBottomColor = color;
+      activeEl.style.color = color;
+
+      // Show/hide panels
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`panel-${tab}`)?.classList.remove('hidden');
+
+      renderAll();
+    });
+  });
+
+  // ═══════════════════════════════════════════════
+  //  MODAL
+  // ═══════════════════════════════════════════════
+  function openModal() {
+    (document.getElementById('formLevel') as HTMLSelectElement).value = activeTab;
+    document.getElementById('strategyModal')!.classList.remove('hidden');
+    document.getElementById('strategyModal')!.classList.add('flex');
+  }
+
+  function closeModal() {
+    document.getElementById('strategyModal')!.classList.add('hidden');
+    document.getElementById('strategyModal')!.classList.remove('flex');
+    (document.getElementById('strategyForm') as HTMLFormElement).reset();
+  }
+
+  document.getElementById('btnAddStrategy')?.addEventListener('click', openStrategyAddModal);
+  document.getElementById('modalClose')?.addEventListener('click', closeModal);
+  document.getElementById('modalCancel')?.addEventListener('click', closeModal);
+  document.getElementById('modalBackdrop')?.addEventListener('click', closeModal);
+
+  document.getElementById('strategyForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const level = (document.getElementById('formLevel') as HTMLSelectElement).value as StrategyLevel;
+    const code = (document.getElementById('formCode') as HTMLInputElement).value.trim();
+    const name = (document.getElementById('formName') as HTMLInputElement).value.trim();
+    const year = (document.getElementById('formYear') as HTMLSelectElement).value;
+    const fiscalPlan = (document.getElementById('formFiscalPlan') as HTMLSelectElement).value || undefined;
+    const status = (document.getElementById('formStatus') as HTMLSelectElement).value as StrategyStatus;
+
+    if (!code || !name) return;
+
+    if (level === 'dean') return; // dean ใช้ API ไม่ใช้ mockData
+    const newId = Math.max(0, ...allData[level].map((r: Strategy) => r.id)) + 1;
+    allData[level].push({ id: newId, code, name, year, fiscalPlan, status });
+
+    closeModal();
+    renderAll();
+
+    // Switch to the newly added tab
+    (document.querySelector(`[data-tab="${level}"]`) as HTMLElement)?.click();
+  });
+
+  // ═══════════════════════════════════════════════
+  //  ROW ACTIONS (global)
+  // ═══════════════════════════════════════════════
+  (window as any).editRow = (id: number) => {
+    if (activeTab === 'dean') return;
+    const row = allData[activeTab].find((r: Strategy) => r.id === id);
+    if (!row) return;
+    (document.getElementById('formLevel') as HTMLSelectElement).value = activeTab;
+    (document.getElementById('formCode') as HTMLInputElement).value = row.code;
+    (document.getElementById('formName') as HTMLInputElement).value = row.name;
+    (document.getElementById('formYear') as HTMLSelectElement).value = row.year;
+    (document.getElementById('formStatus') as HTMLSelectElement).value = row.status;
+    (document.getElementById('formFiscalPlan') as HTMLSelectElement).value = row.fiscalPlan ?? '';
+    document.getElementById('modalTitle')!.textContent = 'แก้ไขยุทธศาสตร์';
+    openModal();
+  };
+
+  (window as any).deleteRow = (id: number) => {
+    if (activeTab === 'dean') return;
+    if (!confirm('ยืนยันการลบยุทธศาสตร์นี้?')) return;
+    allData[activeTab] = allData[activeTab].filter((r: Strategy) => r.id !== id);
+    renderAll();
+  };
+
+  // ═══════════════════════════════════════════════
+  //  ADD STRATEGY MODAL (NEW)
+  // ═══════════════════════════════════════════════
+  const ADD_LEVEL_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
+    university: {
+      label: 'ยุทธศาสตร์ระดับมหาวิทยาลัย',
+      color: '#0c2957', bg: '#eef2ff', border: '#c7d2fe',
+      icon: 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z',
+    },
+    campus: {
+      label: 'ยุทธศาสตร์ระดับวิทยาเขต',
+      color: '#006664', bg: '#f0fdf4', border: '#a7f3d0',
+      icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z',
+    },
+    division: {
+      label: 'ยุทธศาสตร์ระดับส่วนงาน',
+      color: '#7d8416', bg: '#fefce8', border: '#d9f99d',
+      icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    },
+    dean: {
+      label: 'ยุทธศาสตร์ระดับคณบดีส่วนงาน',
+      color: '#9d174d', bg: '#fdf2f8', border: '#fbcfe8',
+      icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
+    },
+  };
+
+  function updateAddLevelBanner(level: string) {
+    const cfg = ADD_LEVEL_CONFIG[level] ?? ADD_LEVEL_CONFIG.university;
+    const banner = document.getElementById('addLevelBanner')!;
+    banner.style.backgroundColor = cfg.bg;
+    banner.style.borderColor = cfg.border;
+    banner.style.color = cfg.color;
+    banner.innerHTML = `
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${cfg.icon}"/>
+      </svg>
+      <span class="text-xs">กำลังเพิ่ม <strong class="font-semibold">${cfg.label}</strong></span>`;
+  }
+
+  function openStrategyAddModal() {
+    const levelEl = document.getElementById('addLevel') as HTMLSelectElement;
+    levelEl.value = activeTab;
+
+    // Auto-fill ลำดับที่ จากจำนวนยุทธศาสตร์ที่มีอยู่
+    let count = 0;
+    if (activeTab === 'university') count = univStrategyStore.size;
+    else if (activeTab === 'campus') count = allData.campus.length;
+    else if (activeTab === 'division') count = deptStrategyStore.size;
+    else if (activeTab === 'dean') count = deanStrategyStore.size;
+    (document.getElementById('addOrder') as HTMLInputElement).value = String(count + 1);
+
+    // ค่าเริ่มต้น แผนปีงบประมาณ
+    (document.getElementById('addFiscalPlan') as HTMLInputElement).value = '2569-2573';
+
+    // อัปเดต banner
+    updateAddLevelBanner(activeTab);
+
+    // เพิ่มช่องกลยุทธ์แรกอัตโนมัติ
+    const list = document.getElementById('addTacticsList')!;
+    list.innerHTML = '';
+    list.appendChild(makeAddTacticRow(1));
+
+    const el = document.getElementById('strategyAddModal')!;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+
+  function closeStrategyAddModal() {
+    const el = document.getElementById('strategyAddModal')!;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+    (document.getElementById('strategyAddForm') as HTMLFormElement).reset();
+    (document.getElementById('addTacticsList') as HTMLElement).innerHTML = '';
+    (document.getElementById('strategyAddError') as HTMLElement).classList.add('hidden');
+  }
+
+  function makeAddTacticRow(seq: number): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 group';
+    row.innerHTML = `
+      <span class="font-mono text-xs font-semibold text-[#0c2957] shrink-0 w-8 text-right">${seq}.</span>
+      <input type="text"
+        class="add-tactic-input flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/20 focus:border-[#0c2957]"
+        placeholder="ชื่อกลยุทธ์" />
+      <button type="button" title="ลบ"
+        class="shrink-0 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>`;
+    row.querySelector('button')!.addEventListener('click', () => {
+      row.remove();
+      document.querySelectorAll('#addTacticsList > div').forEach((r, i) => {
+        (r as HTMLElement).querySelector('span.font-mono')!.textContent = `${i + 1}.`;
+      });
+    });
+    return row;
+  }
+
+  document.getElementById('btnAddNewTactic')?.addEventListener('click', () => {
+    const list = document.getElementById('addTacticsList')!;
+    const seq = list.children.length + 1;
+    const row = makeAddTacticRow(seq);
+    list.appendChild(row);
+    (row.querySelector('.add-tactic-input') as HTMLInputElement)?.focus();
+  });
+
+  document.getElementById('addLevel')?.addEventListener('change', (e) => {
+    updateAddLevelBanner((e.target as HTMLSelectElement).value);
+  });
+
+  document.getElementById('strategyAddClose')?.addEventListener('click', closeStrategyAddModal);
+  document.getElementById('strategyAddCancel')?.addEventListener('click', closeStrategyAddModal);
+  document.getElementById('strategyAddBackdrop')?.addEventListener('click', closeStrategyAddModal);
+
+  document.getElementById('strategyAddForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const level = (document.getElementById('addLevel') as HTMLSelectElement).value as StrategyLevel;
+    const name = (document.getElementById('addName') as HTMLTextAreaElement).value.trim();
+    const fiscalPlan = (document.getElementById('addFiscalPlan') as HTMLInputElement).value.trim() || null;
+    const orderVal = (document.getElementById('addOrder') as HTMLInputElement).value;
+    const orderList = orderVal ? Number(orderVal) : null;
+    const errEl = document.getElementById('strategyAddError')!;
+    const submitBtn = document.getElementById('strategyAddSubmit')!;
+
+    if (!name) {
+      errEl.textContent = 'กรุณาระบุชื่อยุทธศาสตร์';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    errEl.classList.add('hidden');
+    submitBtn.textContent = 'กำลังบันทึก...';
+    submitBtn.setAttribute('disabled', 'true');
+
+    const token = localStorage.getItem('ku_access_token');
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+    try {
+      let endpoint = '';
+      let bodyData: Record<string, unknown> = { name, fiscalPlan };
+
+      if (level === 'university') {
+        endpoint = 'http://localhost:3000/api/strategies';
+        bodyData = { ...bodyData, orderList, campus: 'บางเขน' };
+      } else if (level === 'campus') {
+        endpoint = 'http://localhost:3000/api/strategies';
+        bodyData = { ...bodyData, orderList, campus: currentCampusName ?? 'บางเขน' };
+      } else if (level === 'division') {
+        endpoint = 'http://localhost:3000/api/strategies/departments';
+        bodyData = { ...bodyData };
+      } else if (level === 'dean') {
+        endpoint = 'http://localhost:3000/api/strategies/dean';
+        bodyData = { ...bodyData };
+      }
+
+      const res = await fetch(endpoint, {
+        method: 'POST', headers,
+        body: JSON.stringify(bodyData),
+      });
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        errEl.textContent = json.message ?? 'เกิดข้อผิดพลาด ไม่สามารถบันทึกได้';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      // เพิ่มกลยุทธ์ย่อย (ถ้ามี)
+      const newStrategyId = json.id;
+      const tacticInputs = document.querySelectorAll('#addTacticsList .add-tactic-input') as NodeListOf<HTMLInputElement>;
+      let tacticEndpoint = '';
+      if (level === 'university' || level === 'campus') {
+        tacticEndpoint = `http://localhost:3000/api/strategies/${newStrategyId}/tactics`;
+      } else if (level === 'division') {
+        tacticEndpoint = `http://localhost:3000/api/strategies/departments/${newStrategyId}/tactics`;
+      } else if (level === 'dean') {
+        tacticEndpoint = `http://localhost:3000/api/strategies/dean/${newStrategyId}/tactics`;
+      }
+
+      for (let i = 0; i < tacticInputs.length; i++) {
+        const tacticName = tacticInputs[i].value.trim();
+        if (!tacticName) continue;
+        await fetch(tacticEndpoint, {
+          method: 'POST', headers,
+          body: JSON.stringify(
+            (level === 'university' || level === 'campus')
+              ? { name: tacticName, orderSequence: i + 1 }
+              : { name: tacticName, order: i + 1 }
+          ),
+        });
+      }
+
+      closeStrategyAddModal();
+      (window as any).showToast(`เพิ่ม${ADD_LEVEL_CONFIG[level]?.label ?? 'ยุทธศาสตร์'}สำเร็จ`);
+
+      // โหลดข้อมูลใหม่ตามระดับ
+      if (level === 'university') loadUniversityStrategies();
+      else if (level === 'campus') loadUniversityStrategies(); // campus ใช้ตาราง strategies เหมือนกัน
+      else if (level === 'division') loadDepartmentStrategies();
+      else if (level === 'dean') loadDeanStrategies();
+      loadSummary();
+
+    } catch {
+      errEl.textContent = 'เกิดข้อผิดพลาด ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+      errEl.classList.remove('hidden');
+    } finally {
+      submitBtn.textContent = 'บันทึก';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+
+  // ═══════════════════════════════════════════════
+  //  DELETE CONFIRMATION MODAL
+  // ═══════════════════════════════════════════════
+  let pendingDeleteId: number | null = null;
+  let pendingDeleteLevel: 'university' | 'division' | 'dean' | null = null;
+
+  function openDeleteConfirm(id: number, level: 'university' | 'division' | 'dean', name: string) {
+    pendingDeleteId = id;
+    pendingDeleteLevel = level;
+    document.getElementById('deleteConfirmName')!.textContent = name;
+    const el = document.getElementById('deleteConfirmModal')!;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+
+  function closeDeleteConfirm() {
+    pendingDeleteId = null;
+    pendingDeleteLevel = null;
+    const el = document.getElementById('deleteConfirmModal')!;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+  }
+
+  document.getElementById('deleteConfirmCancel')?.addEventListener('click', closeDeleteConfirm);
+  document.getElementById('deleteConfirmBackdrop')?.addEventListener('click', closeDeleteConfirm);
+
+  document.getElementById('deleteConfirmOk')?.addEventListener('click', async () => {
+    if (!pendingDeleteId || !pendingDeleteLevel) return;
+
+    const btn = document.getElementById('deleteConfirmOk')!;
+    btn.textContent = 'กำลังลบ...';
+    btn.setAttribute('disabled', 'true');
+
+    const token = localStorage.getItem('ku_access_token');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const endpointMap = {
+      university: `http://localhost:3000/api/strategies/${pendingDeleteId}`,
+      division:   `http://localhost:3000/api/strategies/departments/${pendingDeleteId}`,
+      dean:       `http://localhost:3000/api/strategies/dean/${pendingDeleteId}`,
+    };
+
+    const reloadMap = {
+      university: loadUniversityStrategies,
+      division:   loadDepartmentStrategies,
+      dean:       loadDeanStrategies,
+    };
+
+    try {
+      const res = await fetch(endpointMap[pendingDeleteLevel], { method: 'DELETE', headers });
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        (window as any).showToast(json.message ?? 'เกิดข้อผิดพลาด', 'error');
+        return;
+      }
+
+      const levelToReload = pendingDeleteLevel;
+      closeDeleteConfirm();
+      (window as any).showToast('ลบยุทธศาสตร์เรียบร้อย');
+      reloadMap[levelToReload]();
+      loadSummary();
+    } catch {
+      (window as any).showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+    } finally {
+      btn.textContent = 'ลบยุทธศาสตร์';
+      btn.removeAttribute('disabled');
+    }
+  });
+
+  // event delegation — delete buttons in accordions
+  document.getElementById('univAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.univ-delete-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    openDeleteConfirm(Number(btn.dataset.univDeleteId), 'university', btn.dataset.univDeleteName ?? '');
+  });
+
+  document.getElementById('deptAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.dept-delete-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    openDeleteConfirm(Number(btn.dataset.deptDeleteId), 'division', btn.dataset.deptDeleteName ?? '');
+  });
+
+  document.getElementById('deanAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.dean-delete-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    openDeleteConfirm(Number(btn.dataset.deanDeleteId), 'dean', btn.dataset.deanDeleteName ?? '');
+  });
+
+  // ═══════════════════════════════════════════════
+  //  FILTERS
+  // ═══════════════════════════════════════════════
+  document.getElementById('searchInput')?.addEventListener('input', renderAll);
+  document.getElementById('yearFilter')?.addEventListener('change', renderAll);
+  document.getElementById('statusFilter')?.addEventListener('change', renderAll);
+
+  // ═══════════════════════════════════════════════
+  //  TOKEN REFRESH HELPER
+  // ═══════════════════════════════════════════════
+  async function refreshAccessToken(): Promise<string | null> {
+    const refreshToken = localStorage.getItem('ku_refresh_token');
+    if (!refreshToken) return null;
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data.success || !data.accessToken) return null;
+      localStorage.setItem('ku_access_token', data.accessToken);
+      if (data.refreshToken) localStorage.setItem('ku_refresh_token', data.refreshToken);
+      return data.accessToken;
+    } catch {
+      return null;
+    }
+  }
+
+  // fetch wrapper: retry once with refreshed token on 401
+  async function apiFetch(url: string): Promise<Response | null> {
+    let token = localStorage.getItem('ku_access_token');
+    if (!token) return null;
+
+    let res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+
+    if (res.status === 401) {
+      token = await refreshAccessToken();
+      if (!token) {
+        window.location.replace('/login');
+        return null;
+      }
+      res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    }
+    return res;
+  }
+
+  // ═══════════════════════════════════════════════
+  //  SUMMARY STATS — ดึงข้อมูลจาก API
+  // ═══════════════════════════════════════════════
+  async function loadSummary() {
+    try {
+      const res = await apiFetch('http://localhost:3000/api/strategies/summary');
+      if (!res || !res.ok) return;
+
+      const data = await res.json();
+      if (!data.success) return;
+
+      // ระดับมหาวิทยาลัย
+      document.getElementById('statUnivStrategy')!.textContent =
+        `${data.university.strategyCount} ยุทธศาสตร์`;
+      document.getElementById('statUnivTactic')!.textContent =
+        `${data.university.tacticCount} กลยุทธ์`;
+
+      // ระดับวิทยาเขต
+      currentCampusName = data.campus.campusName ?? null;
+      const isBangkhen = !data.campus.campusName || data.campus.campusName === 'บางเขน';
+      const cardCampus = document.getElementById('cardCampus');
+      const tabCampus = document.querySelector('[data-tab="campus"]') as HTMLElement | null;
+
+      if (isBangkhen) {
+        // ผู้ใช้สังกัดบางเขน — ซ่อน card, tab และตัวเลือกใน add modal
+        cardCampus?.classList.add('hidden');
+        tabCampus?.classList.add('hidden');
+        const campusOption = document.querySelector('#addLevel option[value="campus"]') as HTMLOptionElement | null;
+        if (campusOption) campusOption.hidden = true;
+        // ถ้า active tab คือ campus ให้เปลี่ยนไป university
+        if (activeTab === 'campus') {
+          (document.querySelector('[data-tab="university"]') as HTMLElement)?.click();
+        }
+      } else {
+        cardCampus?.classList.remove('hidden');
+        tabCampus?.classList.remove('hidden');
+        document.getElementById('labelCampus')!.textContent =
+          `วิทยาเขต${data.campus.campusName}`;
+        document.getElementById('statCampusStrategy')!.textContent =
+          `${data.campus.strategyCount} ยุทธศาสตร์`;
+        document.getElementById('statCampusTactic')!.textContent =
+          `${data.campus.tacticCount} กลยุทธ์`;
+      }
+
+      // ระดับส่วนงาน
+      document.getElementById('statDivStrategy')!.textContent =
+        `${data.division.strategyCount} ยุทธศาสตร์`;
+      document.getElementById('statDivTactic')!.textContent =
+        `${data.division.tacticCount} กลยุทธ์`;
+
+      // ระดับคณบดีส่วนงาน
+      document.getElementById('statDeanStrategy')!.textContent =
+        `${data.dean.strategyCount} ยุทธศาสตร์`;
+      document.getElementById('statDeanTactic')!.textContent =
+        `${data.dean.tacticCount} กลยุทธ์`;
+
+    } catch {
+      // API ไม่ตอบสนอง — คงค่า — ไว้
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  //  UNIVERSITY STRATEGIES — ดึงจาก API + Accordion
+  // ═══════════════════════════════════════════════
+  interface Tactic {
+    id: number;
+    name: string;
+    orderSequence: number | null;
+  }
+  interface UnivStrategy {
+    id: number;
+    name: string;
+    orderList: number | null;
+    fiscalPlan?: string | null;
+    tactics: Tactic[];
+  }
+
+  function renderUnivAccordion(data: UnivStrategy[]) {
+    // เก็บข้อมูลลง store เพื่อใช้ใน modal
+    univStrategyStore.clear();
+    data.forEach(s => univStrategyStore.set(s.id, s));
+
+    const container = document.getElementById('univAccordion')!;
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="px-5 py-12 text-center text-sm text-gray-400">ไม่พบข้อมูลยุทธศาสตร์ระดับมหาวิทยาลัย</div>`;
+      return;
+    }
+
+    container.innerHTML = data.map((s, si) => {
+      const strategyNo = s.orderList ?? (si + 1);
+      const tacticCount = s.tactics.length;
+
+      const tacticRows = s.tactics.map((t, ti) => {
+        const tacticCode = `SO${strategyNo}.${t.orderSequence ?? (ti + 1)}`;
+        return `
+          <div class="flex items-start gap-3 py-2">
+            <span class="font-mono text-sm font-semibold text-[#0c2957] shrink-0 mt-0.5 min-w-[2.5rem]">${tacticCode}</span>
+            <span class="text-sm text-gray-400 shrink-0 mt-0.5">:</span>
+            <span class="text-sm text-gray-700 leading-relaxed">${t.name}</span>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="univ-strategy-item">
+          <!-- Strategy header row -->
+          <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/40 transition-colors">
+            <!-- Toggle area (click to expand) -->
+            <button type="button" class="flex items-start gap-3 flex-1 min-w-0 text-left"
+              onclick="toggleStrategy(this.closest('.univ-strategy-item'))">
+              <div class="w-7 h-7 rounded-lg bg-[#0c2957] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                ${strategyNo}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-[#0c2957] leading-snug">
+                  ยุทธศาสตร์ที่ ${strategyNo} : <span class="font-normal text-gray-800">${s.name}</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  ประกอบด้วย <span class="font-semibold text-[#006664]">${tacticCount}</span> กลยุทธ์
+                </p>
+              </div>
+            </button>
+            <!-- Actions -->
+            <div class="flex items-center gap-2 shrink-0 mt-0.5">
+              <button type="button"
+                data-univ-edit-id="${s.id}"
+                data-univ-edit-order="${strategyNo}"
+                data-univ-edit-name="${s.name.replace(/"/g, '&quot;')}"
+                class="univ-edit-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0c2957] border border-[#0c2957]/30 rounded-lg hover:bg-[#0c2957] hover:text-white transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                แก้ไข
+              </button>
+              <button type="button"
+                data-univ-delete-id="${s.id}"
+                data-univ-delete-name="${s.name.replace(/"/g, '&quot;')}"
+                class="univ-delete-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                ลบ
+              </button>
+              <svg class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 strategy-chevron cursor-pointer"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                onclick="toggleStrategy(this.closest('.univ-strategy-item'))">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Tactics list (collapsible) -->
+          <div class="strategy-tactics hidden px-5 pb-4 pl-16 space-y-0.5 border-t border-blue-50 bg-blue-50/20">
+            ${tacticCount > 0 ? tacticRows : '<p class="text-xs text-gray-400 py-2">ไม่มีกลยุทธ์ย่อย</p>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  (window as any).toggleStrategy = (item: HTMLElement) => {
+    const tactics = item.querySelector('.strategy-tactics') as HTMLElement;
+    const chevron = item.querySelector('.strategy-chevron') as HTMLElement;
+    const isHidden = tactics.classList.contains('hidden');
+    tactics.classList.toggle('hidden', !isHidden);
+    chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+  };
+
+  // ═══════════════════════════════════════════════
+  //  UNIVERSITY STRATEGY STORE (id → full data)
+  // ═══════════════════════════════════════════════
+  const univStrategyStore = new Map<number, UnivStrategy>();
+
+  // ═══════════════════════════════════════════════
+  //  UNIVERSITY EDIT MODAL
+  // ═══════════════════════════════════════════════
+  let deletedTacticIds: number[] = [];
+
+  function openUnivEditModal() {
+    const el = document.getElementById('univEditModal')!;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+  function closeUnivEditModal() {
+    const el = document.getElementById('univEditModal')!;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+    deletedTacticIds = [];
+    (document.getElementById('univEditForm') as HTMLFormElement).reset();
+    (document.getElementById('univEditTacticsList') as HTMLElement).innerHTML = '';
+    (document.getElementById('univEditError') as HTMLElement).classList.add('hidden');
+  }
+
+  function renderTacticRows(tactics: Tactic[], strategyNo: number) {
+    const list = document.getElementById('univEditTacticsList')!;
+    list.innerHTML = '';
+    tactics.forEach((t, ti) => {
+      const seq = t.orderSequence ?? (ti + 1);
+      const code = `SO${strategyNo}.${seq}`;
+      list.appendChild(makeTacticRow(t.id, seq, code, t.name));
+    });
+  }
+
+  function makeTacticRow(id: number | null, seq: number, code: string, name: string): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 group';
+    row.dataset.tacticId = id !== null ? String(id) : 'new';
+    row.innerHTML = `
+      <span class="font-mono text-xs font-semibold text-[#0c2957] shrink-0 w-14 text-right">${code}</span>
+      <span class="text-xs text-gray-400 shrink-0">:</span>
+      <input type="text" value="${name.replace(/"/g, '&quot;')}"
+        data-tactic-seq="${seq}"
+        class="tactic-name-input flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2957]/20 focus:border-[#0c2957]"
+        placeholder="ชื่อกลยุทธ์" />
+      <button type="button" title="ลบ"
+        class="tactic-delete-btn shrink-0 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>`;
+
+    row.querySelector('.tactic-delete-btn')!.addEventListener('click', () => {
+      if (id !== null) deletedTacticIds.push(id);
+      row.remove();
+      renumberTacticRows();
+    });
+    return row;
+  }
+
+  function renumberTacticRows() {
+    const strategyNo = Number((document.getElementById('univEditOrder') as HTMLInputElement).value) || 1;
+    document.querySelectorAll('#univEditTacticsList [data-tactic-id]').forEach((row, i) => {
+      const seq = i + 1;
+      const code = `SO${strategyNo}.${seq}`;
+      (row as HTMLElement).querySelector('span.font-mono')!.textContent = code;
+      const input = (row as HTMLElement).querySelector('input') as HTMLInputElement;
+      input.dataset.tacticSeq = String(seq);
+    });
+  }
+
+  // ใช้ event delegation บน univAccordion
+  document.getElementById('univAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.univ-edit-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    const id = Number(btn.dataset.univEditId);
+    const order = btn.dataset.univEditOrder!;
+    const name = btn.dataset.univEditName!;
+    const strategy = univStrategyStore.get(id);
+
+    deletedTacticIds = [];
+    (document.getElementById('univEditId') as HTMLInputElement).value = String(id);
+    (document.getElementById('univEditOrder') as HTMLInputElement).value = order;
+    (document.getElementById('univEditName') as HTMLTextAreaElement).value = name;
+    (document.getElementById('univEditFiscalPlan') as HTMLInputElement).value = strategy?.fiscalPlan ?? '';
+
+    if (strategy) {
+      renderTacticRows(strategy.tactics, Number(order));
+    }
+    openUnivEditModal();
+  });
+
+  // ปุ่มเพิ่มกลยุทธ์
+  document.getElementById('btnAddTactic')?.addEventListener('click', () => {
+    const strategyNo = Number((document.getElementById('univEditOrder') as HTMLInputElement).value) || 1;
+    const list = document.getElementById('univEditTacticsList')!;
+    const seq = list.children.length + 1;
+    const code = `SO${strategyNo}.${seq}`;
+    const row = makeTacticRow(null, seq, code, '');
+    list.appendChild(row);
+    (row.querySelector('.tactic-name-input') as HTMLInputElement)?.focus();
+  });
+
+  document.getElementById('univEditClose')?.addEventListener('click', closeUnivEditModal);
+  document.getElementById('univEditCancel')?.addEventListener('click', closeUnivEditModal);
+  document.getElementById('univEditBackdrop')?.addEventListener('click', closeUnivEditModal);
+
+  document.getElementById('univEditForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const strategyId = (document.getElementById('univEditId') as HTMLInputElement).value;
+    const name = (document.getElementById('univEditName') as HTMLTextAreaElement).value.trim();
+    const orderList = (document.getElementById('univEditOrder') as HTMLInputElement).value;
+    const fiscalPlan = (document.getElementById('univEditFiscalPlan') as HTMLInputElement).value || null;
+    const errEl = document.getElementById('univEditError')!;
+    const submitBtn = document.getElementById('univEditSubmit')!;
+
+    if (!name) {
+      errEl.textContent = 'กรุณาระบุชื่อยุทธศาสตร์';
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    submitBtn.textContent = 'กำลังบันทึก...';
+    submitBtn.setAttribute('disabled', 'true');
+    errEl.classList.add('hidden');
+
+    const token = localStorage.getItem('ku_access_token');
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+    try {
+      // 1. อัปเดตยุทธศาสตร์
+      const r1 = await fetch(`http://localhost:3000/api/strategies/${strategyId}`, {
+        method: 'PUT', headers,
+        body: JSON.stringify({ name, orderList: orderList ? Number(orderList) : null, fiscalPlan }),
+      });
+      const d1 = await r1.json();
+      if (!r1.ok || !d1.success) throw new Error(d1.message ?? 'บันทึกยุทธศาสตร์ไม่สำเร็จ');
+
+      // 2. ลบกลยุทธ์ที่ถูก mark ลบ
+      for (const tid of deletedTacticIds) {
+        await fetch(`http://localhost:3000/api/strategies/tactics/${tid}`, { method: 'DELETE', headers });
+      }
+
+      // 3. บันทึกกลยุทธ์ในรายการ (แก้ไข / เพิ่มใหม่)
+      const tacticRows = document.querySelectorAll('#univEditTacticsList [data-tactic-id]');
+      for (let i = 0; i < tacticRows.length; i++) {
+        const row = tacticRows[i] as HTMLElement;
+        const tid = row.dataset.tacticId!;
+        const input = row.querySelector('.tactic-name-input') as HTMLInputElement;
+        const tacticName = input.value.trim();
+        const seq = i + 1;
+        if (!tacticName) continue;
+
+        if (tid === 'new') {
+          await fetch(`http://localhost:3000/api/strategies/${strategyId}/tactics`, {
+            method: 'POST', headers,
+            body: JSON.stringify({ name: tacticName, orderSequence: seq }),
+          });
+        } else {
+          await fetch(`http://localhost:3000/api/strategies/tactics/${tid}`, {
+            method: 'PUT', headers,
+            body: JSON.stringify({ name: tacticName, orderSequence: seq }),
+          });
+        }
+      }
+
+      closeUnivEditModal();
+      loadUniversityStrategies();
+      (window as any).showToast('บันทึกการแก้ไขยุทธศาสตร์สำเร็จ');
+    } catch (err: any) {
+      errEl.textContent = err.message ?? 'เกิดข้อผิดพลาด ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+      errEl.classList.remove('hidden');
+    } finally {
+      submitBtn.textContent = 'บันทึก';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+
+  async function loadUniversityStrategies() {
+    try {
+      const res = await apiFetch('http://localhost:3000/api/strategies/university');
+      if (!res || !res.ok) return;
+      const json = await res.json();
+      if (!json.success) return;
+
+      // ลบ loading indicator
+      document.getElementById('univLoading')?.remove();
+      renderUnivAccordion(json.data as UnivStrategy[]);
+    } catch {
+      document.getElementById('univLoading')!.innerHTML =
+        '<p class="text-sm text-red-400 py-4 text-center">โหลดข้อมูลไม่สำเร็จ</p>';
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  //  DEPARTMENT STRATEGIES — ดึงจาก API + Accordion
+  // ═══════════════════════════════════════════════
+  interface DeptTactic {
+    id: number;
+    name: string;
+    order: number | null;
+  }
+  interface DeptStrategy {
+    id: number;
+    name: string;
+    year: number | null;
+    fiscalPlan?: string | null;
+    tactics: DeptTactic[];
+  }
+
+  const deptStrategyStore = new Map<number, DeptStrategy>();
+
+  function renderDeptAccordion(data: DeptStrategy[]) {
+    deptStrategyStore.clear();
+    data.forEach(s => deptStrategyStore.set(s.id, s));
+
+    const container = document.getElementById('deptAccordion')!;
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="px-5 py-12 text-center text-sm text-gray-400">ไม่พบข้อมูลยุทธศาสตร์ระดับส่วนงาน</div>`;
+      return;
+    }
+
+    container.innerHTML = data.map((s, si) => {
+      const strategyNo = si + 1;
+      const tacticCount = s.tactics.length;
+
+      const tacticRows = s.tactics.map((t, ti) => {
+        const tacticCode = `SD${strategyNo}.${t.order ?? (ti + 1)}`;
+        return `
+          <div class="flex items-start gap-3 py-2">
+            <span class="font-mono text-sm font-semibold text-[#7d8416] shrink-0 mt-0.5 min-w-[2.5rem]">${tacticCode}</span>
+            <span class="text-sm text-gray-400 shrink-0 mt-0.5">:</span>
+            <span class="text-sm text-gray-700 leading-relaxed">${t.name}</span>
+          </div>`;
+      }).join('');
+
+      const yearLabel = s.year ? `ปีงบ ${s.year}` : '';
+      const fiscalLabel = s.fiscalPlan ? `แผน ${s.fiscalPlan}` : '';
+      const metaLabel = [yearLabel, fiscalLabel].filter(Boolean).join(' · ');
+
+      return `
+        <div class="dept-strategy-item">
+          <!-- Strategy header row -->
+          <div class="flex items-start gap-3 px-5 py-4 hover:bg-yellow-50/40 transition-colors">
+            <!-- Toggle area -->
+            <button type="button" class="flex items-start gap-3 flex-1 min-w-0 text-left"
+              onclick="toggleDeptStrategy(this.closest('.dept-strategy-item'))">
+              <div class="w-7 h-7 rounded-lg bg-[#b2bb1e] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                ${strategyNo}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-[#7d8416] leading-snug">
+                  ยุทธศาสตร์ที่ ${strategyNo} : <span class="font-normal text-gray-800">${s.name}</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  ประกอบด้วย <span class="font-semibold text-[#b2bb1e]">${tacticCount}</span> กลยุทธ์${metaLabel ? ` · ${metaLabel}` : ''}
+                </p>
+              </div>
+            </button>
+            <!-- Actions -->
+            <div class="flex items-center gap-2 shrink-0 mt-0.5">
+              <button type="button"
+                data-dept-edit-id="${s.id}"
+                data-dept-edit-order="${strategyNo}"
+                class="dept-edit-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#7d8416] border border-[#7d8416]/30 rounded-lg hover:bg-[#b2bb1e] hover:text-white hover:border-[#b2bb1e] transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                แก้ไข
+              </button>
+              <button type="button"
+                data-dept-delete-id="${s.id}"
+                data-dept-delete-name="${s.name.replace(/"/g, '&quot;')}"
+                class="dept-delete-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                ลบ
+              </button>
+              <svg class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 dept-strategy-chevron cursor-pointer"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                onclick="toggleDeptStrategy(this.closest('.dept-strategy-item'))">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Tactics list (collapsible) -->
+          <div class="dept-strategy-tactics hidden px-5 pb-4 pl-16 space-y-0.5 border-t border-yellow-50 bg-yellow-50/20">
+            ${tacticCount > 0 ? tacticRows : '<p class="text-xs text-gray-400 py-2">ไม่มีกลยุทธ์ย่อย</p>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  (window as any).toggleDeptStrategy = (item: HTMLElement) => {
+    const tactics = item.querySelector('.dept-strategy-tactics') as HTMLElement;
+    const chevron = item.querySelector('.dept-strategy-chevron') as HTMLElement;
+    const isHidden = tactics.classList.contains('hidden');
+    tactics.classList.toggle('hidden', !isHidden);
+    chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+  };
+
+  // ═══════════════════════════════════════════════
+  //  DEPARTMENT EDIT MODAL
+  // ═══════════════════════════════════════════════
+  let deletedDeptTacticIds: number[] = [];
+
+  function openDeptEditModal() {
+    const el = document.getElementById('deptEditModal')!;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+  function closeDeptEditModal() {
+    const el = document.getElementById('deptEditModal')!;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+    deletedDeptTacticIds = [];
+    (document.getElementById('deptEditForm') as HTMLFormElement).reset();
+    (document.getElementById('deptEditTacticsList') as HTMLElement).innerHTML = '';
+    (document.getElementById('deptEditError') as HTMLElement).classList.add('hidden');
+  }
+
+  function renderDeptTacticRows(tactics: DeptTactic[], strategyNo: number) {
+    const list = document.getElementById('deptEditTacticsList')!;
+    list.innerHTML = '';
+    tactics.forEach((t, ti) => {
+      const seq = t.order ?? (ti + 1);
+      const code = `SD${strategyNo}.${seq}`;
+      list.appendChild(makeDeptTacticRow(t.id, seq, code, t.name));
+    });
+  }
+
+  function makeDeptTacticRow(id: number | null, seq: number, code: string, name: string): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 group';
+    row.dataset.deptTacticId = id !== null ? String(id) : 'new';
+    row.innerHTML = `
+      <span class="font-mono text-xs font-semibold text-[#7d8416] shrink-0 w-14 text-right">${code}</span>
+      <span class="text-xs text-gray-400 shrink-0">:</span>
+      <input type="text" value="${name.replace(/"/g, '&quot;')}"
+        data-tactic-seq="${seq}"
+        class="dept-tactic-name-input flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b2bb1e]/30 focus:border-[#b2bb1e]"
+        placeholder="ชื่อกลยุทธ์" />
+      <button type="button" title="ลบ"
+        class="dept-tactic-delete-btn shrink-0 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>`;
+
+    row.querySelector('.dept-tactic-delete-btn')!.addEventListener('click', () => {
+      if (id !== null) deletedDeptTacticIds.push(id);
+      row.remove();
+      renumberDeptTacticRows();
+    });
+    return row;
+  }
+
+  function renumberDeptTacticRows() {
+    const strategyNo = Number((document.getElementById('deptEditOrder') as HTMLInputElement).value) || 1;
+    document.querySelectorAll('#deptEditTacticsList [data-dept-tactic-id]').forEach((row, i) => {
+      const seq = i + 1;
+      const code = `SD${strategyNo}.${seq}`;
+      (row as HTMLElement).querySelector('span.font-mono')!.textContent = code;
+      const input = (row as HTMLElement).querySelector('input') as HTMLInputElement;
+      input.dataset.tacticSeq = String(seq);
+    });
+  }
+
+  // event delegation บน deptAccordion
+  document.getElementById('deptAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.dept-edit-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    const id = Number(btn.dataset.deptEditId);
+    const order = btn.dataset.deptEditOrder!;
+    const strategy = deptStrategyStore.get(id);
+    if (!strategy) return;
+
+    deletedDeptTacticIds = [];
+    (document.getElementById('deptEditId') as HTMLInputElement).value = String(id);
+    (document.getElementById('deptEditOrder') as HTMLInputElement).value = order;
+    (document.getElementById('deptEditName') as HTMLTextAreaElement).value = strategy.name;
+    (document.getElementById('deptEditYear') as HTMLInputElement).value = strategy.year ? String(strategy.year) : '';
+    (document.getElementById('deptEditFiscalPlan') as HTMLInputElement).value = strategy.fiscalPlan ?? '';
+
+    renderDeptTacticRows(strategy.tactics, Number(order));
+    openDeptEditModal();
+  });
+
+  // ปุ่มเพิ่มกลยุทธ์
+  document.getElementById('btnAddDeptTactic')?.addEventListener('click', () => {
+    const strategyNo = Number((document.getElementById('deptEditOrder') as HTMLInputElement).value) || 1;
+    const list = document.getElementById('deptEditTacticsList')!;
+    const seq = list.children.length + 1;
+    const code = `SD${strategyNo}.${seq}`;
+    const row = makeDeptTacticRow(null, seq, code, '');
+    list.appendChild(row);
+    (row.querySelector('.dept-tactic-name-input') as HTMLInputElement)?.focus();
+  });
+
+  document.getElementById('deptEditClose')?.addEventListener('click', closeDeptEditModal);
+  document.getElementById('deptEditCancel')?.addEventListener('click', closeDeptEditModal);
+  document.getElementById('deptEditBackdrop')?.addEventListener('click', closeDeptEditModal);
+
+  document.getElementById('deptEditForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const strategyId = (document.getElementById('deptEditId') as HTMLInputElement).value;
+    const name = (document.getElementById('deptEditName') as HTMLTextAreaElement).value.trim();
+    const yearVal = (document.getElementById('deptEditYear') as HTMLInputElement).value;
+    const fiscalPlan = (document.getElementById('deptEditFiscalPlan') as HTMLInputElement).value || null;
+    const errEl = document.getElementById('deptEditError')!;
+    const submitBtn = document.getElementById('deptEditSubmit')!;
+
+    if (!name) {
+      errEl.textContent = 'กรุณาระบุชื่อยุทธศาสตร์';
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    submitBtn.textContent = 'กำลังบันทึก...';
+    submitBtn.setAttribute('disabled', 'true');
+    errEl.classList.add('hidden');
+
+    const token = localStorage.getItem('ku_access_token');
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+    try {
+      // 1. อัปเดตยุทธศาสตร์ส่วนงาน
+      const r1 = await fetch(`http://localhost:3000/api/strategies/departments/${strategyId}`, {
+        method: 'PUT', headers,
+        body: JSON.stringify({
+          name,
+          fiscalPlan,
+          year: yearVal ? Number(yearVal) : null,
+        }),
+      });
+      const d1 = await r1.json();
+      if (!r1.ok || !d1.success) throw new Error(d1.message ?? 'บันทึกยุทธศาสตร์ไม่สำเร็จ');
+
+      // 2. ลบกลยุทธ์ที่ถูก mark ลบ
+      for (const tid of deletedDeptTacticIds) {
+        await fetch(`http://localhost:3000/api/strategies/department-tactics/${tid}`, { method: 'DELETE', headers });
+      }
+
+      // 3. บันทึกกลยุทธ์ในรายการ (แก้ไข / เพิ่มใหม่)
+      const tacticRows = document.querySelectorAll('#deptEditTacticsList [data-dept-tactic-id]');
+      for (let i = 0; i < tacticRows.length; i++) {
+        const row = tacticRows[i] as HTMLElement;
+        const tid = row.dataset.deptTacticId!;
+        const input = row.querySelector('.dept-tactic-name-input') as HTMLInputElement;
+        const tacticName = input.value.trim();
+        const seq = i + 1;
+        if (!tacticName) continue;
+
+        if (tid === 'new') {
+          await fetch(`http://localhost:3000/api/strategies/departments/${strategyId}/tactics`, {
+            method: 'POST', headers,
+            body: JSON.stringify({ name: tacticName, order: seq }),
+          });
+        } else {
+          await fetch(`http://localhost:3000/api/strategies/department-tactics/${tid}`, {
+            method: 'PUT', headers,
+            body: JSON.stringify({ name: tacticName, order: seq }),
+          });
+        }
+      }
+
+      closeDeptEditModal();
+      loadDepartmentStrategies();
+      (window as any).showToast('บันทึกการแก้ไขยุทธศาสตร์ระดับส่วนงานสำเร็จ');
+    } catch (err: any) {
+      errEl.textContent = err.message ?? 'เกิดข้อผิดพลาด ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+      errEl.classList.remove('hidden');
+    } finally {
+      submitBtn.textContent = 'บันทึกการแก้ไข';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+
+  async function loadDepartmentStrategies() {
+    try {
+      const res = await apiFetch('http://localhost:3000/api/strategies/departments');
+      if (!res || !res.ok) return;
+      const json = await res.json();
+      if (!json.success) return;
+
+      document.getElementById('deptLoading')?.remove();
+      renderDeptAccordion(json.data as DeptStrategy[]);
+    } catch {
+      const loadingEl = document.getElementById('deptLoading');
+      if (loadingEl) loadingEl.innerHTML =
+        '<p class="text-sm text-red-400 py-4 text-center">โหลดข้อมูลไม่สำเร็จ</p>';
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  //  DEAN STRATEGIES — ดึงจาก API + Accordion
+  // ═══════════════════════════════════════════════
+  interface DeanTactic {
+    id: number;
+    name: string;
+    order: number | null;
+  }
+  interface DeanStrategy {
+    id: number;
+    name: string;
+    year: number | null;
+    fiscalPlan?: string | null;
+    tactics: DeanTactic[];
+  }
+
+  const deanStrategyStore = new Map<number, DeanStrategy>();
+
+  function renderDeanAccordion(data: DeanStrategy[]) {
+    deanStrategyStore.clear();
+    data.forEach(s => deanStrategyStore.set(s.id, s));
+
+    const container = document.getElementById('deanAccordion')!;
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="px-5 py-12 text-center text-sm text-gray-400">ไม่พบข้อมูลยุทธศาสตร์ระดับคณบดีส่วนงาน</div>`;
+      return;
+    }
+
+    container.innerHTML = data.map((s, si) => {
+      const strategyNo = si + 1;
+      const tacticCount = s.tactics.length;
+
+      const tacticRows = s.tactics.map((t, ti) => {
+        const tacticCode = `CD${strategyNo}.${t.order ?? (ti + 1)}`;
+        return `
+          <div class="flex items-start gap-3 py-2">
+            <span class="font-mono text-sm font-semibold text-[#9d174d] shrink-0 mt-0.5 min-w-[2.5rem]">${tacticCode}</span>
+            <span class="text-sm text-gray-400 shrink-0 mt-0.5">:</span>
+            <span class="text-sm text-gray-700 leading-relaxed">${t.name}</span>
+          </div>`;
+      }).join('');
+
+      const yearLabel = s.year ? `ปีงบ ${s.year}` : '';
+      const fiscalLabel = s.fiscalPlan ? `แผน ${s.fiscalPlan}` : '';
+      const metaLabel = [yearLabel, fiscalLabel].filter(Boolean).join(' · ');
+
+      return `
+        <div class="dean-strategy-item">
+          <!-- Strategy header row -->
+          <div class="flex items-start gap-3 px-5 py-4 hover:bg-pink-50/40 transition-colors">
+            <!-- Toggle area -->
+            <button type="button" class="flex items-start gap-3 flex-1 min-w-0 text-left"
+              onclick="toggleDeanStrategy(this.closest('.dean-strategy-item'))">
+              <div class="w-7 h-7 rounded-lg bg-[#9d174d] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                ${strategyNo}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-[#9d174d] leading-snug">
+                  ยุทธศาสตร์ที่ ${strategyNo} : <span class="font-normal text-gray-800">${s.name}</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  ประกอบด้วย <span class="font-semibold text-[#9d174d]">${tacticCount}</span> กลยุทธ์${metaLabel ? ` · ${metaLabel}` : ''}
+                </p>
+              </div>
+            </button>
+            <!-- Actions -->
+            <div class="flex items-center gap-2 shrink-0 mt-0.5">
+              <button type="button"
+                data-dean-edit-id="${s.id}"
+                data-dean-edit-order="${strategyNo}"
+                class="dean-edit-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#9d174d] border border-[#9d174d]/30 rounded-lg hover:bg-[#9d174d] hover:text-white hover:border-[#9d174d] transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                แก้ไข
+              </button>
+              <button type="button"
+                data-dean-delete-id="${s.id}"
+                data-dean-delete-name="${s.name.replace(/"/g, '&quot;')}"
+                class="dean-delete-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                ลบ
+              </button>
+              <svg class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 dean-strategy-chevron cursor-pointer"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                onclick="toggleDeanStrategy(this.closest('.dean-strategy-item'))">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Tactics list (collapsible) -->
+          <div class="dean-strategy-tactics hidden px-5 pb-4 pl-16 space-y-0.5 border-t border-pink-50 bg-pink-50/20">
+            ${tacticCount > 0 ? tacticRows : '<p class="text-xs text-gray-400 py-2">ไม่มีกลยุทธ์ย่อย</p>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  (window as any).toggleDeanStrategy = (item: HTMLElement) => {
+    const tactics = item.querySelector('.dean-strategy-tactics') as HTMLElement;
+    const chevron = item.querySelector('.dean-strategy-chevron') as HTMLElement;
+    const isHidden = tactics.classList.contains('hidden');
+    tactics.classList.toggle('hidden', !isHidden);
+    chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+  };
+
+  // ═══════════════════════════════════════════════
+  //  DEAN EDIT MODAL
+  // ═══════════════════════════════════════════════
+  let deletedDeanTacticIds: number[] = [];
+
+  function openDeanEditModal() {
+    const el = document.getElementById('deanEditModal')!;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+  function closeDeanEditModal() {
+    const el = document.getElementById('deanEditModal')!;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+    deletedDeanTacticIds = [];
+    (document.getElementById('deanEditForm') as HTMLFormElement).reset();
+    (document.getElementById('deanEditTacticsList') as HTMLElement).innerHTML = '';
+    (document.getElementById('deanEditError') as HTMLElement).classList.add('hidden');
+  }
+
+  function renderDeanTacticRows(tactics: DeanTactic[], strategyNo: number) {
+    const list = document.getElementById('deanEditTacticsList')!;
+    list.innerHTML = '';
+    tactics.forEach((t, ti) => {
+      const seq = t.order ?? (ti + 1);
+      const code = `CD${strategyNo}.${seq}`;
+      list.appendChild(makeDeanTacticRow(t.id, seq, code, t.name));
+    });
+  }
+
+  function makeDeanTacticRow(id: number | null, seq: number, code: string, name: string): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 group';
+    row.dataset.deanTacticId = id !== null ? String(id) : 'new';
+    row.innerHTML = `
+      <span class="font-mono text-xs font-semibold text-[#9d174d] shrink-0 w-14 text-right">${code}</span>
+      <span class="text-xs text-gray-400 shrink-0">:</span>
+      <input type="text" value="${name.replace(/"/g, '&quot;')}"
+        data-tactic-seq="${seq}"
+        class="dean-tactic-name-input flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#9d174d]/30 focus:border-[#9d174d]"
+        placeholder="ชื่อกลยุทธ์" />
+      <button type="button" title="ลบ"
+        class="dean-tactic-delete-btn shrink-0 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>`;
+
+    row.querySelector('.dean-tactic-delete-btn')!.addEventListener('click', () => {
+      if (id !== null) deletedDeanTacticIds.push(id);
+      row.remove();
+      renumberDeanTacticRows();
+    });
+    return row;
+  }
+
+  function renumberDeanTacticRows() {
+    const strategyNo = Number((document.getElementById('deanEditOrder') as HTMLInputElement).value) || 1;
+    document.querySelectorAll('#deanEditTacticsList [data-dean-tactic-id]').forEach((row, i) => {
+      const seq = i + 1;
+      const code = `CD${strategyNo}.${seq}`;
+      (row as HTMLElement).querySelector('span.font-mono')!.textContent = code;
+      const input = (row as HTMLElement).querySelector('input') as HTMLInputElement;
+      input.dataset.tacticSeq = String(seq);
+    });
+  }
+
+  // event delegation บน deanAccordion
+  document.getElementById('deanAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.dean-edit-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    const id = Number(btn.dataset.deanEditId);
+    const order = btn.dataset.deanEditOrder!;
+    const strategy = deanStrategyStore.get(id);
+    if (!strategy) return;
+
+    deletedDeanTacticIds = [];
+    (document.getElementById('deanEditId') as HTMLInputElement).value = String(id);
+    (document.getElementById('deanEditOrder') as HTMLInputElement).value = order;
+    (document.getElementById('deanEditName') as HTMLTextAreaElement).value = strategy.name;
+    (document.getElementById('deanEditYear') as HTMLInputElement).value = strategy.year ? String(strategy.year) : '';
+    (document.getElementById('deanEditFiscalPlan') as HTMLInputElement).value = strategy.fiscalPlan ?? '';
+
+    renderDeanTacticRows(strategy.tactics, Number(order));
+    openDeanEditModal();
+  });
+
+  // ปุ่มเพิ่มกลยุทธ์
+  document.getElementById('btnAddDeanTactic')?.addEventListener('click', () => {
+    const strategyNo = Number((document.getElementById('deanEditOrder') as HTMLInputElement).value) || 1;
+    const list = document.getElementById('deanEditTacticsList')!;
+    const seq = list.children.length + 1;
+    const code = `CD${strategyNo}.${seq}`;
+    const row = makeDeanTacticRow(null, seq, code, '');
+    list.appendChild(row);
+    (row.querySelector('.dean-tactic-name-input') as HTMLInputElement)?.focus();
+  });
+
+  document.getElementById('deanEditClose')?.addEventListener('click', closeDeanEditModal);
+  document.getElementById('deanEditCancel')?.addEventListener('click', closeDeanEditModal);
+  document.getElementById('deanEditBackdrop')?.addEventListener('click', closeDeanEditModal);
+
+  document.getElementById('deanEditForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const strategyId = (document.getElementById('deanEditId') as HTMLInputElement).value;
+    const name = (document.getElementById('deanEditName') as HTMLTextAreaElement).value.trim();
+    const yearVal = (document.getElementById('deanEditYear') as HTMLInputElement).value;
+    const fiscalPlan = (document.getElementById('deanEditFiscalPlan') as HTMLInputElement).value || null;
+    const errEl = document.getElementById('deanEditError')!;
+    const submitBtn = document.getElementById('deanEditSubmit')!;
+
+    if (!name) {
+      errEl.textContent = 'กรุณาระบุชื่อยุทธศาสตร์';
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    submitBtn.textContent = 'กำลังบันทึก...';
+    submitBtn.setAttribute('disabled', 'true');
+    errEl.classList.add('hidden');
+
+    const token = localStorage.getItem('ku_access_token');
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+    try {
+      // 1. อัปเดตยุทธศาสตร์คณบดี
+      const r1 = await fetch(`http://localhost:3000/api/strategies/dean/${strategyId}`, {
+        method: 'PUT', headers,
+        body: JSON.stringify({
+          name,
+          fiscalPlan,
+          year: yearVal ? Number(yearVal) : null,
+        }),
+      });
+      const d1 = await r1.json();
+      if (!r1.ok || !d1.success) throw new Error(d1.message ?? 'บันทึกยุทธศาสตร์ไม่สำเร็จ');
+
+      // 2. ลบกลยุทธ์ที่ถูก mark ลบ
+      for (const tid of deletedDeanTacticIds) {
+        await fetch(`http://localhost:3000/api/strategies/dean-tactics/${tid}`, { method: 'DELETE', headers });
+      }
+
+      // 3. บันทึกกลยุทธ์ในรายการ (แก้ไข / เพิ่มใหม่)
+      const tacticRows = document.querySelectorAll('#deanEditTacticsList [data-dean-tactic-id]');
+      for (let i = 0; i < tacticRows.length; i++) {
+        const row = tacticRows[i] as HTMLElement;
+        const tid = row.dataset.deanTacticId!;
+        const input = row.querySelector('.dean-tactic-name-input') as HTMLInputElement;
+        const tacticName = input.value.trim();
+        const seq = i + 1;
+        if (!tacticName) continue;
+
+        if (tid === 'new') {
+          await fetch(`http://localhost:3000/api/strategies/dean/${strategyId}/tactics`, {
+            method: 'POST', headers,
+            body: JSON.stringify({ name: tacticName, order: seq }),
+          });
+        } else {
+          await fetch(`http://localhost:3000/api/strategies/dean-tactics/${tid}`, {
+            method: 'PUT', headers,
+            body: JSON.stringify({ name: tacticName, order: seq }),
+          });
+        }
+      }
+
+      closeDeanEditModal();
+      loadDeanStrategies();
+      (window as any).showToast('บันทึกการแก้ไขยุทธศาสตร์ระดับคณบดีสำเร็จ');
+    } catch (err: any) {
+      errEl.textContent = err.message ?? 'เกิดข้อผิดพลาด ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+      errEl.classList.remove('hidden');
+    } finally {
+      submitBtn.textContent = 'บันทึกการแก้ไข';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+
+  async function loadDeanStrategies() {
+    try {
+      const res = await apiFetch('http://localhost:3000/api/strategies/dean');
+      if (!res || !res.ok) return;
+      const json = await res.json();
+      if (!json.success) return;
+
+      document.getElementById('deanLoading')?.remove();
+      renderDeanAccordion(json.data as DeanStrategy[]);
+    } catch {
+      const loadingEl = document.getElementById('deanLoading');
+      if (loadingEl) loadingEl.innerHTML =
+        '<p class="text-sm text-red-400 py-4 text-center">โหลดข้อมูลไม่สำเร็จ</p>';
+    }
+  }
+
+  // Initial render
+  renderAll();
+  loadSummary();
+  loadUniversityStrategies();
+  loadDepartmentStrategies();
+  loadDeanStrategies();
+</script>

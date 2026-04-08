@@ -1,0 +1,699 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="การบำรุงรักษาระบบ">
+
+  <!-- Page Header -->
+  <div class="relative rounded-sm mb-5 overflow-hidden shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #431a00 60%, #7c2d00 100%);">
+    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #ea580c, #f97316, #fdba74);"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(251,146,60,0.12) 0%, transparent 65%);"></div>
+    <div class="relative z-10 px-4 sm:px-5 py-4 pt-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+             style="background: rgba(251,146,60,0.2); border: 1px solid rgba(251,146,60,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-orange-300" viewBox="0 0 16 16">
+            <g fill="currentColor">
+              <path d="M12.496 8a4.5 4.5 0 0 1-1.703 3.526L9.497 8.5l2.959-1.11q.04.3.04.61"/>
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-1 0a7 7 0 1 0-13.202 3.249l1.988-1.657a4.5 4.5 0 0 1 7.537-4.623L7.497 6.5l1 2.5l1.333 3.11c-.56.251-1.18.39-1.833.39a4.5 4.5 0 0 1-1.592-.29L4.747 14.2A7 7 0 0 0 15 8m-8.295.139a.25.25 0 0 0-.288-.376l-1.5.5l.159.474l.808-.27l-.595.894a.25.25 0 0 0 .287.376l.808-.27l-.595.894a.25.25 0 0 0 .287.376l1.5-.5l-.159-.474l-.808.27l.596-.894a.25.25 0 0 0-.288-.376l-.808.27z"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-white text-base sm:text-lg font-semibold">การบำรุงรักษาระบบ</h1>
+          <p class="text-white/80 text-sm mt-0.5">จัดการประกาศ ตรวจสอบฐานข้อมูล และบำรุงรักษาระบบ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access Denied -->
+  <div id="accessDenied" class="hidden bg-red-50 border border-red-200 rounded-lg p-6 text-center mb-6">
+    <svg class="w-12 h-12 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    <p class="text-red-700 font-semibold">ไม่มีสิทธิ์เข้าถึงหน้านี้</p>
+    <p class="text-red-500 text-sm mt-1">เฉพาะ super_admin และ org_admin เท่านั้น</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" class="hidden space-y-6">
+
+    <!-- ══════════════════════════════════════
+         ROW 1: DB Status + DB Tables
+    ══════════════════════════════════════ -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <!-- DB Connection Status -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-[#0a1f3d]">สถานะการเชื่อมต่อฐานข้อมูล</h3>
+            <p class="text-xs text-gray-500">Database Connection Status</p>
+          </div>
+        </div>
+
+        <div id="dbStatusLoading" class="flex items-center gap-2 text-sm text-gray-400 py-2">
+          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+          กำลังตรวจสอบ...
+        </div>
+
+        <div id="dbStatusResult" class="hidden">
+          <div class="flex items-center gap-2 mb-3">
+            <div id="dbStatusDot" class="w-3 h-3 rounded-full"></div>
+            <span id="dbStatusText" class="text-sm font-semibold"></span>
+          </div>
+          <div class="text-xs text-gray-500 space-y-1">
+            <div class="flex justify-between"><span>Host:</span><span id="dbHost" class="font-mono text-gray-700"></span></div>
+            <div class="flex justify-between"><span>Database:</span><span id="dbName" class="font-mono text-gray-700"></span></div>
+            <div class="flex justify-between"><span>ตรวจสอบเมื่อ:</span><span id="dbCheckedAt" class="text-gray-700"></span></div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <button onclick="checkDbStatus()" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            ตรวจสอบอีกครั้ง
+          </button>
+        </div>
+      </div>
+
+      <!-- DB Tables Count -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 4v16M3 4h18a1 1 0 011 1v14a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-[#0a1f3d]">ตารางในฐานข้อมูล</h3>
+            <p class="text-xs text-gray-500">Database Tables</p>
+          </div>
+          <div id="dbTableCount" class="ml-auto text-3xl font-bold text-[#0a1f3d] hidden">—</div>
+        </div>
+
+        <div id="dbTablesLoading" class="flex items-center gap-2 text-sm text-gray-400 py-2">
+          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+          กำลังโหลด...
+        </div>
+
+        <div id="dbTablesList" class="hidden">
+          <div class="max-h-40 overflow-y-auto">
+            <table class="w-full text-xs">
+              <thead class="sticky top-0 bg-white">
+                <tr class="text-gray-500 border-b border-gray-100">
+                  <th class="text-left py-1 pr-2">ตาราง</th>
+                  <th class="text-right py-1 pr-2">แถว</th>
+                  <th class="text-right py-1">ขนาด (KB)</th>
+                </tr>
+              </thead>
+              <tbody id="dbTablesBody" class="divide-y divide-gray-50"></tbody>
+            </table>
+          </div>
+          <div class="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
+            <span class="text-gray-500">ขนาดรวมทั้งหมด</span>
+            <span id="dbTotalSize" class="font-semibold text-purple-700"></span>
+          </div>
+        </div>
+
+        <div id="dbTablesNoAccess" class="hidden text-xs text-gray-400 text-center py-4">
+          <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          เฉพาะ super_admin เท่านั้น
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         ROW 2+3: ประกาศ + เครื่องมือ (2 คอลัมน์บน desktop)
+    ══════════════════════════════════════ -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+
+    <!-- จัดการประกาศ -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-[#0f2d5e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+          <h3 class="text-sm font-semibold text-[#0a1f3d]">จัดการประกาศสำคัญ</h3>
+        </div>
+        <button onclick="openAnnouncementForm()"
+                class="flex items-center gap-1.5 px-3 py-1.5 bg-[#0f2d5e] text-white text-xs font-medium rounded-lg hover:bg-[#0a1f3d] transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          สร้างประกาศ
+        </button>
+      </div>
+
+      <!-- Announcement Form (hidden by default) -->
+      <div id="announcementForm" class="hidden px-5 py-4 bg-gray-50 border-b border-gray-100">
+        <h4 class="text-sm font-semibold text-[#0a1f3d] mb-3" id="formTitle">สร้างประกาศใหม่</h4>
+        <input type="hidden" id="editingId" value="">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">หัวเรื่องประกาศ <span class="text-red-500">*</span></label>
+            <input id="annTitle" type="text" placeholder="กรอกหัวเรื่องประกาศ..."
+                   class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#0f2d5e] focus:ring-1 focus:ring-[#0f2d5e]/20">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">รายละเอียด <span class="text-red-500">*</span></label>
+            <textarea id="annContent" rows="3" placeholder="กรอกรายละเอียดประกาศ..."
+                      class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#0f2d5e] focus:ring-1 focus:ring-[#0f2d5e]/20 resize-none"></textarea>
+          </div>
+          <div class="flex gap-3">
+            <div class="flex-none">
+              <label class="block text-xs font-medium text-gray-600 mb-1">ประเภท</label>
+              <div class="relative inline-block">
+                <select id="annType" class="appearance-none border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-[#0f2d5e] bg-white cursor-pointer">
+                  <option value="info">ข้อมูลทั่วไป (Info)</option>
+                  <option value="warning">แจ้งเตือน (Warning)</option>
+                  <option value="success">สำเร็จ (Success)</option>
+                  <option value="danger">สำคัญ/ด่วน (Danger)</option>
+                </select>
+                <svg class="pointer-events-none absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" style="right:6px"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+            </div>
+            <div class="flex items-end gap-2 pb-0.5">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <div class="relative">
+                  <input type="checkbox" id="annPinned" class="sr-only peer">
+                  <div class="w-9 h-5 bg-gray-200 rounded-full peer-checked:bg-[#0f2d5e] transition-colors"></div>
+                  <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4"></div>
+                </div>
+                <span class="text-xs text-gray-600">ปักหมุด</span>
+              </label>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="saveAnnouncement()"
+                    class="px-4 py-2 bg-[#0f2d5e] text-white text-xs font-medium rounded-lg hover:bg-[#0a1f3d] transition-colors">
+              บันทึก
+            </button>
+            <button onclick="closeAnnouncementForm()"
+                    class="px-4 py-2 bg-gray-100 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors">
+              ยกเลิก
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Announcements List -->
+      <div id="annLoading" class="p-8 text-center text-sm text-gray-400">
+        <svg class="w-5 h-5 animate-spin mx-auto mb-2" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        กำลังโหลด...
+      </div>
+      <div id="annEmpty" class="hidden p-8 text-center">
+        <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500">ยังไม่มีประกาศ</p>
+        <p class="text-xs text-gray-400 mt-1">คลิก "สร้างประกาศ" เพื่อเพิ่มประกาศแรก</p>
+      </div>
+      <ul id="annList" class="hidden divide-y divide-gray-50"></ul>
+    </div>
+
+    <!-- เครื่องมือบำรุงรักษา -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-100">
+        <svg class="w-5 h-5 text-[#0f2d5e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <h3 class="text-sm font-semibold text-[#0a1f3d]">เครื่องมือบำรุงรักษา</h3>
+      </div>
+      <div class="p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+
+        <!-- ไปยังหน้าตั้งค่า -->
+        <a href="/settings"
+           class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-[#0f2d5e]/30 hover:bg-blue-50/50 transition-all group text-center no-underline">
+          <div class="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600" viewBox="0 0 14 14">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x=".5" y=".5" rx="1" transform="rotate(-90 7 7)"/><path d="M4.5 11V6"/><circle cx="4.5" cy="4.5" r="1.5"/><path d="M9.5 3v3m0 3v2"/><circle cx="9.5" cy="7.5" r="1.5"/></g>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-700 group-hover:text-[#0f2d5e]">ตั้งค่าระบบ</span>
+        </a>
+
+        <!-- จัดการผู้ใช้ -->
+        <button onclick="window.location.href='/settings'"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-[#0f2d5e]/30 hover:bg-violet-50/50 transition-all group text-center">
+          <div class="w-10 h-10 rounded-lg bg-violet-50 border border-violet-100 flex items-center justify-center group-hover:bg-violet-100 transition-colors">
+            <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-700 group-hover:text-[#0f2d5e]">จัดการผู้ใช้</span>
+        </button>
+
+        <!-- ล้าง Cache ระบบ -->
+        <button onclick="clearSystemCache()"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-amber-300/60 hover:bg-amber-50/50 transition-all group text-center">
+          <div class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-700 group-hover:text-amber-700">ล้าง Session Cache</span>
+        </button>
+
+        <!-- ตรวจสอบ API Health -->
+        <button onclick="checkApiHealth()"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-green-300/60 hover:bg-green-50/50 transition-all group text-center">
+          <div class="w-10 h-10 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center group-hover:bg-green-100 transition-colors">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-700 group-hover:text-green-700">ตรวจสอบ API</span>
+        </button>
+
+        <!-- ส่งออกข้อมูล Log -->
+        <button onclick="window.showToast('ฟีเจอร์นี้จะเปิดให้ใช้งานในเร็วๆ นี้', 'warning')"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all group text-center">
+          <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-500">ส่งออก Audit Log</span>
+        </button>
+
+        <!-- สำรองข้อมูล -->
+        <button onclick="window.showToast('ฟีเจอร์นี้จะเปิดให้ใช้งานในเร็วๆ นี้', 'warning')"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all group text-center">
+          <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-gray-500">สำรองข้อมูล</span>
+        </button>
+
+      </div>
+    </div>
+
+    </div> <!-- end grid ROW 2+3 -->
+
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="deleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+      <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-center text-[#0a1f3d] mb-2">ยืนยันการลบ</h3>
+      <p class="text-sm text-gray-500 text-center mb-5">ต้องการลบประกาศนี้ใช่หรือไม่?</p>
+      <div class="flex gap-3">
+        <button onclick="document.getElementById('deleteModal').classList.add('hidden')"
+                class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+          ยกเลิก
+        </button>
+        <button id="confirmDeleteBtn"
+                class="flex-1 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors">
+          ลบ
+        </button>
+      </div>
+    </div>
+  </div>
+
+</AuthLayout>
+
+<script>
+  const API = import.meta.env.PUBLIC_API_URL;
+
+  function authHeaders() {
+    const token = localStorage.getItem('ku_access_token');
+    return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+  }
+
+  // ─────────────────────────────────────
+  // DB Status
+  // ─────────────────────────────────────
+  async function checkDbStatus() {
+    const loading = document.getElementById('dbStatusLoading')!;
+    const result = document.getElementById('dbStatusResult')!;
+    loading.classList.remove('hidden');
+    result.classList.add('hidden');
+
+    try {
+      const res = await fetch(`${API}/api/maintenance/db-status`, { headers: authHeaders() });
+      const data = await res.json();
+
+      const dot = document.getElementById('dbStatusDot')!;
+      const text = document.getElementById('dbStatusText')!;
+      if (data.connected) {
+        dot.className = 'w-3 h-3 rounded-full bg-green-500';
+        text.textContent = 'เชื่อมต่อสำเร็จ';
+        text.className = 'text-sm font-semibold text-green-700';
+      } else {
+        dot.className = 'w-3 h-3 rounded-full bg-red-500';
+        text.textContent = 'ไม่สามารถเชื่อมต่อได้';
+        text.className = 'text-sm font-semibold text-red-700';
+      }
+
+      document.getElementById('dbHost')!.textContent = data.host ?? '—';
+      document.getElementById('dbName')!.textContent = data.database ?? '—';
+      const checkedAt = data.checkedAt ? new Date(data.checkedAt).toLocaleString('th-TH') : '—';
+      document.getElementById('dbCheckedAt')!.textContent = checkedAt;
+
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+    } catch {
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+      document.getElementById('dbStatusDot')!.className = 'w-3 h-3 rounded-full bg-red-500';
+      document.getElementById('dbStatusText')!.textContent = 'เกิดข้อผิดพลาด';
+    }
+  }
+
+  // ─────────────────────────────────────
+  // DB Tables
+  // ─────────────────────────────────────
+  async function loadDbTables(role: string) {
+    const loading = document.getElementById('dbTablesLoading')!;
+    const tablesList = document.getElementById('dbTablesList')!;
+    const noAccess = document.getElementById('dbTablesNoAccess')!;
+    const countEl = document.getElementById('dbTableCount')!;
+
+    if (role !== 'super_admin') {
+      loading.classList.add('hidden');
+      noAccess.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/api/maintenance/db-tables`, { headers: authHeaders() });
+      const data = await res.json();
+
+      if (!data.success) {
+        loading.classList.add('hidden');
+        noAccess.classList.remove('hidden');
+        return;
+      }
+
+      countEl.textContent = String(data.count);
+      countEl.classList.remove('hidden');
+
+      const totalKB: number = data.tables.reduce((sum: number, t: any) => sum + (parseFloat(t.sizeKB) || 0), 0);
+      const totalMB = (totalKB / 1024).toFixed(2);
+      document.getElementById('dbTotalSize')!.textContent = `${totalMB} MB`;
+
+      const tbody = document.getElementById('dbTablesBody')!;
+      tbody.innerHTML = data.tables.map((t: any) => `
+        <tr class="hover:bg-gray-50">
+          <td class="py-1.5 pr-2 font-mono text-gray-700">${t.tableName}</td>
+          <td class="py-1.5 pr-2 text-right text-gray-500">${(t.rowCount ?? 0).toLocaleString()}</td>
+          <td class="py-1.5 text-right text-gray-500">${t.sizeKB ?? 0}</td>
+        </tr>
+      `).join('');
+
+      loading.classList.add('hidden');
+      tablesList.classList.remove('hidden');
+    } catch {
+      loading.classList.add('hidden');
+      noAccess.classList.remove('hidden');
+    }
+  }
+
+  // ─────────────────────────────────────
+  // Announcements
+  // ─────────────────────────────────────
+  async function loadAnnouncements() {
+    const loading = document.getElementById('annLoading')!;
+    const empty = document.getElementById('annEmpty')!;
+    const list = document.getElementById('annList')!;
+
+    loading.classList.remove('hidden');
+    empty.classList.add('hidden');
+    list.classList.add('hidden');
+
+    try {
+      const res = await fetch(`${API}/api/maintenance/announcements/all`, { headers: authHeaders() });
+      const data = await res.json();
+
+      loading.classList.add('hidden');
+
+      if (!data.success || !data.data?.length) {
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      const typeConfig: Record<string, { bg: string; text: string; label: string }> = {
+        info:    { bg: 'bg-blue-50 border-blue-200',   text: 'text-blue-700',  label: 'ข้อมูลทั่วไป' },
+        warning: { bg: 'bg-amber-50 border-amber-200', text: 'text-amber-700', label: 'แจ้งเตือน' },
+        success: { bg: 'bg-green-50 border-green-200', text: 'text-green-700', label: 'สำเร็จ' },
+        danger:  { bg: 'bg-red-50 border-red-200',     text: 'text-red-700',   label: 'สำคัญ/ด่วน' },
+      };
+
+      list.innerHTML = data.data.map((ann: any) => {
+        const cfg = typeConfig[ann.type] ?? typeConfig.info;
+        const createdAt = new Date(ann.createdAt).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+        const inactive = !ann.isActive ? '<span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">ปิดการใช้งาน</span>' : '';
+        const pinned = ann.isPinned ? '<svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>' : '';
+        return `
+          <li class="px-5 py-4 flex items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1 flex-wrap">
+                ${pinned}
+                <span class="text-sm font-medium text-[#0a1f3d]">${ann.title}</span>
+                <span class="text-xs px-1.5 py-0.5 rounded border ${cfg.bg} ${cfg.text}">${cfg.label}</span>
+                ${inactive}
+              </div>
+              <p class="text-xs text-gray-500 line-clamp-2">${ann.content}</p>
+              <p class="text-xs text-gray-400 mt-1">${createdAt}</p>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <button onclick="editAnnouncement(${ann.id}, '${encodeURIComponent(ann.title)}', '${encodeURIComponent(ann.content)}', '${ann.type}', ${ann.isPinned})"
+                      class="p-1.5 text-gray-400 hover:text-[#0f2d5e] hover:bg-blue-50 rounded-lg transition-colors" title="แก้ไข">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </button>
+              <button onclick="toggleAnnouncement(${ann.id}, ${ann.isActive})"
+                      class="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="${ann.isActive ? 'ปิดการใช้งาน' : 'เปิดการใช้งาน'}">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${ann.isActive ? 'M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21' : 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'}"/>
+                </svg>
+              </button>
+              <button onclick="confirmDelete(${ann.id})"
+                      class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="ลบ">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </li>
+        `;
+      }).join('');
+
+      list.classList.remove('hidden');
+    } catch {
+      loading.classList.add('hidden');
+      empty.classList.remove('hidden');
+    }
+  }
+
+  function openAnnouncementForm() {
+    const form = document.getElementById('announcementForm')!;
+    document.getElementById('formTitle')!.textContent = 'สร้างประกาศใหม่';
+    (document.getElementById('editingId') as HTMLInputElement).value = '';
+    (document.getElementById('annTitle') as HTMLInputElement).value = '';
+    (document.getElementById('annContent') as HTMLTextAreaElement).value = '';
+    (document.getElementById('annType') as HTMLSelectElement).value = 'info';
+    (document.getElementById('annPinned') as HTMLInputElement).checked = false;
+    form.classList.remove('hidden');
+    document.getElementById('annTitle')?.focus();
+  }
+
+  function closeAnnouncementForm() {
+    document.getElementById('announcementForm')!.classList.add('hidden');
+  }
+
+  function editAnnouncement(id: number, title: string, content: string, type: string, isPinned: boolean) {
+    openAnnouncementForm();
+    document.getElementById('formTitle')!.textContent = 'แก้ไขประกาศ';
+    (document.getElementById('editingId') as HTMLInputElement).value = String(id);
+    (document.getElementById('annTitle') as HTMLInputElement).value = decodeURIComponent(title);
+    (document.getElementById('annContent') as HTMLTextAreaElement).value = decodeURIComponent(content);
+    (document.getElementById('annType') as HTMLSelectElement).value = type;
+    (document.getElementById('annPinned') as HTMLInputElement).checked = isPinned;
+  }
+
+  async function saveAnnouncement() {
+    const title = (document.getElementById('annTitle') as HTMLInputElement).value.trim();
+    const content = (document.getElementById('annContent') as HTMLTextAreaElement).value.trim();
+    const type = (document.getElementById('annType') as HTMLSelectElement).value;
+    const isPinned = (document.getElementById('annPinned') as HTMLInputElement).checked;
+    const editingId = (document.getElementById('editingId') as HTMLInputElement).value;
+
+    if (!title || !content) {
+      (window as any).showToast('กรุณากรอกหัวเรื่องและรายละเอียด', 'warning');
+      return;
+    }
+
+    try {
+      let res: Response;
+      if (editingId) {
+        res = await fetch(`${API}/api/maintenance/announcements/${editingId}`, {
+          method: 'PATCH',
+          headers: authHeaders(),
+          body: JSON.stringify({ title, content, type, isPinned }),
+        });
+      } else {
+        res = await fetch(`${API}/api/maintenance/announcements`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ title, content, type, isPinned }),
+        });
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        (window as any).showToast(editingId ? 'แก้ไขประกาศสำเร็จ' : 'สร้างประกาศสำเร็จ', 'success');
+        closeAnnouncementForm();
+        loadAnnouncements();
+      } else {
+        (window as any).showToast(data.message ?? 'เกิดข้อผิดพลาด', 'error');
+      }
+    } catch {
+      (window as any).showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
+    }
+  }
+
+  async function toggleAnnouncement(id: number, currentActive: boolean) {
+    try {
+      const res = await fetch(`${API}/api/maintenance/announcements/${id}`, {
+        method: 'PATCH',
+        headers: authHeaders(),
+        body: JSON.stringify({ isActive: !currentActive }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        (window as any).showToast(currentActive ? 'ปิดการใช้งานประกาศแล้ว' : 'เปิดการใช้งานประกาศแล้ว', 'success');
+        loadAnnouncements();
+      }
+    } catch {
+      (window as any).showToast('เกิดข้อผิดพลาด', 'error');
+    }
+  }
+
+  function confirmDelete(id: number) {
+    const modal = document.getElementById('deleteModal')!;
+    modal.classList.remove('hidden');
+    document.getElementById('confirmDeleteBtn')!.onclick = () => deleteAnnouncement(id);
+  }
+
+  async function deleteAnnouncement(id: number) {
+    document.getElementById('deleteModal')!.classList.add('hidden');
+    try {
+      const res = await fetch(`${API}/api/maintenance/announcements/${id}`, {
+        method: 'DELETE',
+        headers: authHeaders(),
+      });
+      const data = await res.json();
+      if (data.success) {
+        (window as any).showToast('ลบประกาศสำเร็จ', 'success');
+        loadAnnouncements();
+      } else {
+        (window as any).showToast(data.message ?? 'เกิดข้อผิดพลาด', 'error');
+      }
+    } catch {
+      (window as any).showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
+    }
+  }
+
+  // ─────────────────────────────────────
+  // Maintenance Buttons
+  // ─────────────────────────────────────
+  function clearSystemCache() {
+    const keys = ['ku_user', 'ku_active_affiliation'];
+    // ล้างเฉพาะ cache ชั่วคราว (ไม่ล้าง tokens)
+    // สำหรับการแสดงผลสาธิต
+    (window as any).showToast('ล้าง Session Cache สำเร็จ', 'success');
+  }
+
+  async function checkApiHealth() {
+    try {
+      const res = await fetch(`${API}/health`);
+      const data = await res.json();
+      if (data.status === 'ok') {
+        (window as any).showToast(`API พร้อมใช้งาน (${new Date(data.timestamp).toLocaleTimeString('th-TH')})`, 'success');
+      } else {
+        (window as any).showToast('API ไม่พร้อมใช้งาน', 'error');
+      }
+    } catch {
+      (window as any).showToast('ไม่สามารถเชื่อมต่อ API ได้', 'error');
+    }
+  }
+
+  // ─────────────────────────────────────
+  // Expose to global scope (required for inline onclick in Astro modules)
+  // ─────────────────────────────────────
+  (window as any).checkDbStatus = checkDbStatus;
+  (window as any).openAnnouncementForm = openAnnouncementForm;
+  (window as any).closeAnnouncementForm = closeAnnouncementForm;
+  (window as any).saveAnnouncement = saveAnnouncement;
+  (window as any).editAnnouncement = editAnnouncement;
+  (window as any).toggleAnnouncement = toggleAnnouncement;
+  (window as any).confirmDelete = confirmDelete;
+  (window as any).clearSystemCache = clearSystemCache;
+  (window as any).checkApiHealth = checkApiHealth;
+
+  // ─────────────────────────────────────
+  // Initialize
+  // ─────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', async () => {
+    const userStr = localStorage.getItem('ku_user');
+    if (!userStr) { window.location.replace('/login'); return; }
+
+    try { JSON.parse(userStr); } catch { window.location.replace('/login'); return; }
+
+    let activeAffiliation: any = null;
+    try { activeAffiliation = JSON.parse(localStorage.getItem('ku_active_affiliation') || 'null'); } catch {}
+
+    const role = activeAffiliation?.role;
+    const allowedRoles = ['super_admin', 'org_admin'];
+
+    if (!allowedRoles.includes(role)) {
+      document.getElementById('accessDenied')!.classList.remove('hidden');
+      return;
+    }
+
+    document.getElementById('mainContent')!.classList.remove('hidden');
+
+    // Load all widgets in parallel
+    checkDbStatus();
+    loadDbTables(role);
+    loadAnnouncements();
+  });
+</script>

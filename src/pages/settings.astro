@@ -1,0 +1,1799 @@
+---
+import AuthLayout from '../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="ตั้งค่าระบบ">
+
+  <!-- Page Header -->
+  <div class="relative rounded-sm mb-5 overflow-hidden shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #0a4068 45%, #006664 100%);">
+    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #006664, #d4de3a, #b2bb1e);"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(178,187,30,0.12) 0%, transparent 65%);"></div>
+    <div class="relative z-10 px-4 sm:px-3 py-4 pt-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(178,187,30,0.2); border: 1px solid rgba(178,187,30,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" 
+            class="w-6 h-6 text-[#d4de3a]" viewBox="0 0 14 14">
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x=".5" y=".5" rx="1" transform="rotate(-90 7 7)"/><path d="M4.5 11V6"/><circle cx="4.5" cy="4.5" r="1.5"/><path d="M9.5 3v3m0 3v2"/><circle cx="9.5" cy="7.5" r="1.5"/></g></svg>
+        </div>
+        <div>
+          <h1 class="text-white text-base sm:text-lg font-semibold">ตั้งค่าระบบ</h1>
+          <p class="text-white/90 text-sm mt-0.5">จัดการสิทธิ์ผู้ใช้ หน่วยงาน และหมวดการใช้เงิน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access Denied Message (hidden by default) -->
+  <div id="accessDenied" class="hidden bg-red-50 border border-red-200 rounded-lg p-6 text-center mb-6">
+    <svg class="w-12 h-12 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    </svg>
+    <p class="text-red-700 font-semibold">ไม่มีสิทธิ์เข้าถึงหน้านี้</p>
+    <p class="text-red-500 text-sm mt-1">เฉพาะ super_admin และ org_admin เท่านั้น</p>
+  </div>
+
+  <!-- Main Settings Content -->
+  <div id="settingsContent" class="hidden">
+
+    <!-- Tab Navigation -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm mb-5">
+      <div class="flex overflow-x-auto border-b border-gray-200">
+        <button onclick="switchTab('permissions')" id="tab-permissions" class="settings-tab active-tab px-5 py-3.5 text-sm font-medium whitespace-nowrap flex items-center gap-2 border-b-2 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 14 14">
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x=".5" y=".5" rx="1"/><path d="M3 4.5h5"/><circle cx="9.5" cy="4.5" r="1.5"/><path d="M11 9.5H8m-3 0H3"/><circle cx="6.5" cy="9.5" r="1.5"/></g>
+          </svg>
+          การจัดการสิทธิ์ในระบบ
+        </button>
+        <button onclick="switchTab('organizations')" id="tab-organizations" class="settings-tab px-5 py-3.5 text-sm font-medium whitespace-nowrap flex items-center gap-2 border-b-2 border-transparent transition-colors text-gray-500 hover:text-gray-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          ตั้งค่าหน่วยงาน
+        </button>
+        <button onclick="switchTab('budget')" id="tab-budget" class="settings-tab px-5 py-3.5 text-sm font-medium whitespace-nowrap flex items-center gap-2 border-b-2 border-transparent transition-colors text-gray-500 hover:text-gray-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          ตั้งค่าหมวดการใช้เงิน
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TAB 1: การจัดการสิทธิ์ในระบบ ===== -->
+    <div id="panel-permissions" class="settings-panel mb-8">
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col" style="max-height: calc(100vh - 220px);">
+        <!-- Header — fixed, does not scroll -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50 shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-5 rounded-full bg-[#006664]"></div>
+            <div>
+              <h2 class="text-sm font-bold text-gray-700 uppercase tracking-widest">การจัดการสิทธิ์ในระบบ</h2>
+              <p class="text-xs text-gray-600 mt-0.5">กำหนดให้แต่ละบทบาท สามารถเข้าถึงการดำเนินการได้ในระบบ</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="permUnsavedBadge" class="hidden text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
+            <button onclick="savePermissionMatrix()" id="permSaveBtn"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+              style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              บันทึกสิทธิ์
+            </button>
+          </div>
+        </div>
+
+        <!-- Legend — fixed, does not scroll -->
+        <div class="flex items-center gap-4 px-5 py-3 border-b border-gray-100 bg-gray-50/50 text-xs text-gray-500 shrink-0">
+          <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded border-2 border-[#006664] bg-[#006664] flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span>มีสิทธิ์</span>
+          <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded border border-gray-300 bg-white"></span>ไม่มีสิทธิ์</span>
+        </div>
+
+        <!-- Matrix Table — scrollable area (thead sticky inside) -->
+        <div class="overflow-auto flex-1 no-scrollbar">
+          <div id="permMatrixWrap">
+            <div class="flex items-center justify-center py-10 text-gray-400 text-sm">
+              <svg class="animate-spin w-5 h-5 mr-2 text-[#006664]" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+              กำลังโหลดข้อมูล...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 2: ตั้งค่าหน่วยงาน ===== -->
+    <div id="panel-organizations" class="settings-panel hidden">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+
+        <!-- Section description -->
+        <div class="px-5 pt-4 pb-3 flex items-start gap-3 bg-emerald-50/50 border-b border-emerald-100">
+          <div class="w-8 h-8 rounded-lg bg-[#006664] flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-[#006664]">จัดการหน่วยงาน</p>
+            <p class="text-xs text-gray-500 mt-0.5">กำหนดโครงสร้างหน่วยงาน ระดับ และความสัมพันธ์ระหว่างหน่วยงานในระบบ</p>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div class="relative flex-1">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input id="orgSearchInput" type="text" placeholder="ค้นหาหน่วยงาน..." oninput="filterOrgs()"
+              class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]" />
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="orgLevelFilter" onchange="filterOrgs()" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] appearance-none dropdown-arrow">
+              <option value="">ทุกระดับ</option>
+              <option value="university">มหาวิทยาลัย</option>
+              <option value="campus">วิทยาเขต</option>
+              <option value="faculty">คณะ/สำนัก/กอง</option>
+              <option value="department">ภาควิชา/หน่วยงาน</option>
+            </select>
+            <button onclick="openOrgModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors shadow-md" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              เพิ่มหน่วยงาน
+            </button>
+          </div>
+        </div>
+
+        <!-- Tree -->
+        <div id="orgsTreeContainer">
+          <div class="flex flex-col items-center gap-2 text-gray-400 py-12">
+            <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm">กำลังโหลดข้อมูล...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 3: ตั้งค่าหมวดการใช้เงิน ===== -->
+    <div id="panel-budget" class="settings-panel hidden">
+      <!-- Budget Sub-tabs -->
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm mb-4">
+        <div class="flex overflow-x-auto border-b border-gray-200 px-2 pt-2 gap-1">
+          <button onclick="switchBudgetTab('subsidies')" id="btab-subsidies" class="budget-tab active-budget-tab px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-t-lg transition-colors">
+            งบอุดหนุน
+          </button>
+          <button onclick="switchBudgetTab('subsidy-types')" id="btab-subsidy-types" class="budget-tab px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-t-lg transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+            ประเภทงบอุดหนุน
+          </button>
+          <button onclick="switchBudgetTab('groups')" id="btab-groups" class="budget-tab px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-t-lg transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+            กลุ่มงบอุดหนุน
+          </button>
+          <button onclick="switchBudgetTab('expense-details')" id="btab-expense-details" class="budget-tab px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-t-lg transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+            รายละเอียดค่าใช้จ่าย
+          </button>
+        </div>
+      </div>
+
+      <!-- Budget Panel: งบอุดหนุน -->
+      <div id="bpanel-subsidies" class="budget-panel">
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-5 rounded-full bg-[#b2bb1e]"></div>
+              <h2 class="text-sm font-bold text-gray-700 uppercase tracking-widest">งบอุดหนุน</h2>
+            </div>
+            <button onclick="openBudgetModal('subsidies')" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              เพิ่มงบอุดหนุน
+            </button>
+          </div>
+          <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex items-center gap-3">
+            <div class="relative flex-1">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input id="subsidySearch" type="text" placeholder="ค้นหางบอุดหนุน (รหัส, ชื่อ)..." oninput="filterSubsidies()"
+                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]" />
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">รหัส</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">ชื่อ (ไทย)</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">ชื่อ (อังกฤษ)</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">สถานะ</th>
+                  <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="subsidiesTableBody" class="divide-y divide-gray-100">
+                <tr><td colspan="5" class="text-center py-8 text-gray-400">กำลังโหลดข้อมูล...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Panel: ประเภทงบอุดหนุน -->
+      <div id="bpanel-subsidy-types" class="budget-panel hidden">
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-5 rounded-full bg-[#b2bb1e]"></div>
+              <h2 class="text-sm font-bold text-gray-700 uppercase tracking-widest">ประเภทงบอุดหนุน</h2>
+            </div>
+            <button onclick="openBudgetModal('subsidy-types')" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              เพิ่มประเภทงบอุดหนุน
+            </button>
+          </div>
+          <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="relative flex-1">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input id="subsidyTypeSearch" type="text" placeholder="ค้นหาประเภทงบอุดหนุน (รหัส, ชื่อ)..." oninput="filterSubsidyTypes()"
+                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]" />
+            </div>
+            <select id="subsidyTypeFilter" onchange="filterSubsidyTypes()" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] appearance-none dropdown-arrow">
+              <option value="">ทุกงบอุดหนุน</option>
+            </select>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">รหัส</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">ชื่อ (ไทย)</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">งบอุดหนุน</th>
+                  <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">สถานะ</th>
+                  <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="subsidyTypesTableBody" class="divide-y divide-gray-100">
+                <tr><td colspan="5" class="text-center py-8 text-gray-400">กำลังโหลดข้อมูล...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Panel: กลุ่มงบอุดหนุน -->
+      <div id="bpanel-groups" class="budget-panel hidden">
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-5 rounded-full bg-[#b2bb1e]"></div>
+              <h2 class="text-sm font-bold text-gray-700 uppercase tracking-widest">กลุ่มงบอุดหนุน</h2>
+            </div>
+            <button onclick="openBudgetModal('groups')" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              เพิ่มกลุ่มงบอุดหนุน
+            </button>
+          </div>
+          <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="relative flex-1">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input id="groupSearch" type="text" placeholder="ค้นหากลุ่มงบอุดหนุน (รหัส, ชื่อ)..." oninput="filterGroups()"
+                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]" />
+            </div>
+            <select id="groupTypeFilter" onchange="filterGroups()" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] appearance-none dropdown-arrow">
+              <option value="">ทุกประเภทงบอุดหนุน</option>
+            </select>
+          </div>
+          <div id="groupsTableBody">
+            <div class="flex items-center justify-center py-10 text-gray-400 text-sm">กำลังโหลดข้อมูล...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Panel: รายละเอียดค่าใช้จ่าย -->
+      <div id="bpanel-expense-details" class="budget-panel hidden">
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-5 rounded-full bg-[#b2bb1e]"></div>
+              <h2 class="text-sm font-bold text-gray-700 uppercase tracking-widest">รายละเอียดค่าใช้จ่ายตามหมวดเงิน</h2>
+            </div>
+            <button onclick="openBudgetModal('expense-details')" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              เพิ่มรายละเอียด
+            </button>
+          </div>
+          <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="relative flex-1">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input id="expenseSearch" type="text" placeholder="ค้นหารายละเอียดค่าใช้จ่าย (รหัส, ชื่อ)..." oninput="filterExpenseDetails()"
+                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]" />
+            </div>
+            <select id="expenseGroupFilter" onchange="filterExpenseDetails()" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] appearance-none dropdown-arrow">
+              <option value="">ทุกหัวข้อหลัก</option>
+            </select>
+          </div>
+          <div id="expenseDetailsContainer">
+            <div class="flex items-center justify-center py-10 text-gray-400 text-sm">กำลังโหลดข้อมูล...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: เพิ่ม/แก้ไขสังกัด ===== -->
+  <div id="affiliationModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <h3 class="text-base font-semibold text-gray-800" id="affiliationModalTitle">เพิ่มสังกัด</h3>
+        <button onclick="closeModal('affiliationModal')" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <input type="hidden" id="affModalId" />
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">ผู้ใช้งาน <span class="text-red-500">*</span></label>
+          <select id="affUserId" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="">-- เลือกผู้ใช้ --</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">หน่วยงาน <span class="text-red-500">*</span></label>
+          <select id="affOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="">-- เลือกหน่วยงาน --</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">บทบาท <span class="text-red-500">*</span></label>
+          <select id="affRole" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="super_admin">ผู้ดูแลระบบสูงสุด (super_admin)</option>
+            <option value="univ_executive">ผู้บริหารระดับมหาวิทยาลัย (univ_executive)</option>
+            <option value="univ_officer">เจ้าหน้าที่ระดับมหาวิทยาลัย (univ_officer)</option>
+            <option value="campus_executive">ผู้บริหารระดับวิทยาเขต (campus_executive)</option>
+            <option value="campus_officer">เจ้าหน้าที่ระดับวิทยาเขต (campus_officer)</option>
+            <option value="faculty_executive">ผู้บริหารระดับหน่วยงานหลัก (faculty_executive)</option>
+            <option value="unit_head">หัวหน้าหน่วยงานย่อย (unit_head)</option>
+            <option value="org_admin">ผู้ดูแลระบบระดับหน่วยงาน (org_admin)</option>
+            <option value="project_lead">หัวหน้าโครงการ (project_lead)</option>
+            <option value="staff" selected>อาจารย์/เจ้าหน้าที่ (staff)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">ตำแหน่ง</label>
+          <input type="text" id="affPositionTitle" placeholder="เช่น หัวหน้าภาควิชา, รองอธิการบดี" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="affIsPrimary" class="w-4 h-4 accent-[#006664]" />
+          <label for="affIsPrimary" class="text-sm text-gray-600">เป็นสังกัดหลัก</label>
+        </div>
+        <div id="affIsActiveRow" class="hidden flex items-center gap-2">
+          <input type="checkbox" id="affIsActive" class="w-4 h-4 accent-[#006664]" checked />
+          <label for="affIsActive" class="text-sm text-gray-600">เปิดใช้งาน</label>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">
+        <button onclick="closeModal('affiliationModal')" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">ยกเลิก</button>
+        <button onclick="saveAffiliation()" class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: เพิ่ม/แก้ไขหน่วยงาน ===== -->
+  <div id="orgModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <h3 class="text-base font-semibold text-gray-800" id="orgModalTitle">เพิ่มหน่วยงาน</h3>
+        <button onclick="closeModal('orgModal')" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <input type="hidden" id="orgModalId" />
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">รหัสหน่วยงาน <span class="text-red-500">*</span></label>
+            <input type="text" id="orgCode" placeholder="เช่น 01, FAG, SCI" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">ระดับ <span class="text-red-500">*</span></label>
+            <select id="orgLevel" onchange="updateCampusRowVisibility()" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+              <option value="university">มหาวิทยาลัย</option>
+              <option value="campus">วิทยาเขต</option>
+              <option value="faculty" selected>คณะ/สำนัก/กอง</option>
+              <option value="department">ภาควิชา/หน่วยงานย่อย</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">ชื่อหน่วยงาน (ไทย) <span class="text-red-500">*</span></label>
+          <input type="text" id="orgNameTh" placeholder="ชื่อภาษาไทย" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">ชื่อหน่วยงาน (อังกฤษ)</label>
+          <input type="text" id="orgNameEn" placeholder="English name (optional)" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div id="orgParentRow">
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">หน่วยงานแม่</label>
+          <select id="orgParentId" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="">-- ไม่มีหน่วยงานแม่ --</option>
+          </select>
+        </div>
+        <div id="orgCampusRow">
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">วิทยาเขต</label>
+          <select id="orgCampusId" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="">-- ไม่ระบุ --</option>
+          </select>
+        </div>
+        <div id="orgIsActiveRow" class="hidden flex items-center gap-2">
+          <input type="checkbox" id="orgIsActive" class="w-4 h-4 accent-[#006664]" checked />
+          <label for="orgIsActive" class="text-sm text-gray-600">เปิดใช้งาน</label>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">
+        <button onclick="closeModal('orgModal')" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">ยกเลิก</button>
+        <button onclick="saveOrg()" class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Budget (generic) ===== -->
+  <div id="budgetModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <h3 class="text-base font-semibold text-gray-800" id="budgetModalTitle">เพิ่มข้อมูล</h3>
+        <button onclick="closeModal('budgetModal')" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <input type="hidden" id="budgetModalId" />
+        <input type="hidden" id="budgetModalType" />
+        <!-- Parent selector (shown for child levels) -->
+        <div id="budgetParentRow" class="hidden">
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5" id="budgetParentLabel">งบอุดหนุน <span class="text-red-500">*</span></label>
+          <select id="budgetParentId" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664] appearance-none dropdown-arrow">
+            <option value="">-- เลือก --</option>
+          </select>
+        </div>
+        <div id="budgetCodeRow">
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">รหัส <span class="text-red-500">*</span></label>
+          <input type="text" id="budgetCode" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5" id="budgetNameThLabel">ชื่อ (ไทย) <span class="text-red-500">*</span></label>
+          <input type="text" id="budgetNameTh" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div id="budgetNameEnRow">
+          <label class="block text-xs font-semibold text-gray-600 mb-1.5">ชื่อ (อังกฤษ)</label>
+          <input type="text" id="budgetNameEn" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]" />
+        </div>
+        <div id="budgetIsActiveRow" class="hidden flex items-center gap-2">
+          <input type="checkbox" id="budgetIsActive" class="w-4 h-4 accent-[#006664]" checked />
+          <label for="budgetIsActive" class="text-sm text-gray-600">เปิดใช้งาน</label>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">
+        <button onclick="closeModal('budgetModal')" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">ยกเลิก</button>
+        <button onclick="saveBudgetItem()" class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors" style="background:#006664;" onmouseover="this.style.background='#004d4b'" onmouseout="this.style.background='#006664'">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Confirm Delete ===== -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm">
+      <div class="px-6 py-6 text-center">
+        <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-800 mb-2">ยืนยันการลบ</h3>
+        <p class="text-sm text-gray-500 mb-6" id="confirmMsg">คุณต้องการลบข้อมูลนี้หรือไม่?</p>
+        <div class="flex justify-center gap-3">
+          <button onclick="closeModal('confirmModal')" class="px-5 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">ยกเลิก</button>
+          <button id="confirmDeleteBtn" class="px-5 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">ลบ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .settings-tab.active-tab {
+      color: #006664;
+      border-bottom-color: #006664;
+    }
+    .settings-tab:not(.active-tab) {
+      border-bottom-color: transparent;
+    }
+    .budget-tab.active-budget-tab {
+      background: #006664;
+      color: white;
+    }
+    .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+
+  <script>
+    const API = import.meta.env.PUBLIC_API_URL;
+
+    // Current user context (set during init)
+    let currentRole = '';
+    let currentAffiliationOrg: any = null; // activeAffiliation.organization
+
+    // Cache for dropdown data
+    let allOrgs: any[] = [];
+    let allCampuses: any[] = [];
+    const collapsedOrgNodes = new Set<number>();
+    let allSubsidies: any[] = [];
+    let allSubsidyTypes: any[] = [];
+    let allGroups: any[] = [];
+    let allExpenseDetails: any[] = [];
+    const collapsedExpenseNodes = new Set<number>();
+
+    // Permission matrix state
+    let permMatrix = {};      // { permCode: { role: boolean } }
+    let permMatrixOrig = {};  // original state for dirty tracking
+
+    // =====================
+    // Tab switching
+    // =====================
+    function switchTab(tab) {
+      document.querySelectorAll('.settings-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.settings-tab').forEach(t => {
+        t.classList.remove('active-tab');
+        t.classList.add('text-gray-500');
+        t.style.borderBottomColor = 'transparent';
+      });
+      document.getElementById('panel-' + tab).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tab);
+      activeBtn.classList.add('active-tab');
+      activeBtn.classList.remove('text-gray-500');
+    }
+
+    function switchBudgetTab(tab) {
+      document.querySelectorAll('.budget-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.budget-tab').forEach(t => {
+        t.classList.remove('active-budget-tab');
+        t.classList.add('text-gray-500');
+        t.style.background = '';
+        t.style.color = '';
+      });
+      document.getElementById('bpanel-' + tab).classList.remove('hidden');
+      const activeBtn = document.getElementById('btab-' + tab);
+      activeBtn.classList.add('active-budget-tab');
+      activeBtn.classList.remove('text-gray-500');
+    }
+
+    // =====================
+    // Modal helpers
+    // =====================
+    function openModal(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    }
+
+    // =====================
+    // Auth + Init
+    // =====================
+    function getRoleTh(role) {
+      const map = {
+        super_admin: 'ผู้ดูแลระบบสูงสุด',
+        univ_executive: 'ผู้บริหาร ม.',
+        univ_officer: 'เจ้าหน้าที่ ม.',
+        campus_executive: 'ผู้บริหารวิทยาเขต',
+        campus_officer: 'เจ้าหน้าที่วิทยาเขต',
+        faculty_executive: 'ผู้บริหารหน่วยงานหลัก',
+        unit_head: 'หัวหน้าหน่วยงานย่อย',
+        org_admin: 'ผู้ดูแลระบบหน่วยงาน',
+        project_lead: 'หัวหน้าโครงการ',
+        staff: 'อาจารย์/เจ้าหน้าที่',
+      };
+      return map[role] || role;
+    }
+
+    function getOrgLevelTh(level) {
+      const map = { university: 'มหาวิทยาลัย', campus: 'วิทยาเขต', faculty: 'คณะ/สำนัก/กอง', department: 'ภาควิชา/หน่วยงาน' };
+      return map[level] || level;
+    }
+
+    function statusBadge(isActive: boolean) {
+      return isActive
+        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>ใช้งาน</span>`
+        : `<span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded"><span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>ปิดใช้งาน</span>`;
+    }
+
+    // =============================================
+    // Permission Matrix
+    // =============================================
+    const ROLE_LABELS: Record<string, string> = {
+      super_admin:       'ผู้ดูแลระบบสูงสุด',
+      org_admin:         'ผู้ดูแล\n(หน่วยงาน)',
+      univ_executive:    'ผู้บริหาร ม.',
+      univ_officer:      'เจ้าหน้าที่ ม.',
+      campus_executive:  'ผู้บริหาร\nวิทยาเขต',
+      campus_officer:    'เจ้าหน้าที่\nวิทยาเขต',
+      faculty_executive: 'ผู้บริหาร\nคณะ/สำนัก/กอง',
+      unit_head:         'หัวหน้า\nหน่วยงานย่อย',
+      project_lead:      'หัวหน้า\nโครงการ',
+      staff:             'อาจารย์/\nเจ้าหน้าที่',
+    };
+
+    async function loadPermissionMatrix() {
+      const wrap = document.getElementById('permMatrixWrap');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/permissions/matrix`);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+
+        // สร้าง state
+        permMatrix = {};
+        for (const mod of json.modules) {
+          for (const perm of mod.permissions) {
+            permMatrix[perm.code] = { ...perm.roles };
+          }
+        }
+        permMatrixOrig = JSON.parse(JSON.stringify(permMatrix));
+
+        renderPermissionMatrix(json.roles, json.modules);
+      } catch (e) {
+        wrap.innerHTML = `<div class="text-center py-10 text-red-400 text-sm">โหลดข้อมูลล้มเหลว</div>`;
+      }
+    }
+
+    function renderPermissionMatrix(roles: string[], modules: any[]) {
+      const wrap = document.getElementById('permMatrixWrap');
+
+      const colW = 'min-w-[80px] w-20';
+      const headerCols = roles.map(role => `
+        <th class="${colW} text-center px-1 py-3 text-xs font-semibold text-gray-600 border-l border-gray-200 leading-tight whitespace-pre-line">${ROLE_LABELS[role] || role}</th>
+      `).join('');
+
+      let bodyRows = '';
+      for (const mod of modules) {
+        // Module header row
+        bodyRows += `<tr class="bg-[#006664]/8">
+          <td colspan="${roles.length + 1}" class="px-4 py-2 text-xs font-bold text-[#006664] uppercase tracking-widest" style="background:rgba(0,102,100,0.06)">
+            ${mod.moduleTh}
+          </td>
+        </tr>`;
+
+        for (const perm of mod.permissions) {
+          const checkboxes = roles.map(role => {
+            const checked = permMatrix[perm.code]?.[role] ? 'checked' : '';
+            return `<td class="${colW} text-center px-1 py-2.5 border-l border-gray-100">
+              <input type="checkbox" data-perm="${perm.code}" data-role="${role}"
+                class="perm-checkbox w-4 h-4 accent-[#006664] cursor-pointer rounded"
+                ${checked} onchange="onPermCheckboxChange(this)" />
+            </td>`;
+          }).join('');
+
+          bodyRows += `<tr class="hover:bg-gray-50/70 border-t border-gray-100">
+            <td class="px-4 py-2.5 text-sm text-gray-700 min-w-[180px]">${perm.nameTh}</td>
+            ${checkboxes}
+          </tr>`;
+        }
+      }
+
+      wrap.innerHTML = `
+        <table class="w-full text-sm border-collapse">
+          <thead class="bg-gray-50 border-b-2 border-gray-200 sticky top-0 z-10">
+            <tr>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[180px]">สิทธิ์</th>
+              ${headerCols}
+            </tr>
+          </thead>
+          <tbody>${bodyRows}</tbody>
+        </table>`;
+    }
+
+    (window as any).onPermCheckboxChange = function onPermCheckboxChange(el: HTMLInputElement) {
+      const code = el.dataset.perm!;
+      const role = el.dataset.role!;
+      if (!permMatrix[code]) permMatrix[code] = {};
+      permMatrix[code][role] = el.checked;
+      document.getElementById('permUnsavedBadge')!.classList.remove('hidden');
+    };
+
+    (window as any).savePermissionMatrix = async function savePermissionMatrix() {
+      const btn = document.getElementById('permSaveBtn') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.textContent = 'กำลังบันทึก...';
+
+      const matrix: { role: string; permissionCode: string; granted: boolean }[] = [];
+      for (const [code, roles] of Object.entries(permMatrix)) {
+        for (const [role, granted] of Object.entries(roles as Record<string, boolean>)) {
+          matrix.push({ role, permissionCode: code, granted });
+        }
+      }
+
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/permissions/matrix`, {
+          method: 'PUT',
+          body: JSON.stringify({ matrix }),
+        });
+        const json = await res.json();
+        if (json.success) {
+          permMatrixOrig = JSON.parse(JSON.stringify(permMatrix));
+          document.getElementById('permUnsavedBadge')!.classList.add('hidden');
+          (window as any).showToast('บันทึกสิทธิ์สำเร็จ', 'success');
+        } else {
+          (window as any).showToast(json.message || 'เกิดข้อผิดพลาด', 'error');
+        }
+      } catch {
+        (window as any).showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> บันทึกสิทธิ์`;
+      }
+    }
+
+    // =====================
+    // Organizations Tab
+    // =====================
+    const ORG_LEVEL_CFG = {
+      university: { color: '#0c2957', bg: 'rgba(12,41,87,0.06)',    rowBg: 'rgba(12,41,87,0.025)',   label: 'มหาวิทยาลัย' },
+      campus:     { color: '#006664', bg: 'rgba(0,102,100,0.08)',   rowBg: 'rgba(0,102,100,0.02)',   label: 'วิทยาเขต' },
+      faculty:    { color: '#7d8416', bg: 'rgba(178,187,30,0.09)',  rowBg: 'rgba(178,187,30,0.02)',  label: 'คณะ/สำนัก/กอง' },
+      department: { color: '#6b7280', bg: 'rgba(107,114,128,0.07)', rowBg: 'transparent',            label: 'ภาควิชา/หน่วยงาน' },
+    };
+
+    const ORG_LEVEL_ICON = {
+      university: 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z',
+      campus:     'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z',
+      faculty:    'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+      department: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z',
+    };
+
+    async function loadCampuses() {
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/campus`);
+        const json = await res.json();
+        if (json.success) allCampuses = json.data;
+      } catch {}
+    }
+
+    (window as any).updateCampusRowVisibility = function() {
+      const level = (document.getElementById('orgLevel') as HTMLSelectElement).value;
+      const campusRow = document.getElementById('orgCampusRow') as HTMLElement;
+      const parentRow = document.getElementById('orgParentRow') as HTMLElement;
+      if (!campusRow || !parentRow) return;
+
+      // คณะ/สำนัก/กอง (faculty): แสดงวิทยาเขต ซ่อนหน่วยงานแม่
+      if (level === 'faculty') {
+        campusRow.classList.remove('hidden');
+        parentRow.classList.add('hidden');
+        (document.getElementById('orgParentId') as HTMLSelectElement).value = '';
+      // ภาควิชา/หน่วยงานย่อย (department): ซ่อนวิทยาเขต แสดงหน่วยงานแม่
+      } else if (level === 'department') {
+        campusRow.classList.add('hidden');
+        (document.getElementById('orgCampusId') as HTMLSelectElement).value = '';
+        parentRow.classList.remove('hidden');
+      // วิทยาเขต (campus): แสดงวิทยาเขต ซ่อนหน่วยงานแม่
+      } else if (level === 'campus') {
+        campusRow.classList.remove('hidden');
+        parentRow.classList.add('hidden');
+        (document.getElementById('orgParentId') as HTMLSelectElement).value = '';
+      // มหาวิทยาลัย: ซ่อนทั้งหน่วยงานแม่และวิทยาเขต
+      } else {
+        campusRow.classList.add('hidden');
+        (document.getElementById('orgCampusId') as HTMLSelectElement).value = '';
+        parentRow.classList.add('hidden');
+        (document.getElementById('orgParentId') as HTMLSelectElement).value = '';
+      }
+    };
+
+    function populateCampusSelect(selectedId?: number | null) {
+      const sel = document.getElementById('orgCampusId') as HTMLSelectElement;
+      sel.innerHTML = '<option value="">-- ไม่ระบุ --</option>' +
+        allCampuses.map(c =>
+          `<option value="${c.id}" ${c.id === selectedId ? 'selected' : ''}>${c.nameTh}</option>`
+        ).join('');
+    }
+
+    // Return the subset of orgs the current role is allowed to see
+    function getVisibleOrgs(orgs: any[]): any[] {
+      const role = currentRole;
+      const affOrg = currentAffiliationOrg;
+
+      if (role === 'super_admin') return orgs;
+
+      if (['univ_executive', 'univ_officer'].includes(role)) {
+        return orgs.filter(o => o.orgLevel === 'university');
+      }
+
+      if (['campus_executive', 'campus_officer'].includes(role)) {
+        const byId = Object.fromEntries(orgs.map(o => [o.id, o]));
+        // Walk up from current org to find campus ancestor
+        let cur = byId[affOrg?.id];
+        while (cur && cur.orgLevel !== 'campus') cur = byId[cur.parentId];
+        if (!cur) return [];
+        return collectSubtree(orgs, cur.id);
+      }
+
+      if (['faculty_executive', 'org_admin'].includes(role)) {
+        return collectSubtree(orgs, affOrg?.id);
+      }
+
+      if (['unit_head', 'project_lead', 'staff'].includes(role)) {
+        return orgs.filter(o => o.id === affOrg?.id);
+      }
+
+      return orgs;
+    }
+
+    // Return org with given rootId + all its descendants
+    function collectSubtree(orgs: any[], rootId: number): any[] {
+      const ids = new Set<number>();
+      function collect(id: number) {
+        if (!id) return;
+        ids.add(id);
+        orgs.filter(o => o.parentId === id).forEach(c => collect(c.id));
+      }
+      collect(rootId);
+      return orgs.filter(o => ids.has(o.id));
+    }
+
+    async function loadOrganizations() {
+      const container = document.getElementById('orgsTreeContainer');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/organizations/all`);
+        const json = await res.json();
+        if (!json.success) {
+          container.innerHTML = `<div class="flex flex-col items-center gap-2 text-gray-400 py-12"><svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p class="text-sm">ไม่พบข้อมูล</p></div>`;
+          return;
+        }
+        allOrgs = json.data;
+        renderOrgsTable(getVisibleOrgs(allOrgs));
+      } catch {
+        container.innerHTML = `<div class="flex flex-col items-center gap-2 text-red-400 py-12"><p class="text-sm">โหลดข้อมูลล้มเหลว</p></div>`;
+      }
+    }
+
+    function buildOrgGuide(depth: number, parentHasMore: boolean[], ancestorLevels: string[]) {
+      // parentHasMore[i] = true  → ancestor at depth i still has siblings after this path
+      // ancestorLevels[i]       → orgLevel of ancestor at depth i (for colored lines)
+      if (depth === 0) return '';
+      const GW = 22;
+      const cfg = ORG_LEVEL_CFG as Record<string, { color: string; bg: string; rowBg: string; label: string }>;
+      let html = '<div class="flex flex-shrink-0 items-stretch self-stretch">';
+      for (let i = 0; i < depth - 1; i++) {
+        const col = (cfg[ancestorLevels[i]]?.color || '#9ca3af') + '44';
+        if (parentHasMore[i]) {
+          html += `<div style="width:${GW}px;display:flex;justify-content:center;align-items:stretch;"><div style="width:2px;background:${col};border-radius:1px;"></div></div>`;
+        } else {
+          html += `<div style="width:${GW}px;"></div>`;
+        }
+      }
+      const hasMoreSiblings = parentHasMore[depth - 1];
+      const col = (cfg[ancestorLevels[depth - 1]]?.color || '#9ca3af') + '44';
+      html += `<div style="width:${GW}px;position:relative;min-height:48px;">
+        <div style="position:absolute;left:50%;top:0;width:2px;height:50%;background:${col};transform:translateX(-50%);border-radius:1px;"></div>
+        ${hasMoreSiblings ? `<div style="position:absolute;left:50%;top:50%;width:2px;height:50%;background:${col};transform:translateX(-50%);border-radius:1px;"></div>` : ''}
+        <div style="position:absolute;left:50%;top:50%;width:55%;height:2px;background:${col};transform:translateY(-50%);border-radius:1px;"></div>
+      </div>`;
+      html += '</div>';
+      return html;
+    }
+
+    function countDescendants(node: any): number {
+      let count = node.children.length;
+      for (const c of node.children) count += countDescendants(c);
+      return count;
+    }
+
+    (window as any).toggleOrgNode = function(id: number) {
+      if (collapsedOrgNodes.has(id)) {
+        collapsedOrgNodes.delete(id);
+      } else {
+        collapsedOrgNodes.add(id);
+      }
+      renderOrgsTable(allOrgs);
+    };
+
+    function renderOrgsTable(orgs) {
+      const container = document.getElementById('orgsTreeContainer');
+      if (!orgs.length) {
+        container.innerHTML = `<div class="flex flex-col items-center gap-3 py-12 text-gray-400"><svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p class="text-sm">ไม่พบข้อมูล</p></div>`;
+        return;
+      }
+
+      // Build tree from the orgs subset
+      const nodeMap: Record<number, any> = {};
+      for (const o of orgs) nodeMap[o.id] = { ...o, children: [] };
+      const roots: any[] = [];
+      for (const o of orgs) {
+        if (o.parentId && nodeMap[o.parentId]) {
+          nodeMap[o.parentId].children.push(nodeMap[o.id]);
+        } else {
+          roots.push(nodeMap[o.id]);
+        }
+      }
+
+      // Sort by level order then code
+      function sortNodes(list: any[]) {
+        list.sort((a, b) =>
+          (a.code ?? '').localeCompare(b.code ?? '', undefined, { numeric: true, sensitivity: 'base' })
+        );
+        list.forEach(n => sortNodes(n.children));
+      }
+      sortNodes(roots);
+
+      // Flatten tree into rows, skipping children of collapsed nodes
+      const rows: { node: any; depth: number; parentHasMore: boolean[]; ancestorLevels: string[] }[] = [];
+      function flatten(node: any, depth: number, parentHasMore: boolean[], ancestorLevels: string[]) {
+        rows.push({ node, depth, parentHasMore: [...parentHasMore], ancestorLevels: [...ancestorLevels] });
+        if (!collapsedOrgNodes.has(node.id)) {
+          for (let i = 0; i < node.children.length; i++) {
+            flatten(node.children[i], depth + 1, [...parentHasMore, i < node.children.length - 1], [...ancestorLevels, node.orgLevel]);
+          }
+        }
+      }
+      roots.forEach(r => flatten(r, 0, [], []));
+
+      // Render
+      container.innerHTML = rows.map(({ node, depth, parentHasMore, ancestorLevels }) => {
+        const cfg  = ORG_LEVEL_CFG[node.orgLevel]  || ORG_LEVEL_CFG.department;
+        const safe = node.nameTh.replace(/'/g, "\\'");
+        const guide = buildOrgGuide(depth, parentHasMore, ancestorLevels);
+        const hasChildren = node.children.length > 0;
+        const isCollapsed = collapsedOrgNodes.has(node.id);
+        const descCount = hasChildren ? countDescendants(node) : 0;
+
+        const isUniv   = node.orgLevel === 'university';
+        const isCampus = node.orgLevel === 'campus';
+        const isFaculty = node.orgLevel === 'faculty';
+
+        // Left accent bar — full-height colored strip by level
+        const accentW  = isUniv ? 4 : isCampus ? 3 : isFaculty ? 3 : 2;
+        const accentOp = isUniv ? 1 : isCampus ? 0.75 : isFaculty ? 0.55 : 0.35;
+        const accentBar = `<div style="width:${accentW}px;flex-shrink:0;align-self:stretch;background:${cfg.color};opacity:${accentOp};border-radius:0 2px 2px 0;"></div>`;
+
+        // Row height and name weight per level
+        const minH      = isUniv ? '56px' : isCampus ? '52px' : '44px';
+        const nameWt    = isUniv ? 'font-bold text-[0.9rem]' : isCampus ? 'font-semibold text-sm' : 'font-medium text-sm';
+        const rowBorder = `border-bottom:1px solid ${cfg.color}18;`;
+
+        const chevron = hasChildren
+          ? `<svg class="w-3 h-3 flex-shrink-0 transition-transform ${isCollapsed ? '' : 'rotate-90'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:${cfg.color}88;">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+             </svg>`
+          : `<span style="width:12px;flex-shrink:0;display:inline-block;"></span>`;
+
+        const countBadge = hasChildren
+          ? `<span class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-md" style="color:${cfg.color};background:${cfg.bg};border:1px solid ${cfg.color}33;">${descCount}</span>`
+          : '';
+
+        const nameArea = hasChildren
+          ? `<div class="flex-1 min-w-0 py-2.5 pr-2 cursor-pointer select-none" onclick="toggleOrgNode(${node.id})" title="${isCollapsed ? 'แสดงหน่วยงานย่อย' : 'ซ่อนหน่วยงานย่อย'}">
+              <div class="flex items-center gap-2 flex-wrap">
+                ${chevron}
+                <span class="${nameWt} text-gray-800 leading-snug hover:text-[#006664] transition-colors">${node.nameTh}</span>
+                <code class="font-mono text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">${node.code}</code>
+                ${countBadge}
+              </div>
+              ${node.nameEn ? `<p class="text-xs text-gray-400 mt-0.5 ml-[14px]">${node.nameEn}</p>` : ''}
+            </div>`
+          : `<div class="flex-1 min-w-0 py-2.5 pr-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span style="width:12px;flex-shrink:0;display:inline-block;"></span>
+                <span class="${nameWt} text-gray-800 leading-snug">${node.nameTh}</span>
+                <code class="font-mono text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">${node.code}</code>
+              </div>
+              ${node.nameEn ? `<p class="text-xs text-gray-400 mt-0.5 ml-[14px]">${node.nameEn}</p>` : ''}
+            </div>`;
+
+        return `<div class="flex items-center hover:brightness-[0.97] transition-all" style="min-height:${minH};background:${cfg.rowBg};${rowBorder}">
+          ${accentBar}
+          ${guide}
+          <div class="w-7 h-7 flex items-center justify-center flex-shrink-0 mx-2.5" style="color:${cfg.color}">
+            ${node.orgLevel === 'campus'
+              ? `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="currentColor" fill-rule="evenodd" d="M10.75 2h2c1.886 0 2.828 0 3.414.586S16.75 4.114 16.75 6v15.25h5a.75.75 0 0 1 0 1.5h-20a.75.75 0 0 1 0-1.5h5V6c0-1.886 0-2.828.586-3.414S8.864 2 10.75 2M9 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 12m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 15m2.75 3.25a.75.75 0 0 1 .75.75v2.25H11V19a.75.75 0 0 1 .75-.75M9.25 7a2.75 2.75 0 1 1 5.5 0a2.75 2.75 0 0 1-5.5 0" clip-rule="evenodd"/>
+                  <path fill="currentColor" d="M10.75 7a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0" opacity=".5"/>
+                  <path fill="currentColor" d="M20.913 5.889c.337.504.337 1.206.337 2.611v12.75h.5a.75.75 0 0 1 0 1.5h-20a.75.75 0 1 1 0-1.5h.5V8.5c0-1.405 0-2.107.337-2.611a2 2 0 0 1 .552-.552c.441-.295 2.537-.332 3.618-.336q-.005.437-.004.91V7.25H4.25a.75.75 0 1 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v6.5h10v-6.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 0 0 0-1.5h-2.497V5.91q.001-.471-.004-.91c1.081.005 3.17.042 3.612.337a2 2 0 0 1 .552.552" opacity=".5"/>
+                </svg>`
+              : node.orgLevel === 'faculty'
+              ? `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 512 512">
+                  <path fill="currentColor" d="M440 464V16H72v448H16v32h480v-32Zm-32 0H272v-64h-32v64H104V48h304Z"/>
+                  <path fill="currentColor" d="M160 304h32v32h-32zm80 0h32v32h-32zm80 0h32v32h-32zm-160-96h32v32h-32zm80 0h32v32h-32zm80 0h32v32h-32zm-160-96h32v32h-32zm80 0h32v32h-32zm80 0h32v32h-32z"/>
+                </svg>`
+              : node.orgLevel === 'department'
+              ? `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 256 256" style="color:#B2BB1E">
+                  <path fill="currentColor" d="M176 32v192a16 16 0 0 1-16 16H96a16 16 0 0 1-16-16V32a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16" opacity=".2"/>
+                  <path fill="currentColor" d="M140 128a12 12 0 1 1-12-12a12 12 0 0 1 12 12m-12-56a12 12 0 1 0-12-12a12 12 0 0 0 12 12m0 112a12 12 0 1 0 12 12a12 12 0 0 0-12-12"/>
+                </svg>`
+              : `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="m12 4.05l9.46 7.358a.75.75 0 1 1-.92 1.184l-.79-.614V20a.75.75 0 0 1-1.5 0v-9.189L12 5.951l-6.25 4.86V20a.75.75 0 0 1-1.5 0v-8.022l-.79.614a.75.75 0 0 1-.92-1.184l1.71-1.33V7.5c0-.69.56-1.25 1.25-1.25h1a1.25 1.25 0 0 1 1.242 1.111zM6.25 8.425V7.75h-.5V8.8z"/>
+                  <path fill="currentColor" d="M10.5 14.75a.25.25 0 0 0-.25.25v5a.75.75 0 0 1-1.5 0v-5c0-.966.784-1.75 1.75-1.75h3c.966 0 1.75.784 1.75 1.75v5a.75.75 0 0 1-1.5 0v-5a.25.25 0 0 0-.25-.25z" opacity=".5"/>
+                </svg>`}
+          </div>
+          ${nameArea}
+          <div class="flex items-center gap-2 px-3 flex-shrink-0">
+            <span class="hidden sm:inline-flex px-2 py-0.5 text-xs font-medium rounded whitespace-nowrap" style="color:${cfg.color};background:${cfg.bg};border:1px solid ${cfg.color}33;">${cfg.label}</span>
+            ${statusBadge(node.isActive)}
+            <div class="flex gap-1 ml-1">
+              <button onclick="editOrg(${node.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                แก้ไข
+              </button>
+              <button onclick="deleteItem('org', ${node.id}, '${safe}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                ลบ
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filterOrgs() {
+      const level = document.getElementById('orgLevelFilter').value;
+      const q = (document.getElementById('orgSearchInput')?.value || '').toLowerCase();
+      const visible = getVisibleOrgs(allOrgs);
+      const effectiveLevel = level === 'university' ? '' : level;
+      if (!effectiveLevel && !q) { renderOrgsTable(visible); return; }
+
+      // Find directly matched orgs (within role-visible set)
+      let matched = visible;
+      if (effectiveLevel) matched = matched.filter(o => o.orgLevel === effectiveLevel);
+      if (q) matched = matched.filter(o =>
+        o.nameTh?.toLowerCase().includes(q) ||
+        o.nameEn?.toLowerCase().includes(q) ||
+        o.code?.toLowerCase().includes(q)
+      );
+
+      // Include ancestors so tree context is preserved (only within visible set)
+      const byId = Object.fromEntries(visible.map(o => [o.id, o]));
+      const ids = new Set(matched.map(o => o.id));
+      for (const org of matched) {
+        let cur = org;
+        while (cur.parentId && byId[cur.parentId]) {
+          ids.add(cur.parentId);
+          cur = byId[cur.parentId];
+        }
+      }
+      renderOrgsTable(visible.filter(o => ids.has(o.id)));
+    }
+
+    function openOrgModal() {
+      document.getElementById('orgModalTitle').textContent = 'เพิ่มหน่วยงาน';
+      document.getElementById('orgModalId').value = '';
+      document.getElementById('orgCode').value = '';
+      document.getElementById('orgNameTh').value = '';
+      document.getElementById('orgNameEn').value = '';
+      document.getElementById('orgLevel').value = 'faculty';
+      document.getElementById('orgIsActiveRow').classList.add('hidden');
+
+      const sel = document.getElementById('orgParentId');
+      sel.innerHTML = '<option value="">-- ไม่มีหน่วยงานแม่ --</option>' +
+        allOrgs.filter(o => o.isActive).map(o => `<option value="${o.id}">[${getOrgLevelTh(o.orgLevel)}] ${o.nameTh}</option>`).join('');
+
+      populateCampusSelect(null);
+      (window as any).updateCampusRowVisibility();
+      openModal('orgModal');
+    }
+
+    function editOrg(id) {
+      const org = allOrgs.find(o => o.id === id);
+      if (!org) return;
+
+      document.getElementById('orgModalTitle').textContent = 'แก้ไขหน่วยงาน';
+      document.getElementById('orgModalId').value = org.id;
+      document.getElementById('orgCode').value = org.code;
+      document.getElementById('orgNameTh').value = org.nameTh;
+      document.getElementById('orgNameEn').value = org.nameEn || '';
+      document.getElementById('orgLevel').value = org.orgLevel;
+      document.getElementById('orgIsActiveRow').classList.remove('hidden');
+      document.getElementById('orgIsActive').checked = org.isActive;
+
+      const sel = document.getElementById('orgParentId');
+      sel.innerHTML = '<option value="">-- ไม่มีหน่วยงานแม่ --</option>' +
+        allOrgs.filter(o => o.id !== id && o.isActive).map(o =>
+          `<option value="${o.id}" ${o.id === org.parentId ? 'selected' : ''}>[${getOrgLevelTh(o.orgLevel)}] ${o.nameTh}</option>`
+        ).join('');
+
+      populateCampusSelect(org.campusId ?? null);
+      (window as any).updateCampusRowVisibility();
+      openModal('orgModal');
+    }
+
+    async function saveOrg() {
+      const id = document.getElementById('orgModalId').value;
+      const code = document.getElementById('orgCode').value.trim();
+      const nameTh = document.getElementById('orgNameTh').value.trim();
+      const nameEn = document.getElementById('orgNameEn').value.trim() || undefined;
+      const orgLevel = document.getElementById('orgLevel').value;
+      const parentId = document.getElementById('orgParentId').value ? parseInt(document.getElementById('orgParentId').value) : undefined;
+      const campusIdRaw = (document.getElementById('orgCampusId') as HTMLSelectElement).value;
+      const campusId = campusIdRaw ? parseInt(campusIdRaw) : undefined;
+      const isActive = id ? (document.getElementById('orgIsActive') as HTMLInputElement).checked : undefined;
+
+      if (!code || !nameTh) {
+        (window as any).showToast('กรุณากรอกรหัสและชื่อหน่วยงาน', 'error');
+        return;
+      }
+
+      try {
+        const url = id ? `${API}/api/settings/organizations/${id}` : `${API}/api/settings/organizations`;
+        const method = id ? 'PUT' : 'POST';
+        const res = await (window as any).apiFetch(url, {
+          method,
+          body: JSON.stringify({ code, nameTh, nameEn, orgLevel, parentId, campusId, isActive }),
+        });
+        const json = await res.json();
+        if (json.success) {
+          (window as any).showToast(json.message, 'success');
+          closeModal('orgModal');
+          await loadOrganizations();
+        } else {
+          (window as any).showToast(json.message || 'เกิดข้อผิดพลาด', 'error');
+        }
+      } catch {
+        (window as any).showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+      }
+    }
+
+    // =====================
+    // Budget Tab
+    // =====================
+    function renderSubsidies(data) {
+      const tbody = document.getElementById('subsidiesTableBody');
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">ไม่พบข้อมูล</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(s => `<tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-mono text-sm text-gray-600">${s.code}</td>
+        <td class="px-4 py-3 font-medium text-gray-800">${s.nameTh}</td>
+        <td class="px-4 py-3 text-gray-500 text-sm">${s.nameEn || '-'}</td>
+        <td class="px-4 py-3">${statusBadge(s.isActive)}</td>
+        <td class="px-4 py-3 text-right">
+          <div class="flex gap-1 justify-end">
+            <button onclick="editBudgetItem('subsidies', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              แก้ไข
+            </button>
+            <button onclick="deleteItem('budget-subsidies', ${s.id}, '${s.nameTh.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              ลบ
+            </button>
+          </div>
+        </td>
+      </tr>`).join('');
+    }
+
+    function filterSubsidies() {
+      const q = (document.getElementById('subsidySearch')?.value || '').toLowerCase();
+      if (!q) { renderSubsidies(allSubsidies); return; }
+      renderSubsidies(allSubsidies.filter(s =>
+        s.code?.toLowerCase().includes(q) ||
+        s.nameTh?.toLowerCase().includes(q) ||
+        s.nameEn?.toLowerCase().includes(q)
+      ));
+    }
+
+    async function loadBudgetSubsidies() {
+      const tbody = document.getElementById('subsidiesTableBody');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/budget-subsidies`);
+        const json = await res.json();
+        allSubsidies = json.data || [];
+        renderSubsidies(allSubsidies);
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
+      }
+    }
+
+    function renderSubsidyTypes(data) {
+      const tbody = document.getElementById('subsidyTypesTableBody');
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">ไม่พบข้อมูล</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(s => `<tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-mono text-sm text-gray-600">${s.code}</td>
+        <td class="px-4 py-3 font-medium text-gray-800">${s.nameTh}</td>
+        <td class="px-4 py-3 text-gray-500 text-sm">${s.subsidy?.nameTh || '-'}</td>
+        <td class="px-4 py-3">${statusBadge(s.isActive)}</td>
+        <td class="px-4 py-3 text-right">
+          <div class="flex gap-1 justify-end">
+            <button onclick="editBudgetItem('subsidy-types', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              แก้ไข
+            </button>
+            <button onclick="deleteItem('budget-subsidy-types', ${s.id}, '${s.nameTh.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              ลบ
+            </button>
+          </div>
+        </td>
+      </tr>`).join('');
+    }
+
+    function filterSubsidyTypes() {
+      const q = (document.getElementById('subsidyTypeSearch')?.value || '').toLowerCase();
+      const subsidyId = document.getElementById('subsidyTypeFilter')?.value || '';
+      let data = allSubsidyTypes;
+      if (subsidyId) data = data.filter(s => String(s.subsidyId) === subsidyId);
+      if (q) data = data.filter(s =>
+        s.code?.toLowerCase().includes(q) ||
+        s.nameTh?.toLowerCase().includes(q)
+      );
+      renderSubsidyTypes(data);
+    }
+
+    async function loadBudgetSubsidyTypes() {
+      const tbody = document.getElementById('subsidyTypesTableBody');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/budget-subsidy-types`);
+        const json = await res.json();
+        allSubsidyTypes = json.data || [];
+        // Populate filter dropdown
+        const sel = document.getElementById('subsidyTypeFilter');
+        if (sel) {
+          sel.innerHTML = '<option value="">ทุกงบอุดหนุน</option>' +
+            allSubsidies.map(s => `<option value="${s.id}">${s.nameTh}</option>`).join('');
+        }
+        renderSubsidyTypes(allSubsidyTypes);
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
+      }
+    }
+
+    function renderGroups(data) {
+      const container = document.getElementById('groupsTableBody');
+      if (!container) return;
+      if (!data.length) {
+        container.innerHTML = `<div class="flex flex-col items-center gap-2 text-gray-400 py-10"><p class="text-sm">ไม่พบข้อมูล</p></div>`;
+        return;
+      }
+      // จัดกลุ่มตาม budgetType
+      const grouped: Record<string, { label: string; items: any[] }> = {};
+      for (const s of data) {
+        const key = String(s.budgetTypeId ?? '__none__');
+        const label = s.budgetType?.name || '-';
+        if (!grouped[key]) grouped[key] = { label, items: [] };
+        grouped[key].items.push(s);
+      }
+      let html = '';
+      for (const key of Object.keys(grouped)) {
+        const { label, items } = grouped[key];
+        // Group header
+        html += `<div class="flex items-center gap-3 px-4 py-2 bg-[#006664]/5 border-t border-b border-[#006664]/15">
+          <span class="text-sm font-bold text-[#006664] uppercase tracking-wider">${label}</span>
+          <span class="text-xs text-gray-400">${items.length} รายการ</span>
+        </div>`;
+        for (const s of items) {
+          const safeName = s.name.replace(/'/g, "\\'");
+          html += `<div class="flex items-stretch border-b border-gray-100 hover:brightness-[0.97] transition-all" style="min-height:44px;">
+            <div style="width:4px;flex-shrink:0;background:#006664;opacity:0.4;"></div>
+            <div class="flex items-center flex-1 px-4 py-2.5 min-w-0">
+              <span class="font-medium text-xs text-gray-800">${s.name}</span>
+            </div>
+            <div class="flex items-center gap-2 px-3 flex-shrink-0">
+              ${statusBadge(s.isActive)}
+              <div class="flex gap-1 ml-1">
+                <button onclick="editBudgetItem('groups', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  แก้ไข
+                </button>
+                <button onclick="deleteItem('budget-groups', ${s.id}, '${safeName}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  ลบ
+                </button>
+              </div>
+            </div>
+          </div>`;
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    function filterGroups() {
+      const q = (document.getElementById('groupSearch')?.value || '').toLowerCase();
+      const typeId = document.getElementById('groupTypeFilter')?.value || '';
+      let data = allGroups;
+      if (typeId) data = data.filter(s => String(s.budgetTypeId) === typeId);
+      if (q) data = data.filter(s =>
+        s.groupType?.toLowerCase().includes(q) ||
+        s.name?.toLowerCase().includes(q)
+      );
+      renderGroups(data);
+    }
+
+    async function loadBudgetGroups() {
+      const container = document.getElementById('groupsTableBody');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/budget-groups`);
+        const json = await res.json();
+        allGroups = json.data || [];
+        // Populate filter dropdown — เฉพาะชื่อกลุ่มที่มีในข้อมูลจริง
+        const sel = document.getElementById('groupTypeFilter');
+        if (sel) {
+          const seen = new Map<string, string>();
+          for (const g of allGroups as any[]) {
+            if (g.budgetTypeId && g.budgetType?.name && !seen.has(String(g.budgetTypeId))) {
+              seen.set(String(g.budgetTypeId), g.budgetType.name);
+            }
+          }
+          const opts = [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1], 'th'));
+          sel.innerHTML = '<option value="">ทุกกลุ่ม</option>' +
+            opts.map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
+        }
+        renderGroups(allGroups);
+      } catch {
+        if (container) container.innerHTML = `<div class="flex items-center justify-center py-10 text-red-400 text-sm">โหลดข้อมูลล้มเหลว</div>`;
+      }
+    }
+
+    function renderExpenseDetails(data: any[]) {
+      const container = document.getElementById('expenseDetailsContainer');
+      if (!container) return;
+      if (!data.length) {
+        container.innerHTML = `<div class="flex flex-col items-center gap-2 text-gray-400 py-10"><p class="text-sm">ไม่พบข้อมูล</p></div>`;
+        return;
+      }
+
+      // Build tree: attach sub items under their main parent
+      const byId: Record<number, any> = {};
+      for (const s of data) byId[s.id] = { ...s, children: [] };
+
+      const roots: any[] = [];
+      for (const s of data) {
+        if (s.detailType === 'sub' && s.parentId && byId[s.parentId]) {
+          byId[s.parentId].children.push(byId[s.id]);
+        } else {
+          roots.push(byId[s.id]);
+        }
+      }
+
+      // Sort
+      roots.sort((a: any, b: any) => (a.name || '').localeCompare(b.name || '', 'th'));
+      for (const r of roots) r.children.sort((a: any, b: any) => (a.name || '').localeCompare(b.name || '', 'th'));
+
+      const actionBtns = (id: number, safeName: string) => `
+        <div class="flex gap-1 ml-1 flex-shrink-0">
+          <button onclick="editBudgetItem('expense-details', ${id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            แก้ไข
+          </button>
+          <button onclick="deleteItem('budget-expense-details', ${id}, '${safeName}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            ลบ
+          </button>
+        </div>`;
+
+      let html = '';
+      for (const main of roots) {
+        const hasChildren = main.children.length > 0;
+        const isCollapsed = collapsedExpenseNodes.has(main.id);
+        const safeName = main.name.replace(/'/g, "\\'");
+
+        html += `<div class="flex items-stretch border-b border-gray-100 hover:brightness-[0.97] transition-all" style="min-height:48px;background:rgba(0,102,100,0.025);">
+          <div style="width:4px;flex-shrink:0;background:#006664;opacity:0.5;"></div>
+          <div class="flex items-center flex-1 px-4 py-2.5 gap-2 min-w-0">
+            ${hasChildren
+              ? `<svg class="w-3.5 h-3.5 flex-shrink-0 transition-transform text-gray-400 ${isCollapsed ? '' : 'rotate-90'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>`
+              : `<span class="w-3.5 flex-shrink-0"></span>`}
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="${hasChildren ? 'cursor-pointer hover:text-[#006664]' : ''} font-semibold text-sm text-gray-800" ${hasChildren ? `onclick="toggleExpenseNode(${main.id})"` : ''}>${main.name}</span>
+                <span class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded" style="color:#006664;background:rgba(0,102,100,0.08);border:1px solid rgba(0,102,100,0.25);">หัวข้อหลัก</span>
+                ${hasChildren ? `<span class="text-xs text-gray-400">${main.children.length} หัวข้อย่อย</span>` : ''}
+              </div>
+              ${main.budgetGroup?.name ? `<p class="text-xs text-gray-400 mt-0.5">${main.budgetGroup.name}</p>` : ''}
+            </div>
+          </div>
+          <div class="flex items-center gap-2 px-3 flex-shrink-0">
+            ${statusBadge(main.isActive)}
+            ${actionBtns(main.id, safeName)}
+          </div>
+        </div>`;
+
+        if (!isCollapsed) {
+          const lastIdx = main.children.length - 1;
+          for (let i = 0; i < main.children.length; i++) {
+            const sub = main.children[i];
+            const isLast = i === lastIdx;
+            const safeSubName = sub.name.replace(/'/g, "\\'");
+            html += `<div class="flex items-stretch border-b border-gray-100 hover:brightness-[0.97] transition-all" style="min-height:42px;">
+              <div style="width:4px;flex-shrink:0;background:#006664;opacity:0.5;"></div>
+              <!-- tree guide -->
+              <div style="width:22px;flex-shrink:0;display:flex;justify-content:center;position:relative;">
+                <div style="position:absolute;left:50%;top:0;width:2px;height:${isLast ? '50%' : '100%'};background:rgba(0,102,100,0.2);transform:translateX(-50%);"></div>
+                <div style="position:absolute;left:50%;top:50%;width:55%;height:2px;background:rgba(0,102,100,0.2);transform:translateY(-50%);"></div>
+              </div>
+              <div class="flex items-center flex-1 px-3 py-2 gap-2 min-w-0">
+                <span class="w-5 flex-shrink-0"></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-medium text-sm text-gray-700">${sub.name}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 px-3 flex-shrink-0">
+                ${statusBadge(sub.isActive)}
+                ${actionBtns(sub.id, safeSubName)}
+              </div>
+            </div>`;
+          }
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    (window as any).toggleExpenseNode = function(id: number) {
+      if (collapsedExpenseNodes.has(id)) collapsedExpenseNodes.delete(id);
+      else collapsedExpenseNodes.add(id);
+      filterExpenseDetails();
+    };
+
+    function filterExpenseDetails() {
+      const q = (document.getElementById('expenseSearch')?.value || '').toLowerCase();
+      const groupId = document.getElementById('expenseGroupFilter')?.value || '';
+
+      const all = allExpenseDetails as any[];
+
+      if (!q && !groupId) { renderExpenseDetails(all); return; }
+
+      if (groupId) {
+        const mainId = Number(groupId);
+        // แสดง main นั้นเสมอ + sub ที่ตรงกับคำค้น (หรือทุก sub ถ้าไม่มีคำค้น)
+        renderExpenseDetails(all.filter(s =>
+          s.id === mainId ||
+          (s.parentId === mainId && (!q || s.name?.toLowerCase().includes(q)))
+        ));
+        return;
+      }
+
+      // ค้นหาเฉพาะ text: match รายการที่ชื่อตรง + ดึง parent main มาด้วย (ไม่ดึง sub อื่น)
+      const matchedIds = new Set<number>();
+      for (const s of all) {
+        if (s.name?.toLowerCase().includes(q)) matchedIds.add(s.id);
+      }
+      // sub match → ดึง parent main มาด้วย
+      for (const s of all) {
+        if (matchedIds.has(s.id) && s.detailType === 'sub' && s.parentId) matchedIds.add(s.parentId);
+      }
+      renderExpenseDetails(all.filter(s => matchedIds.has(s.id)));
+    }
+
+    async function loadBudgetExpenseDetails() {
+      const container = document.getElementById('expenseDetailsContainer');
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/settings/budget-expense-details`);
+        const json = await res.json();
+        allExpenseDetails = json.data || [];
+        const sel = document.getElementById('expenseGroupFilter');
+        if (sel) {
+          const mainItems = (allExpenseDetails as any[]).filter(s => s.detailType === 'main');
+          mainItems.sort((a: any, b: any) => (a.name || '').localeCompare(b.name || '', 'th'));
+          sel.innerHTML = '<option value="">ทุกหัวข้อหลัก</option>' +
+            mainItems.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+        renderExpenseDetails(allExpenseDetails as any[]);
+      } catch {
+        if (container) container.innerHTML = `<div class="flex items-center justify-center py-10 text-red-400 text-sm">โหลดข้อมูลล้มเหลว</div>`;
+      }
+    }
+
+    function openBudgetModal(type) {
+      document.getElementById('budgetModalId').value = '';
+      document.getElementById('budgetModalType').value = type;
+      document.getElementById('budgetCode').value = '';
+      document.getElementById('budgetNameTh').value = '';
+      document.getElementById('budgetNameEn').value = '';
+      document.getElementById('budgetIsActiveRow').classList.add('hidden');
+
+      const parentRow = document.getElementById('budgetParentRow');
+      const parentLabel = document.getElementById('budgetParentLabel');
+      const parentSel = document.getElementById('budgetParentId');
+      const codeRow = document.getElementById('budgetCodeRow');
+      const nameEnRow = document.getElementById('budgetNameEnRow');
+      const nameLbl = document.getElementById('budgetNameThLabel');
+
+      const titles = {
+        'subsidies': 'เพิ่มงบอุดหนุน',
+        'subsidy-types': 'เพิ่มประเภทงบอุดหนุน',
+        'groups': 'เพิ่มกลุ่มงบอุดหนุน',
+        'expense-details': 'เพิ่มรายละเอียดค่าใช้จ่าย',
+      };
+      document.getElementById('budgetModalTitle').textContent = titles[type] || 'เพิ่มข้อมูล';
+
+      // groups/expense-details ไม่มี code/nameEn ใน schema
+      const isNameOnly = type === 'groups' || type === 'expense-details';
+      if (codeRow) codeRow.classList.toggle('hidden', isNameOnly);
+      if (nameEnRow) nameEnRow.classList.toggle('hidden', isNameOnly);
+      if (nameLbl) nameLbl.innerHTML = isNameOnly ? 'ชื่อ <span class="text-red-500">*</span>' : 'ชื่อ (ไทย) <span class="text-red-500">*</span>';
+
+      if (type === 'subsidies') {
+        parentRow.classList.add('hidden');
+      } else if (type === 'subsidy-types') {
+        parentRow.classList.remove('hidden');
+        parentLabel.innerHTML = 'งบอุดหนุน <span class="text-red-500">*</span>';
+        parentSel.innerHTML = '<option value="">-- เลือกงบอุดหนุน --</option>' +
+          allSubsidies.filter(s => s.isActive).map(s => `<option value="${s.id}">${s.nameTh}</option>`).join('');
+      } else if (type === 'groups') {
+        parentRow.classList.remove('hidden');
+        parentLabel.innerHTML = 'ประเภทงบอุดหนุน <span class="text-red-500">*</span>';
+        parentSel.innerHTML = '<option value="">-- เลือกประเภทงบอุดหนุน --</option>' +
+          allSubsidyTypes.filter(s => s.isActive).map(s => `<option value="${s.id}">${s.nameTh}</option>`).join('');
+      } else if (type === 'expense-details') {
+        parentRow.classList.remove('hidden');
+        parentLabel.innerHTML = 'กลุ่มงบอุดหนุน <span class="text-red-500">*</span>';
+        parentSel.innerHTML = '<option value="">-- เลือกกลุ่มงบอุดหนุน --</option>' +
+          allGroups.filter(s => s.isActive).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      }
+
+      openModal('budgetModal');
+    }
+
+    function editBudgetItem(type, id) {
+      let item;
+      if (type === 'subsidies') item = allSubsidies.find(s => s.id === id);
+      else if (type === 'subsidy-types') item = allSubsidyTypes.find(s => s.id === id);
+      else if (type === 'groups') item = allGroups.find(s => s.id === id);
+      else if (type === 'expense-details') item = allExpenseDetails.find(s => s.id === id);
+
+      if (!item) return;
+
+      openBudgetModal(type);
+
+      if (item) {
+        document.getElementById('budgetModalId').value = id;
+        // groups และ expense-details ใช้ field `name` (ไม่มี code/nameTh)
+        const isNameOnly = type === 'groups' || type === 'expense-details';
+        document.getElementById('budgetCode').value = isNameOnly ? '' : (item.code || '');
+        document.getElementById('budgetNameTh').value = isNameOnly ? item.name : (item.nameTh || '');
+        document.getElementById('budgetNameEn').value = item.nameEn || '';
+        document.getElementById('budgetIsActiveRow').classList.remove('hidden');
+        document.getElementById('budgetIsActive').checked = item.isActive;
+
+        const titles = {
+          'subsidies': 'แก้ไขงบอุดหนุน',
+          'subsidy-types': 'แก้ไขประเภทงบอุดหนุน',
+          'groups': 'แก้ไขกลุ่มงบอุดหนุน',
+          'expense-details': 'แก้ไขรายละเอียดค่าใช้จ่าย',
+        };
+        document.getElementById('budgetModalTitle').textContent = titles[type] || 'แก้ไขข้อมูล';
+
+        if (type === 'subsidy-types' && item.subsidyId) {
+          document.getElementById('budgetParentId').value = item.subsidyId;
+        } else if (type === 'groups' && item.budgetTypeId) {
+          document.getElementById('budgetParentId').value = item.budgetTypeId;
+        } else if (type === 'expense-details' && item.budgetGroupId) {
+          document.getElementById('budgetParentId').value = item.budgetGroupId;
+        }
+      }
+    }
+
+    async function saveBudgetItem() {
+      const id = document.getElementById('budgetModalId').value;
+      const type = document.getElementById('budgetModalType').value;
+      const code = document.getElementById('budgetCode').value.trim();
+      const nameTh = document.getElementById('budgetNameTh').value.trim();
+      const nameEn = document.getElementById('budgetNameEn').value.trim() || undefined;
+      const parentId = document.getElementById('budgetParentId').value ? parseInt(document.getElementById('budgetParentId').value) : undefined;
+      const isActive = id ? document.getElementById('budgetIsActive').checked : undefined;
+
+      // groups และ expense-details ใช้ field `name` แทน nameTh/code
+      const isNameOnly = type === 'groups' || type === 'expense-details';
+      if (isNameOnly) {
+        if (!nameTh) { (window as any).showToast('กรุณากรอกชื่อ', 'error'); return; }
+      } else {
+        if (!code || !nameTh) { (window as any).showToast('กรุณากรอกรหัสและชื่อ', 'error'); return; }
+      }
+
+      const endpointMap = {
+        'subsidies': 'budget-subsidies',
+        'subsidy-types': 'budget-subsidy-types',
+        'groups': 'budget-groups',
+        'expense-details': 'budget-expense-details',
+      };
+      const endpoint = endpointMap[type];
+
+      let body: any;
+      if (type === 'groups') {
+        body = { name: nameTh, budgetTypeId: parentId };
+      } else if (type === 'expense-details') {
+        body = { name: nameTh, budgetGroupId: parentId };
+      } else {
+        body = { code, nameTh, nameEn };
+        if (type === 'subsidy-types') body = { ...body, subsidyId: parentId };
+      }
+      if (id) body = { ...body, isActive };
+
+      try {
+        const url = id ? `${API}/api/settings/${endpoint}/${id}` : `${API}/api/settings/${endpoint}`;
+        const method = id ? 'PUT' : 'POST';
+        const res = await (window as any).apiFetch(url, { method, body: JSON.stringify(body) });
+        const json = await res.json();
+        if (json.success) {
+          (window as any).showToast(json.message, 'success');
+          closeModal('budgetModal');
+          // Reload appropriate table
+          if (type === 'subsidies') await loadBudgetSubsidies();
+          else if (type === 'subsidy-types') await loadBudgetSubsidyTypes();
+          else if (type === 'groups') await loadBudgetGroups();
+          else if (type === 'expense-details') await loadBudgetExpenseDetails();
+        } else {
+          (window as any).showToast(json.message || 'เกิดข้อผิดพลาด', 'error');
+        }
+      } catch {
+        (window as any).showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+      }
+    }
+
+    // =====================
+    // Delete (generic)
+    // =====================
+    function deleteItem(type, id, label) {
+      document.getElementById('confirmMsg').textContent = `ต้องการลบ "${label}" ใช่หรือไม่?`;
+      const btn = document.getElementById('confirmDeleteBtn');
+      btn.onclick = async () => {
+        try {
+          let url;
+          if (type === 'affiliation') url = `${API}/api/admin/affiliations/${id}`;
+          else if (type === 'org') url = `${API}/api/settings/organizations/${id}`;
+          else url = `${API}/api/settings/${type}/${id}`;
+
+          const res = await (window as any).apiFetch(url, { method: 'DELETE' });
+          const json = await res.json();
+          if (json.success) {
+            (window as any).showToast(json.message, 'success');
+            closeModal('confirmModal');
+            // Reload appropriate data
+            if (type === 'org') loadOrganizations();
+            else if (type === 'budget-subsidies') loadBudgetSubsidies();
+            else if (type === 'budget-subsidy-types') loadBudgetSubsidyTypes();
+            else if (type === 'budget-groups') loadBudgetGroups();
+            else if (type === 'budget-expense-details') loadBudgetExpenseDetails();
+          } else {
+            (window as any).showToast(json.message || 'เกิดข้อผิดพลาด', 'error');
+          }
+        } catch {
+          (window as any).showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        }
+      };
+      openModal('confirmModal');
+    }
+
+    // =====================
+    // Budget sub-tab load on switch
+    // =====================
+    // Expose all onclick-referenced functions to window (Astro script = ES module, not global)
+    // =====================
+    const _w = window as any;
+    _w.switchTab = switchTab;
+    _w.closeModal = closeModal;
+    _w.filterOrgs = filterOrgs;
+    _w.openOrgModal = openOrgModal;
+    _w.editOrg = editOrg;
+    _w.saveOrg = saveOrg;
+    _w.openBudgetModal = openBudgetModal;
+    _w.editBudgetItem = editBudgetItem;
+    _w.saveBudgetItem = saveBudgetItem;
+    _w.deleteItem = deleteItem;
+    _w.filterSubsidies = filterSubsidies;
+    _w.filterSubsidyTypes = filterSubsidyTypes;
+    _w.filterGroups = filterGroups;
+    _w.filterExpenseDetails = filterExpenseDetails;
+
+    const budgetTabLoaded = { subsidies: false, 'subsidy-types': false, groups: false, 'expense-details': false };
+    const origSwitchBudgetTab = switchBudgetTab;
+    window.switchBudgetTab = function(tab) {
+      origSwitchBudgetTab(tab);
+      if (!budgetTabLoaded[tab]) {
+        budgetTabLoaded[tab] = true;
+        if (tab === 'subsidies') loadBudgetSubsidies();
+        else if (tab === 'subsidy-types') loadBudgetSubsidyTypes();
+        else if (tab === 'groups') loadBudgetGroups();
+        else if (tab === 'expense-details') loadBudgetExpenseDetails();
+      }
+    };
+
+    // =====================
+    // Initialize
+    // =====================
+    document.addEventListener('DOMContentLoaded', async () => {
+      // แสดงข้อมูลจาก localStorage ก่อน (fast initial render)
+      const userStr = localStorage.getItem('ku_user');
+      if (!userStr) { window.location.replace('/login'); return; }
+
+      let user: any;
+      try { user = JSON.parse(userStr); } catch { window.location.replace('/login'); return; }
+
+      let activeAffiliation: any = null;
+      try { activeAffiliation = JSON.parse(localStorage.getItem('ku_active_affiliation') || 'null'); } catch {}
+
+      const allowedRoles = [
+        'super_admin',
+        'univ_executive', 'univ_officer',
+        'campus_executive', 'campus_officer',
+        'faculty_executive', 'org_admin',
+        'unit_head', 'project_lead', 'staff',
+      ];
+      const role = activeAffiliation?.role;
+      if (!allowedRoles.includes(role)) {
+        document.getElementById('accessDenied').classList.remove('hidden');
+        return;
+      }
+
+      currentRole = role;
+      currentAffiliationOrg = activeAffiliation?.organization ?? null;
+      document.getElementById('settingsContent').classList.remove('hidden');
+
+      // Fetch /api/auth/me พร้อม auto-refresh เมื่อ token หมดอายุ
+      async function fetchMe() {
+        let token = localStorage.getItem('ku_access_token');
+        if (!token) return null;
+
+        let res = await fetch(`${API}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 401) {
+          const refreshToken = localStorage.getItem('ku_refresh_token');
+          if (!refreshToken) { window.location.replace('/login'); return null; }
+
+          const rfRes = await fetch(`${API}/api/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken }),
+          });
+          const rfData = await rfRes.json();
+
+          if (!rfData.success) { window.location.replace('/login'); return null; }
+
+          localStorage.setItem('ku_access_token', rfData.accessToken);
+          localStorage.setItem('ku_refresh_token', rfData.refreshToken);
+          if (rfData.user) localStorage.setItem('ku_user', JSON.stringify(rfData.user));
+
+          res = await fetch(`${API}/api/auth/me`, {
+            headers: { Authorization: `Bearer ${rfData.accessToken}` },
+          });
+        }
+
+        const data = await res.json();
+        return data.success ? data : null;
+      }
+
+      // Verify & refresh token ก่อนโหลดข้อมูล
+      // ถ้า token หมดอายุจะ refresh อัตโนมัติ, ถ้า refresh ไม่สำเร็จจะ redirect login
+      await fetchMe().then((data) => {
+        if (!data) return;
+        if (data.user) localStorage.setItem('ku_user', JSON.stringify(data.user));
+        if (data.activeAffiliation) localStorage.setItem('ku_active_affiliation', JSON.stringify(data.activeAffiliation));
+      }).catch(() => { /* ใช้ข้อมูลจาก localStorage แทน */ });
+
+      // Load initial data (token is now fresh)
+      await loadCampuses();
+      await loadOrganizations();
+      loadPermissionMatrix();
+      loadBudgetSubsidies();
+      budgetTabLoaded['subsidies'] = true;
+    });
+  </script>
+
+  <style>
+    .dropdown-arrow {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-position: right 6px center;
+      background-repeat: no-repeat;
+      background-size: 10px 6px;
+    }
+  </style>
+
+</AuthLayout>
