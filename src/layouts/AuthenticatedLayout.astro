@@ -265,6 +265,59 @@ const { title } = Astro.props;
         window.location.replace('/login');
       }
 
+      // =====================
+      // Proactive token refresh — refresh ก่อน token หมดอายุ
+      // =====================
+      let _proactiveRefreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+      async function _doProactiveRefresh() {
+        const refreshToken = localStorage.getItem('ku_refresh_token');
+        if (!refreshToken) return;
+        if (_isRefreshing) return; // มี refresh กำลังทำอยู่แล้ว
+
+        _isRefreshing = true;
+        try {
+          const rr = await fetch(`${_AUTH_API}/api/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken })
+          });
+          const rd = await rr.json();
+          if (!rd.success || !rd.accessToken) throw new Error('refresh failed');
+
+          localStorage.setItem('ku_access_token', rd.accessToken);
+          localStorage.setItem('ku_refresh_token', rd.refreshToken);
+
+          _refreshQueue.forEach(cb => cb(rd.accessToken));
+          _refreshQueue = [];
+
+          _scheduleProactiveRefresh(); // นัดหมายครั้งถัดไป
+        } catch {
+          _refreshQueue = [];
+          _forceLogout();
+        } finally {
+          _isRefreshing = false;
+        }
+      }
+
+      function _scheduleProactiveRefresh() {
+        if (_proactiveRefreshTimer) clearTimeout(_proactiveRefreshTimer);
+        const accessToken = localStorage.getItem('ku_access_token');
+        if (!accessToken) return;
+        try {
+          const payload = JSON.parse(atob(accessToken.split('.')[1]));
+          const exp: number = payload.exp; // Unix timestamp (วินาที)
+          const now = Math.floor(Date.now() / 1000);
+          const msUntilRefresh = Math.max(0, (exp - now - 60)) * 1000; // refresh 60 วินาทีก่อนหมดอายุ
+          _proactiveRefreshTimer = setTimeout(_doProactiveRefresh, msUntilRefresh);
+        } catch {
+          // JWT decode ล้มเหลว — ใช้ fallback refresh ทุก 10 นาที
+          _proactiveRefreshTimer = setTimeout(_doProactiveRefresh, 10 * 60 * 1000);
+        }
+      }
+
+      _scheduleProactiveRefresh();
+
       // Auth guard
       const token = localStorage.getItem('ku_access_token');
       const userStr = localStorage.getItem('ku_user');
