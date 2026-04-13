@@ -117,7 +117,10 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">เบอร์โทรศัพท์</dt>
           <dd class="text-sm font-semibold text-gray-900" id="infoPhone">-</dd>
         </div>
-        <div></div>
+        <div>
+          <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">ส่วนงาน</dt>
+          <dd class="text-sm font-semibold text-gray-900" id="infoCampus">-</dd>
+        </div>
         <div>
           <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">KU UID</dt>
           <dd class="text-sm font-bold text-[#1a5c2a] font-mono" id="infoKuUid">-</dd>
@@ -645,6 +648,11 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           // 3. หน่วยงานหลัก from user_affiliations.org_id -> organizations.name_th
           const primaryOrg = affiliations.find(a => a.isPrimary) || affiliations[0];
           setText('infoDepartment', primaryOrg?.organization?.nameTh || '-');
+
+          // 3b. ส่วนงาน (campus) — NULL campusId = บางเขน (ส่วนกลาง)
+          const campusName = primaryOrg?.organization?.campus?.nameTh
+            || (primaryOrg?.organization?.campusId == null ? 'บางเขน' : '-');
+          setText('infoCampus', campusName);
 
           setText('infoPhone', user.phone || '-'); // 4. เบอร์โทรศัพท์ from users.phone
           setText('infoKuUid', user.kuUid || '-');

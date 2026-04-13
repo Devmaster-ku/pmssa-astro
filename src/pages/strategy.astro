@@ -78,7 +78,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       </div>
     </div>
     <!-- Campus -->
-    <div id="cardCampus" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+    <div id="cardCampus" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-4 items-center gap-3">
       <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
            style="background-color: #f0fdf4;">
         <svg class="w-5 h-5 text-[#006664]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         </svg>
       </div>
       <div class="min-w-0">
-        <p class="text-xs text-gray-500">ระดับส่วนงาน</p>
+        <p class="text-xs text-gray-500">ระดับส่วนงาน/คณะ/สำนัก</p>
         <p class="text-lg font-bold text-[#b2bb1e] leading-tight" id="statDivStrategy">—</p>
         <p class="text-xs text-gray-400" id="statDivTactic">— กลยุทธ์</p>
       </div>
@@ -144,7 +144,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         </button>
         <!-- Tab 2 -->
         <button data-tab="campus"
-          class="tab-btn flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-[#006664] hover:border-[#006664] whitespace-nowrap transition-colors">
+          class="tab-btn hidden items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-[#006664] hover:border-[#006664] whitespace-nowrap transition-colors">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -159,7 +159,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
-          ระดับส่วนงาน
+          ระดับส่วนงาน/คณะ/สำนัก
         </button>
         <!-- Tab 4 -->
         <button data-tab="dean"
@@ -189,9 +189,6 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         <select id="yearFilter"
           class="border border-gray-200 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0c2957]/30 focus:border-[#0c2957]">
           <option value="">ทั้งหมด</option>
-          <option value="2568" selected>2568</option>
-          <option value="2567">2567</option>
-          <option value="2566">2566</option>
         </select>
         <!-- Status filter -->
         <select id="statusFilter"
@@ -199,7 +196,6 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           <option value="">ทุกสถานะ</option>
           <option value="active">ใช้งาน</option>
           <option value="draft">ร่าง</option>
-          <!-- <option value="archived">เก็บถาวร</option> -->
         </select>
       </div>
     </div>
@@ -252,33 +248,18 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           <p class="text-xs text-gray-500 mt-0.5">ยุทธศาสตร์เฉพาะของแต่ละวิทยาเขต สอดคล้องกับยุทธศาสตร์มหาวิทยาลัยและบริบทพื้นที่</p>
         </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-gray-200 bg-gray-50/80">
-              <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-16">ลำดับ</th>
-              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">รหัสยุทธศาสตร์</th>
-              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">ชื่อยุทธศาสตร์</th>
-              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">วิทยาเขต</th>
-              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">ปีงบประมาณ</th>
-              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">สถานะ</th>
-              <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">จัดการ</th>
-            </tr>
-          </thead>
-          <tbody id="tableCampus" class="divide-y divide-gray-100">
-            <tr>
-              <td colspan="7" class="px-5 py-12 text-center">
-                <div class="flex flex-col items-center gap-2 text-gray-400">
-                  <svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                  </svg>
-                  <p class="text-sm">กำลังโหลดข้อมูล...</p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Accordion list -->
+      <div id="campusAccordion" class="divide-y divide-gray-100">
+        <!-- Loading state -->
+        <div id="campusLoading" class="px-5 py-12 text-center">
+          <div class="flex flex-col items-center gap-2 text-gray-400">
+            <svg class="w-10 h-10 opacity-30 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm">กำลังโหลดข้อมูล...</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -866,6 +847,12 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   let allData: Record<MockLevel, Strategy[]> = { ...mockData };
   let currentCampusName: string | null = null; // เก็บชื่อวิทยาเขตของผู้ใช้
 
+  // Raw data stores สำหรับ accordion filtering
+  let univRawData: UnivStrategy[] = [];
+  let campusRawData: UnivStrategy[] = [];
+  let deptRawData: DeptStrategy[] = [];
+  let deanRawData: DeanStrategy[] = [];
+
   // ═══════════════════════════════════════════════
   //  HELPERS
   // ═══════════════════════════════════════════════
@@ -918,30 +905,34 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     // University — ใช้ accordion (loadUniversityStrategies) ไม่ใช้ mockData
     // stats cards ถูก update โดย loadSummary() แยกต่างหาก
 
-    // Campus
-    const campusRows = filter(allData.campus);
-    const tCampus = document.getElementById('tableCampus')!;
-    if (campusRows.length === 0) {
-      tCampus.innerHTML = emptyRow(7);
-    } else {
-      tCampus.innerHTML = campusRows.map((r, i) => `
-        <tr class="hover:bg-gray-50/60 transition-colors">
-          <td class="px-5 py-3 text-gray-400 text-xs">${i + 1}</td>
-          <td class="px-4 py-3 font-mono text-xs text-[#006664] font-medium">${r.code}</td>
-          <td class="px-4 py-3 text-gray-800 font-medium">${r.name}</td>
-          <td class="px-4 py-3 text-xs text-gray-600">${r.unit ?? '—'}</td>
-          <td class="px-4 py-3 text-gray-600 text-xs">${r.year}</td>
-          <td class="px-4 py-3">${statusBadge(r.status)}</td>
-          <td class="px-4 py-3">${actionBtns(r.id)}</td>
-        </tr>`).join('');
-    }
+    // Campus — ใช้ accordion (loadCampusStrategies) ไม่ใช้ mockData
+  }
 
-    // Pagination info (campus only for now)
-    const campusFiltered = filter(allData.campus);
-    document.getElementById('paginationInfo')!.textContent =
-      activeTab === 'campus'
-        ? `แสดง ${campusFiltered.length} จาก ${allData.campus.length} รายการ`
-        : '—';
+  function populateYearFilter(plans: (string | null | undefined)[]) {
+    const sel = document.getElementById('yearFilter') as HTMLSelectElement;
+    sel.innerHTML = '<option value="">ทั้งหมด</option>';
+    const unique = [...new Set(plans.filter((p): p is string => !!p))].sort().reverse();
+    unique.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      sel.appendChild(opt);
+    });
+    // เลือกปีล่าสุดเป็นค่าเริ่มต้น
+    if (unique.length > 0) sel.value = unique[0];
+  }
+
+  function filterAndRenderAccordion() {
+    const year = (document.getElementById('yearFilter') as HTMLSelectElement)?.value ?? '';
+    if (activeTab === 'university') {
+      renderUnivAccordion(year ? univRawData.filter(s => s.fiscalPlan === year) : univRawData);
+    } else if (activeTab === 'campus') {
+      renderCampusAccordion(year ? campusRawData.filter(s => s.fiscalPlan === year) : campusRawData);
+    } else if (activeTab === 'division') {
+      renderDeptAccordion(year ? deptRawData.filter(s => s.fiscalPlan === year) : deptRawData);
+    } else if (activeTab === 'dean') {
+      renderDeanAccordion(year ? deanRawData.filter(s => s.fiscalPlan === year) : deanRawData);
+    }
   }
 
   function emptyRow(cols: number): string {
@@ -987,6 +978,17 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       document.getElementById(`panel-${tab}`)?.classList.remove('hidden');
 
       renderAll();
+
+      // อัปเดต yearFilter ตามแท็บที่เลือก
+      (document.getElementById('yearFilter') as HTMLSelectElement).value = '';
+      const tabPlansMap: Partial<Record<StrategyLevel, (string | null | undefined)[]>> = {
+        university: univRawData.map(s => s.fiscalPlan),
+        campus:     campusRawData.map(s => s.fiscalPlan),
+        division:   deptRawData.map(s => s.fiscalPlan),
+        dean:       deanRawData.map(s => s.fiscalPlan),
+      };
+      populateYearFilter(tabPlansMap[tab] ?? []);
+      filterAndRenderAccordion();
     });
   });
 
@@ -1102,7 +1104,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     // Auto-fill ลำดับที่ จากจำนวนยุทธศาสตร์ที่มีอยู่
     let count = 0;
     if (activeTab === 'university') count = univStrategyStore.size;
-    else if (activeTab === 'campus') count = allData.campus.length;
+    else if (activeTab === 'campus') count = campusStrategyStore.size;
     else if (activeTab === 'division') count = deptStrategyStore.size;
     else if (activeTab === 'dean') count = deanStrategyStore.size;
     (document.getElementById('addOrder') as HTMLInputElement).value = String(count + 1);
@@ -1254,7 +1256,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
 
       // โหลดข้อมูลใหม่ตามระดับ
       if (level === 'university') loadUniversityStrategies();
-      else if (level === 'campus') loadUniversityStrategies(); // campus ใช้ตาราง strategies เหมือนกัน
+      else if (level === 'campus') loadCampusStrategies();
       else if (level === 'division') loadDepartmentStrategies();
       else if (level === 'dean') loadDeanStrategies();
       loadSummary();
@@ -1272,9 +1274,9 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   //  DELETE CONFIRMATION MODAL
   // ═══════════════════════════════════════════════
   let pendingDeleteId: number | null = null;
-  let pendingDeleteLevel: 'university' | 'division' | 'dean' | null = null;
+  let pendingDeleteLevel: 'university' | 'campus' | 'division' | 'dean' | null = null;
 
-  function openDeleteConfirm(id: number, level: 'university' | 'division' | 'dean', name: string) {
+  function openDeleteConfirm(id: number, level: 'university' | 'campus' | 'division' | 'dean', name: string) {
     pendingDeleteId = id;
     pendingDeleteLevel = level;
     document.getElementById('deleteConfirmName')!.textContent = name;
@@ -1306,12 +1308,14 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
 
     const endpointMap = {
       university: `http://localhost:3000/api/strategies/${pendingDeleteId}`,
+      campus:     `http://localhost:3000/api/strategies/${pendingDeleteId}`,
       division:   `http://localhost:3000/api/strategies/departments/${pendingDeleteId}`,
       dean:       `http://localhost:3000/api/strategies/dean/${pendingDeleteId}`,
     };
 
     const reloadMap = {
       university: loadUniversityStrategies,
+      campus:     loadCampusStrategies,
       division:   loadDepartmentStrategies,
       dean:       loadDeanStrategies,
     };
@@ -1346,6 +1350,13 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     openDeleteConfirm(Number(btn.dataset.univDeleteId), 'university', btn.dataset.univDeleteName ?? '');
   });
 
+  document.getElementById('campusAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.campus-delete-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    openDeleteConfirm(Number(btn.dataset.campusDeleteId), 'campus', btn.dataset.campusDeleteName ?? '');
+  });
+
   document.getElementById('deptAccordion')?.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest('.dept-delete-btn') as HTMLElement | null;
     if (!btn) return;
@@ -1364,7 +1375,10 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   //  FILTERS
   // ═══════════════════════════════════════════════
   document.getElementById('searchInput')?.addEventListener('input', renderAll);
-  document.getElementById('yearFilter')?.addEventListener('change', renderAll);
+  document.getElementById('yearFilter')?.addEventListener('change', () => {
+    renderAll();
+    filterAndRenderAccordion();
+  });
   document.getElementById('statusFilter')?.addEventListener('change', renderAll);
 
   // ═══════════════════════════════════════════════
@@ -1432,18 +1446,24 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       const tabCampus = document.querySelector('[data-tab="campus"]') as HTMLElement | null;
 
       if (isBangkhen) {
-        // ผู้ใช้สังกัดบางเขน — ซ่อน card, tab และตัวเลือกใน add modal
+        // ผู้ใช้สังกัดบางเขน — ซ่อน card, tab และตัวเลือกใน add/edit modal
+        cardCampus?.classList.remove('flex');
         cardCampus?.classList.add('hidden');
+        tabCampus?.classList.remove('flex');
         tabCampus?.classList.add('hidden');
         const campusOption = document.querySelector('#addLevel option[value="campus"]') as HTMLOptionElement | null;
         if (campusOption) campusOption.hidden = true;
+        const campusOptionForm = document.querySelector('#formLevel option[value="campus"]') as HTMLOptionElement | null;
+        if (campusOptionForm) campusOptionForm.hidden = true;
         // ถ้า active tab คือ campus ให้เปลี่ยนไป university
         if (activeTab === 'campus') {
           (document.querySelector('[data-tab="university"]') as HTMLElement)?.click();
         }
       } else {
         cardCampus?.classList.remove('hidden');
+        cardCampus?.classList.add('flex');
         tabCampus?.classList.remove('hidden');
+        tabCampus?.classList.add('flex');
         document.getElementById('labelCampus')!.textContent =
           `วิทยาเขต${data.campus.campusName}`;
         document.getElementById('statCampusStrategy')!.textContent =
@@ -1583,9 +1603,102 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   const univStrategyStore = new Map<number, UnivStrategy>();
 
   // ═══════════════════════════════════════════════
+  //  CAMPUS STRATEGY STORE (id → full data)
+  // ═══════════════════════════════════════════════
+  const campusStrategyStore = new Map<number, UnivStrategy>();
+
+  function renderCampusAccordion(data: UnivStrategy[]) {
+    campusStrategyStore.clear();
+    data.forEach(s => campusStrategyStore.set(s.id, s));
+
+    const container = document.getElementById('campusAccordion')!;
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="px-5 py-12 text-center text-sm text-gray-400">ไม่พบข้อมูลยุทธศาสตร์ระดับวิทยาเขต</div>`;
+      return;
+    }
+
+    container.innerHTML = data.map((s, si) => {
+      const strategyNo = s.orderList ?? (si + 1);
+      const tacticCount = s.tactics.length;
+
+      const tacticRows = s.tactics.map((t, ti) => {
+        const tacticCode = `SC${strategyNo}.${t.orderSequence ?? (ti + 1)}`;
+        return `
+          <div class="flex items-start gap-3 py-2">
+            <span class="font-mono text-sm font-semibold text-[#006664] shrink-0 mt-0.5 min-w-[2.5rem]">${tacticCode}</span>
+            <span class="text-sm text-gray-400 shrink-0 mt-0.5">:</span>
+            <span class="text-sm text-gray-700 leading-relaxed">${t.name}</span>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="campus-strategy-item">
+          <div class="flex items-start gap-3 px-5 py-4 hover:bg-emerald-50/40 transition-colors">
+            <button type="button" class="flex items-start gap-3 flex-1 min-w-0 text-left"
+              onclick="toggleCampusStrategy(this.closest('.campus-strategy-item'))">
+              <div class="w-7 h-7 rounded-lg bg-[#006664] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                ${strategyNo}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-[#006664] leading-snug">
+                  ยุทธศาสตร์ที่ ${strategyNo} : <span class="font-normal text-gray-800">${s.name}</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  ประกอบด้วย <span class="font-semibold text-[#006664]">${tacticCount}</span> กลยุทธ์
+                </p>
+              </div>
+            </button>
+            <div class="flex items-center gap-2 shrink-0 mt-0.5">
+              <button type="button"
+                data-campus-edit-id="${s.id}"
+                data-campus-edit-order="${strategyNo}"
+                data-campus-edit-name="${s.name.replace(/"/g, '&quot;')}"
+                class="campus-edit-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#006664] border border-[#006664]/30 rounded-lg hover:bg-[#006664] hover:text-white transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                แก้ไข
+              </button>
+              <button type="button"
+                data-campus-delete-id="${s.id}"
+                data-campus-delete-name="${s.name.replace(/"/g, '&quot;')}"
+                class="campus-delete-btn flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                ลบ
+              </button>
+              <svg class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 campus-strategy-chevron cursor-pointer"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                onclick="toggleCampusStrategy(this.closest('.campus-strategy-item'))">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+          <div class="campus-strategy-tactics hidden px-5 pb-4 pl-16 space-y-0.5 border-t border-emerald-50 bg-emerald-50/20">
+            ${tacticCount > 0 ? tacticRows : '<p class="text-xs text-gray-400 py-2">ไม่มีกลยุทธ์ย่อย</p>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  (window as any).toggleCampusStrategy = (item: HTMLElement) => {
+    const tactics = item.querySelector('.campus-strategy-tactics') as HTMLElement;
+    const chevron = item.querySelector('.campus-strategy-chevron') as HTMLElement;
+    const isHidden = tactics.classList.contains('hidden');
+    tactics.classList.toggle('hidden', !isHidden);
+    chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+  };
+
+  // ═══════════════════════════════════════════════
   //  UNIVERSITY EDIT MODAL
   // ═══════════════════════════════════════════════
   let deletedTacticIds: number[] = [];
+  let editModalReload: () => void = loadUniversityStrategies;
 
   function openUnivEditModal() {
     const el = document.getElementById('univEditModal')!;
@@ -1660,6 +1773,30 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     const name = btn.dataset.univEditName!;
     const strategy = univStrategyStore.get(id);
 
+    editModalReload = loadUniversityStrategies;
+    deletedTacticIds = [];
+    (document.getElementById('univEditId') as HTMLInputElement).value = String(id);
+    (document.getElementById('univEditOrder') as HTMLInputElement).value = order;
+    (document.getElementById('univEditName') as HTMLTextAreaElement).value = name;
+    (document.getElementById('univEditFiscalPlan') as HTMLInputElement).value = strategy?.fiscalPlan ?? '';
+
+    if (strategy) {
+      renderTacticRows(strategy.tactics, Number(order));
+    }
+    openUnivEditModal();
+  });
+
+  // event delegation บน campusAccordion (แก้ไข)
+  document.getElementById('campusAccordion')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.campus-edit-btn') as HTMLElement | null;
+    if (!btn) return;
+    e.stopPropagation();
+    const id = Number(btn.dataset.campusEditId);
+    const order = btn.dataset.campusEditOrder!;
+    const name = btn.dataset.campusEditName!;
+    const strategy = campusStrategyStore.get(id);
+
+    editModalReload = loadCampusStrategies;
     deletedTacticIds = [];
     (document.getElementById('univEditId') as HTMLInputElement).value = String(id);
     (document.getElementById('univEditOrder') as HTMLInputElement).value = order;
@@ -1747,7 +1884,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       }
 
       closeUnivEditModal();
-      loadUniversityStrategies();
+      editModalReload();
       (window as any).showToast('บันทึกการแก้ไขยุทธศาสตร์สำเร็จ');
     } catch (err: any) {
       errEl.textContent = err.message ?? 'เกิดข้อผิดพลาด ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
@@ -1765,12 +1902,39 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       const json = await res.json();
       if (!json.success) return;
 
+      univRawData = json.data as UnivStrategy[];
       // ลบ loading indicator
       document.getElementById('univLoading')?.remove();
-      renderUnivAccordion(json.data as UnivStrategy[]);
+      if (activeTab === 'university') {
+        populateYearFilter(univRawData.map(s => s.fiscalPlan));
+        filterAndRenderAccordion();
+      } else {
+        renderUnivAccordion(univRawData);
+      }
     } catch {
       document.getElementById('univLoading')!.innerHTML =
         '<p class="text-sm text-red-400 py-4 text-center">โหลดข้อมูลไม่สำเร็จ</p>';
+    }
+  }
+
+  async function loadCampusStrategies() {
+    try {
+      const res = await apiFetch('http://localhost:3000/api/strategies/campus');
+      if (!res || !res.ok) return;
+      const json = await res.json();
+      if (!json.success) return;
+
+      campusRawData = json.data as UnivStrategy[];
+      document.getElementById('campusLoading')?.remove();
+      if (activeTab === 'campus') {
+        populateYearFilter(campusRawData.map(s => s.fiscalPlan));
+        filterAndRenderAccordion();
+      } else {
+        renderCampusAccordion(campusRawData);
+      }
+    } catch {
+      const el = document.getElementById('campusLoading');
+      if (el) el.innerHTML = '<p class="text-sm text-red-400 py-4 text-center">โหลดข้อมูลไม่สำเร็จ</p>';
     }
   }
 
@@ -2072,8 +2236,14 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       const json = await res.json();
       if (!json.success) return;
 
+      deptRawData = json.data as DeptStrategy[];
       document.getElementById('deptLoading')?.remove();
-      renderDeptAccordion(json.data as DeptStrategy[]);
+      if (activeTab === 'division') {
+        populateYearFilter(deptRawData.map(s => s.fiscalPlan));
+        filterAndRenderAccordion();
+      } else {
+        renderDeptAccordion(deptRawData);
+      }
     } catch {
       const loadingEl = document.getElementById('deptLoading');
       if (loadingEl) loadingEl.innerHTML =
@@ -2379,8 +2549,14 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       const json = await res.json();
       if (!json.success) return;
 
+      deanRawData = json.data as DeanStrategy[];
       document.getElementById('deanLoading')?.remove();
-      renderDeanAccordion(json.data as DeanStrategy[]);
+      if (activeTab === 'dean') {
+        populateYearFilter(deanRawData.map(s => s.fiscalPlan));
+        filterAndRenderAccordion();
+      } else {
+        renderDeanAccordion(deanRawData);
+      }
     } catch {
       const loadingEl = document.getElementById('deanLoading');
       if (loadingEl) loadingEl.innerHTML =
@@ -2392,6 +2568,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   renderAll();
   loadSummary();
   loadUniversityStrategies();
+  loadCampusStrategies();
   loadDepartmentStrategies();
   loadDeanStrategies();
 </script>

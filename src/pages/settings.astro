@@ -21,7 +21,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     <div class="relative z-10 px-4 sm:px-3 py-4 pt-4">
       <div class="flex items-center gap-4">
         <div
-          class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+          class="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
           style="background: rgba(178,187,30,0.2); border: 1px solid rgba(178,187,30,0.4);"
         >
           <svg
@@ -188,10 +188,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <button
               onclick="savePermissionMatrix()"
               id="permSaveBtn"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              style="display:none"
+              class="btn-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             >
               <svg
                 class="w-4 h-4"
@@ -299,6 +297,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
 
         <!-- Toolbar -->
         <div
+          id="orgFilterRow"
           class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3"
         >
           <div class="relative flex-1">
@@ -335,11 +334,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
               <option value="department">ภาควิชา/หน่วยงาน</option>
             </select>
             <button
+              id="addOrgBtn"
               onclick="openOrgModal()"
-              class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors shadow-md"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              class="btn-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors shadow-md"
             >
               <svg
                 class="w-4 h-4"
@@ -433,11 +430,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
               </h2>
             </div>
             <button
+              id="addSubsidyBtn"
               onclick="openBudgetModal('subsidies')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              class="btn-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             >
               <svg
                 class="w-4 h-4"
@@ -454,6 +449,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             </button>
           </div>
           <div
+            id="subsidyFilterRow"
             class="px-4 sm:px-5 py-3 border-b border-gray-100 flex items-center gap-3"
           >
             <div class="relative flex-1">
@@ -480,7 +476,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
-              <thead class="bg-gray-50 border-b border-gray-200">
+              <thead id="subsidiesTableHead" class="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th
                     class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -533,11 +529,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
               </h2>
             </div>
             <button
+              id="addSubsidyTypeBtn"
               onclick="openBudgetModal('subsidy-types')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              class="btn-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             >
               <svg
                 class="w-4 h-4"
@@ -554,6 +548,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             </button>
           </div>
           <div
+            id="subsidyTypeFilterRow"
             class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3"
           >
             <div class="relative flex-1">
@@ -587,7 +582,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
-              <thead class="bg-gray-50 border-b border-gray-200">
+              <thead id="subsidyTypesTableHead" class="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th
                     class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -643,11 +638,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
               </h2>
             </div>
             <button
+              id="addGroupBtn"
               onclick="openBudgetModal('groups')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              class="btn-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             >
               <svg
                 class="w-4 h-4"
@@ -664,6 +657,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             </button>
           </div>
           <div
+            id="groupFilterRow"
             class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3"
           >
             <div class="relative flex-1">
@@ -722,11 +716,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
               </h2>
             </div>
             <button
+              id="addExpenseBtn"
               onclick="openBudgetModal('expense-details')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style="background:#006664;"
-              onmouseover="this.style.background='#004d4b'"
-              onmouseout="this.style.background='#006664'"
+              class="btn-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             >
               <svg
                 class="w-4 h-4"
@@ -743,6 +735,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             </button>
           </div>
           <div
+            id="expenseFilterRow"
             class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3"
           >
             <div class="relative flex-1">
@@ -896,7 +889,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             >เป็นสังกัดหลัก</label
           >
         </div>
-        <div id="affIsActiveRow" class="hidden flex items-center gap-2">
+        <div id="affIsActiveRow" class="hidden items-center gap-2">
           <input
             type="checkbox"
             id="affIsActive"
@@ -916,10 +909,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         >
         <button
           onclick="saveAffiliation()"
-          class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-          style="background:#006664;"
-          onmouseover="this.style.background='#004d4b'"
-          onmouseout="this.style.background='#006664'">บันทึก</button
+          class="btn-primary px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+        >บันทึก</button
         >
       </div>
     </div>
@@ -1029,7 +1020,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <option value="">-- ไม่ระบุ --</option>
           </select>
         </div>
-        <div id="orgIsActiveRow" class="hidden flex items-center gap-2">
+        <div id="orgIsActiveRow" class="hidden items-center gap-2">
           <input
             type="checkbox"
             id="orgIsActive"
@@ -1049,10 +1040,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         >
         <button
           onclick="saveOrg()"
-          class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-          style="background:#006664;"
-          onmouseover="this.style.background='#004d4b'"
-          onmouseout="this.style.background='#006664'">บันทึก</button
+          class="btn-primary px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+        >บันทึก</button
         >
       </div>
     </div>
@@ -1162,7 +1151,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006664]"
           />
         </div>
-        <div id="budgetIsActiveRow" class="hidden flex items-center gap-2">
+        <div id="budgetIsActiveRow" class="hidden items-center gap-2">
           <input
             type="checkbox"
             id="budgetIsActive"
@@ -1182,10 +1171,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         >
         <button
           onclick="saveBudgetItem()"
-          class="px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-          style="background:#006664;"
-          onmouseover="this.style.background='#004d4b'"
-          onmouseout="this.style.background='#006664'">บันทึก</button
+          class="btn-primary px-5 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+        >บันทึก</button
         >
       </div>
     </div>
@@ -1255,6 +1242,13 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
+    .btn-primary {
+      background: #006664;
+      transition: background-color 0.2s;
+    }
+    .btn-primary:hover {
+      background: #004d4b;
+    }
   </style>
 
   <script>
@@ -1263,6 +1257,36 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     // Current user context (set during init)
     let currentRole = "";
     let currentAffiliationOrg: any = null; // activeAffiliation.organization
+    let myPermissions = new Set<string>(); // granted permissions for current role
+
+    function hasPermission(code: string): boolean {
+      return myPermissions.has(code);
+    }
+
+    async function loadMyPermissions(): Promise<void> {
+      try {
+        const res = await (window as any).apiFetch(
+          `${API}/api/settings/permissions/my`,
+        );
+        const json = await res.json();
+        if (json.success) {
+          myPermissions = new Set(json.permissions);
+        }
+      } catch {}
+    }
+
+    function applyBudgetPermissions(): void {
+      if (!hasPermission("settings.manage")) {
+        [
+          "addSubsidyBtn", "addSubsidyTypeBtn", "addGroupBtn", "addExpenseBtn",
+          "subsidyFilterRow", "subsidyTypeFilterRow", "groupFilterRow", "expenseFilterRow",
+          "subsidiesTableHead", "subsidyTypesTableHead",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = "none";
+        });
+      }
+    }
 
     // Cache for dropdown data
     let allOrgs: any[] = [];
@@ -1275,63 +1299,71 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     const collapsedExpenseNodes = new Set<number>();
 
     // Permission matrix state
-    let permMatrix = {}; // { permCode: { role: boolean } }
-    let permMatrixOrig = {}; // original state for dirty tracking
+    let permMatrix: Record<string, Record<string, boolean>> = {}; // { permCode: { role: boolean } }
+    let permMatrixOrig: Record<string, Record<string, boolean>> = {}; // original state for dirty tracking
 
     // =====================
     // Tab switching
     // =====================
-    function switchTab(tab) {
+    function switchTab(tab: string): void {
       document
         .querySelectorAll(".settings-panel")
         .forEach((p) => p.classList.add("hidden"));
       document.querySelectorAll(".settings-tab").forEach((t) => {
         t.classList.remove("active-tab");
         t.classList.add("text-gray-500");
-        t.style.borderBottomColor = "transparent";
+        (t as HTMLElement).style.borderBottomColor = "transparent";
       });
-      document.getElementById("panel-" + tab).classList.remove("hidden");
+      document.getElementById("panel-" + tab)?.classList.remove("hidden");
       const activeBtn = document.getElementById("tab-" + tab);
-      activeBtn.classList.add("active-tab");
-      activeBtn.classList.remove("text-gray-500");
+      if (activeBtn) {
+        activeBtn.classList.add("active-tab");
+        activeBtn.classList.remove("text-gray-500");
+      }
     }
 
-    function switchBudgetTab(tab) {
+    function switchBudgetTab(tab: string): void {
       document
         .querySelectorAll(".budget-panel")
         .forEach((p) => p.classList.add("hidden"));
       document.querySelectorAll(".budget-tab").forEach((t) => {
         t.classList.remove("active-budget-tab");
         t.classList.add("text-gray-500");
-        t.style.background = "";
-        t.style.color = "";
+        (t as HTMLElement).style.background = "";
+        (t as HTMLElement).style.color = "";
       });
-      document.getElementById("bpanel-" + tab).classList.remove("hidden");
+      document.getElementById("bpanel-" + tab)?.classList.remove("hidden");
       const activeBtn = document.getElementById("btab-" + tab);
-      activeBtn.classList.add("active-budget-tab");
-      activeBtn.classList.remove("text-gray-500");
+      if (activeBtn) {
+        activeBtn.classList.add("active-budget-tab");
+        activeBtn.classList.remove("text-gray-500");
+      }
     }
 
     // =====================
     // Modal helpers
     // =====================
-    function openModal(id) {
+    function openModal(id: string): void {
       const el = document.getElementById(id);
-      el.classList.remove("hidden");
-      el.classList.add("flex");
+      if (el) {
+        el.classList.remove("hidden");
+        el.classList.add("flex");
+      }
     }
 
-    function closeModal(id) {
+    function closeModal(id: string): void {
       const el = document.getElementById(id);
-      el.classList.add("hidden");
-      el.classList.remove("flex");
+      if (el) {
+        el.classList.add("hidden");
+        el.classList.remove("flex");
+      }
     }
 
     // =====================
     // Auth + Init
     // =====================
-    function getRoleTh(role) {
-      const map = {
+    function getRoleTh(role: string): string {
+      const map: Record<string, string> = {
         super_admin: "ผู้ดูแลระบบสูงสุด",
         univ_executive: "ผู้บริหาร ม.",
         univ_officer: "เจ้าหน้าที่ ม.",
@@ -1346,8 +1378,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       return map[role] || role;
     }
 
-    function getOrgLevelTh(level) {
-      const map = {
+    function getOrgLevelTh(level: string): string {
+      const map: Record<string, string> = {
         university: "มหาวิทยาลัย",
         campus: "วิทยาเขต",
         faculty: "คณะ/สำนัก/กอง",
@@ -1378,12 +1410,35 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       staff: "อาจารย์/\nเจ้าหน้าที่",
     };
 
+    // HTML สำหรับแสดงเมื่อไม่มีสิทธิ์เข้าถึง
+    function noPermHtml(wrapType: "div" | "tr", colspan: number = 5): string {
+      const inner = `
+        <div class="flex flex-col items-center gap-3 py-12">
+          <div class="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center">
+            <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-700">ไม่มีสิทธิ์เข้าถึงข้อมูล</p>
+          <p class="text-xs text-gray-400 text-center max-w-xs">ท่านไม่ได้รับสิทธิ์ให้เข้าถึงการตั้งค่าข้อมูลระบบนี้<br>กรุณาติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์เพิ่มเติม</p>
+        </div>`;
+      return wrapType === "tr"
+        ? `<tr><td colspan="${colspan}" class="text-center">${inner}</td></tr>`
+        : inner;
+    }
+
     async function loadPermissionMatrix() {
       const wrap = document.getElementById("permMatrixWrap");
+      if (!wrap) return;
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/permissions/matrix`,
         );
+        if (res.status === 403) {
+          wrap.innerHTML = noPermHtml("div");
+          return;
+        }
         const json = await res.json();
         if (!json.success) throw new Error(json.message);
 
@@ -1397,13 +1452,16 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         permMatrixOrig = JSON.parse(JSON.stringify(permMatrix));
 
         renderPermissionMatrix(json.roles, json.modules);
+        const saveBtn = document.getElementById("permSaveBtn") as HTMLElement | null;
+        if (saveBtn) saveBtn.style.display = "inline-flex";
       } catch (e) {
         wrap.innerHTML = `<div class="text-center py-10 text-red-400 text-sm">โหลดข้อมูลล้มเหลว</div>`;
       }
     }
 
-    function renderPermissionMatrix(roles: string[], modules: any[]) {
+    function renderPermissionMatrix(roles: string[], modules: any[]): void {
       const wrap = document.getElementById("permMatrixWrap");
+      if (!wrap) return;
 
       const colW = "min-w-[80px] w-20";
       const headerCols = roles
@@ -1518,7 +1576,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     // =====================
     // Organizations Tab
     // =====================
-    const ORG_LEVEL_CFG = {
+    const ORG_LEVEL_CFG: Record<string, { color: string; bg: string; rowBg: string; label: string }> = {
       university: {
         color: "#0c2957",
         bg: "rgba(12,41,87,0.06)",
@@ -1558,15 +1616,26 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
 
     async function loadCampuses() {
       try {
+        console.log("DEBUG: Loading campuses from API...");
         const res = await (window as any).apiFetch(
           `${API}/api/settings/campus`,
         );
+        console.log("DEBUG: Campus API response status:", res.status);
         const json = await res.json();
-        if (json.success) allCampuses = json.data;
-      } catch {}
+        console.log("DEBUG: Campus API response JSON:", json);
+        
+        if (json.success && json.data) {
+          allCampuses = json.data;
+          console.log("DEBUG: allCampuses updated with", allCampuses.length, "items");
+        } else {
+          console.warn("DEBUG: Campus API returned non-success response");
+        }
+      } catch (error) {
+        console.error("Failed to load campuses:", error);
+      }
     }
 
-    (window as any).updateCampusRowVisibility = function () {
+    (window as any).updateCampusRowVisibility = function (): void {
       const level = (document.getElementById("orgLevel") as HTMLSelectElement)
         .value;
       const campusRow = document.getElementById("orgCampusRow") as HTMLElement;
@@ -1579,18 +1648,27 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         parentRow.classList.add("hidden");
         (document.getElementById("orgParentId") as HTMLSelectElement).value =
           "";
+        // Preserve the currently selected campus value instead of clearing it
+        const currentCampusId = (document.getElementById("orgCampusId") as HTMLSelectElement).value;
+        populateCampusSelect(currentCampusId ? parseInt(currentCampusId) : null);
         // ภาควิชา/หน่วยงานย่อย (department): ซ่อนวิทยาเขต แสดงหน่วยงานแม่
       } else if (level === "department") {
         campusRow.classList.add("hidden");
         (document.getElementById("orgCampusId") as HTMLSelectElement).value =
           "";
         parentRow.classList.remove("hidden");
-        // วิทยาเขต (campus): แสดงวิทยาเขต ซ่อนหน่วยงานแม่
+        // Preserve the currently selected parent organization
+        const currentParentId = (document.getElementById("orgParentId") as HTMLSelectElement).value;
+        updateParentByLevel(currentParentId ? parseInt(currentParentId) : null, "faculty");
+        // วิทยาเขต (campus): ซ่อนวิทยาเขต แสดงหน่วยงานแม่ (มหาวิทยาลัย) - auto-select university
       } else if (level === "campus") {
-        campusRow.classList.remove("hidden");
-        parentRow.classList.add("hidden");
-        (document.getElementById("orgParentId") as HTMLSelectElement).value =
+        campusRow.classList.add("hidden");
+        (document.getElementById("orgCampusId") as HTMLSelectElement).value =
           "";
+        parentRow.classList.remove("hidden");
+        // Find the university and auto-select it
+        const univ = allOrgs.find((o) => o.isActive && o.orgLevel === "university");
+        updateParentByLevel(univ?.id ?? null, "university");
         // มหาวิทยาลัย: ซ่อนทั้งหน่วยงานแม่และวิทยาเขต
       } else {
         campusRow.classList.add("hidden");
@@ -1602,16 +1680,110 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       }
     };
 
-    function populateCampusSelect(selectedId?: number | null) {
-      const sel = document.getElementById("orgCampusId") as HTMLSelectElement;
+    function updateParentByLevel(selectedId?: number | null, filterByLevel?: string): void {
+      const sel = document.getElementById("orgParentId") as HTMLSelectElement;
+      let filtered = allOrgs.filter((o) => o.isActive);
+      if (filterByLevel) {
+        filtered = filtered.filter((o) => o.orgLevel === filterByLevel);
+      }
       sel.innerHTML =
-        '<option value="">-- ไม่ระบุ --</option>' +
-        allCampuses
+        '<option value="">-- ไม่มีหน่วยงานแม่ --</option>' +
+        filtered
+          .map(
+            (o) =>
+              `<option value="${o.id}" ${o.id === selectedId ? "selected" : ""}>[${getOrgLevelTh(o.orgLevel)}] ${o.nameTh}</option>`,
+          )
+          .join("");
+    }
+
+    function populateCampusSelect(selectedId?: number | null): void {
+      const sel = document.getElementById("orgCampusId") as HTMLSelectElement;
+      if (!sel) return;
+      
+      // Collect campuses from multiple sources
+      const campusList: { id: number; nameTh: string }[] = [];
+      const seenIds = new Set<number>();
+      
+      // 1. Priority: from allCampuses table (has proper structure)
+      console.log("DEBUG: populateCampusSelect - allCampuses:", allCampuses?.length ?? 0, allCampuses?.map((c: any) => ({ id: c.id, nameTh: c.nameTh })));
+      if (allCampuses && allCampuses.length > 0) {
+        for (const c of allCampuses) {
+          if (!seenIds.has(c.id)) {
+            campusList.push({ id: c.id, nameTh: c.nameTh });
+            seenIds.add(c.id);
+          }
+        }
+      }
+      
+      // 2. Extract campuses from faculty organizations' campusId field
+      // (This is the fallback when campuses are referenced but not created as org-level records)
+      const facultiesWithCampus = allOrgs.filter(
+        (o) => o.isActive && o.orgLevel === "faculty" && o.campusId
+      );
+      console.log("DEBUG: Faculty orgs with campusId:", facultiesWithCampus.length, 
+        facultiesWithCampus.map((o: any) => ({ id: o.id, campusId: o.campusId, nameTh: o.nameTh })));
+      
+      for (const fac of facultiesWithCampus) {
+        if (!seenIds.has(fac.campusId)) {
+          // Try to find campus name from allCampuses first
+          const campusFromTable = allCampuses?.find((c) => c.id === fac.campusId);
+          if (campusFromTable) {
+            console.log("DEBUG: Found campus from table:", fac.campusId, campusFromTable.nameTh);
+            campusList.push({ id: fac.campusId, nameTh: campusFromTable.nameTh });
+            seenIds.add(fac.campusId);
+          }
+        }
+      }
+      
+      // 3. Fallback: from campus-level organizations in allOrgs
+      const campusOrgs = allOrgs.filter((o) => o.isActive && o.orgLevel === "campus");
+      console.log("DEBUG: Campus-level orgs:", campusOrgs.length);
+      for (const org of campusOrgs) {
+        if (!seenIds.has(org.id)) {
+          campusList.push({ id: org.id, nameTh: org.nameTh });
+          seenIds.add(org.id);
+        }
+      }
+      
+      // 4. Deep fallback: extract unique campus names from faculty "campus" property (if available)
+      // This is for cases where campus name is stored but no ID mapping exists yet
+      if (campusList.length === 0) {
+        const uniqueCampusNames = new Set<string>();
+        for (const fac of allOrgs.filter((o) => o.isActive && o.orgLevel === "faculty")) {
+          // Some systems might have campus info stored as a property (check if it exists)
+          if ((fac as any).campus) {
+            uniqueCampusNames.add((fac as any).campus);
+          }
+        }
+        
+        // Create virtual IDs for these campus names (use stringified hash)
+        let campusCount = (allCampuses?.length ?? 0) + 100; // Offset to avoid conflicts
+        for (const campusName of Array.from(uniqueCampusNames).sort()) {
+          campusList.push({ id: campusCount++, nameTh: campusName });
+        }
+      }
+      
+      // Sort by name
+      campusList.sort((a, b) =>
+        (a.nameTh || "").localeCompare(b.nameTh || "", "th"),
+      );
+      
+      console.log("DEBUG: Final campus list:", campusList);
+      
+      // Build options HTML
+      let optionsHtml = '<option value="">-- เลือกวิทยาเขต --</option>';
+      if (campusList.length > 0) {
+        optionsHtml += campusList
           .map(
             (c) =>
               `<option value="${c.id}" ${c.id === selectedId ? "selected" : ""}>${c.nameTh}</option>`,
           )
           .join("");
+      } else {
+        optionsHtml += '<option value="" disabled style="color: #999;">ไม่พบข้อมูลวิทยาเขต</option>';
+      }
+      
+      sel.innerHTML = optionsHtml;
     }
 
     // Return the subset of orgs the current role is allowed to see
@@ -1657,12 +1829,28 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       return orgs.filter((o) => ids.has(o.id));
     }
 
-    async function loadOrganizations() {
+    // Check if current user has permission to edit/delete the given org
+    function canManageOrg(orgId: number): boolean {
+      if (currentRole === "super_admin") return true;
+      if (!currentAffiliationOrg) return false;
+      return collectSubtree(allOrgs, currentAffiliationOrg.id).some(
+        (o) => o.id === orgId
+      );
+    }
+
+    async function loadOrganizations(): Promise<void> {
       const container = document.getElementById("orgsTreeContainer");
+      if (!container) return;
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/organizations/all`,
         );
+        if (res.status === 403) {
+          container.innerHTML = noPermHtml("div");
+          const filterRow = document.getElementById("orgFilterRow");
+          if (filterRow) filterRow.style.display = "none";
+          return;
+        }
         const json = await res.json();
         if (!json.success) {
           container.innerHTML = `<div class="flex flex-col items-center gap-2 text-gray-400 py-12"><svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p class="text-sm">ไม่พบข้อมูล</p></div>`;
@@ -1679,7 +1867,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       depth: number,
       parentHasMore: boolean[],
       ancestorLevels: string[],
-    ) {
+    ): string {
       // parentHasMore[i] = true  → ancestor at depth i still has siblings after this path
       // ancestorLevels[i]       → orgLevel of ancestor at depth i (for colored lines)
       if (depth === 0) return "";
@@ -1714,7 +1902,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       return count;
     }
 
-    (window as any).toggleOrgNode = function (id: number) {
+    (window as any).toggleOrgNode = function (id: number): void {
       if (collapsedOrgNodes.has(id)) {
         collapsedOrgNodes.delete(id);
       } else {
@@ -1723,8 +1911,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       renderOrgsTable(allOrgs);
     };
 
-    function renderOrgsTable(orgs) {
+    function renderOrgsTable(orgs: any[]): void {
       const container = document.getElementById("orgsTreeContainer");
+      if (!container) return;
       if (!orgs.length) {
         container.innerHTML = `<div class="flex flex-col items-center gap-3 py-12 text-gray-400"><svg class="w-10 h-10 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p class="text-sm">ไม่พบข้อมูล</p></div>`;
         return;
@@ -1896,10 +2085,10 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         .join("");
     }
 
-    function filterOrgs() {
-      const level = document.getElementById("orgLevelFilter").value;
+    function filterOrgs(): void {
+      const level = (document.getElementById("orgLevelFilter") as HTMLSelectElement)?.value || "";
       const q = (
-        document.getElementById("orgSearchInput")?.value || ""
+        (document.getElementById("orgSearchInput") as HTMLInputElement)?.value || ""
       ).toLowerCase();
       const visible = getVisibleOrgs(allOrgs);
       const effectiveLevel = level === "university" ? "" : level;
@@ -1933,16 +2122,16 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       renderOrgsTable(visible.filter((o) => ids.has(o.id)));
     }
 
-    function openOrgModal() {
-      document.getElementById("orgModalTitle").textContent = "เพิ่มหน่วยงาน";
-      document.getElementById("orgModalId").value = "";
-      document.getElementById("orgCode").value = "";
-      document.getElementById("orgNameTh").value = "";
-      document.getElementById("orgNameEn").value = "";
-      document.getElementById("orgLevel").value = "faculty";
-      document.getElementById("orgIsActiveRow").classList.add("hidden");
+    function openOrgModal(): void {
+      document.getElementById("orgModalTitle")!.textContent = "เพิ่มหน่วยงาน";
+      (document.getElementById("orgModalId") as HTMLInputElement).value = "";
+      (document.getElementById("orgCode") as HTMLInputElement).value = "";
+      (document.getElementById("orgNameTh") as HTMLInputElement).value = "";
+      (document.getElementById("orgNameEn") as HTMLInputElement).value = "";
+      (document.getElementById("orgLevel") as HTMLSelectElement).value = "faculty";
+      document.getElementById("orgIsActiveRow")!.classList.add("hidden");
 
-      const sel = document.getElementById("orgParentId");
+      const sel = document.getElementById("orgParentId") as HTMLSelectElement;
       sel.innerHTML =
         '<option value="">-- ไม่มีหน่วยงานแม่ --</option>' +
         allOrgs
@@ -1953,25 +2142,32 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
           )
           .join("");
 
-      populateCampusSelect(null);
+      // Don't call populateCampusSelect here; let updateCampusRowVisibility handle it
       (window as any).updateCampusRowVisibility();
       openModal("orgModal");
     }
 
-    function editOrg(id) {
+    function editOrg(id: number): void {
+      if (!canManageOrg(id)) {
+        (window as any).showToast(
+          "ท่านไม่มีสิทธิ์แก้ไขข้อมูลนี้ เนื่องจากท่านไม่ได้สังกัดหน่วยงานที่ต้องการดำเนินการ",
+          "error"
+        );
+        return;
+      }
       const org = allOrgs.find((o) => o.id === id);
       if (!org) return;
 
-      document.getElementById("orgModalTitle").textContent = "แก้ไขหน่วยงาน";
-      document.getElementById("orgModalId").value = org.id;
-      document.getElementById("orgCode").value = org.code;
-      document.getElementById("orgNameTh").value = org.nameTh;
-      document.getElementById("orgNameEn").value = org.nameEn || "";
-      document.getElementById("orgLevel").value = org.orgLevel;
-      document.getElementById("orgIsActiveRow").classList.remove("hidden");
-      document.getElementById("orgIsActive").checked = org.isActive;
+      document.getElementById("orgModalTitle")!.textContent = "แก้ไขหน่วยงาน";
+      (document.getElementById("orgModalId") as HTMLInputElement).value = org.id;
+      (document.getElementById("orgCode") as HTMLInputElement).value = org.code;
+      (document.getElementById("orgNameTh") as HTMLInputElement).value = org.nameTh;
+      (document.getElementById("orgNameEn") as HTMLInputElement).value = org.nameEn || "";
+      (document.getElementById("orgLevel") as HTMLSelectElement).value = org.orgLevel;
+      document.getElementById("orgIsActiveRow")!.classList.remove("hidden");
+      (document.getElementById("orgIsActive") as HTMLInputElement).checked = org.isActive;
 
-      const sel = document.getElementById("orgParentId");
+      const sel = document.getElementById("orgParentId") as HTMLSelectElement;
       sel.innerHTML =
         '<option value="">-- ไม่มีหน่วยงานแม่ --</option>' +
         allOrgs
@@ -1987,15 +2183,15 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       openModal("orgModal");
     }
 
-    async function saveOrg() {
-      const id = document.getElementById("orgModalId").value;
-      const code = document.getElementById("orgCode").value.trim();
-      const nameTh = document.getElementById("orgNameTh").value.trim();
+    async function saveOrg(): Promise<void> {
+      const id = (document.getElementById("orgModalId") as HTMLInputElement).value;
+      const code = (document.getElementById("orgCode") as HTMLInputElement).value.trim();
+      const nameTh = (document.getElementById("orgNameTh") as HTMLInputElement).value.trim();
       const nameEn =
-        document.getElementById("orgNameEn").value.trim() || undefined;
-      const orgLevel = document.getElementById("orgLevel").value;
-      const parentId = document.getElementById("orgParentId").value
-        ? parseInt(document.getElementById("orgParentId").value)
+        (document.getElementById("orgNameEn") as HTMLInputElement).value.trim() || undefined;
+      const orgLevel = (document.getElementById("orgLevel") as HTMLSelectElement).value;
+      const parentId = (document.getElementById("orgParentId") as HTMLSelectElement).value
+        ? parseInt((document.getElementById("orgParentId") as HTMLSelectElement).value)
         : undefined;
       const campusIdRaw = (
         document.getElementById("orgCampusId") as HTMLSelectElement
@@ -2043,8 +2239,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     // =====================
     // Budget Tab
     // =====================
-    function renderSubsidies(data) {
+    function renderSubsidies(data: any[]): void {
       const tbody = document.getElementById("subsidiesTableBody");
+      if (!tbody) return;
       if (!data.length) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">ไม่พบข้อมูล</td></tr>`;
         return;
@@ -2058,6 +2255,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         <td class="px-4 py-3">${statusBadge(s.isActive)}</td>
         <td class="px-4 py-3 text-right">
           <div class="flex gap-1 justify-end">
+            ${hasPermission("settings.manage") ? `
             <button onclick="editBudgetItem('subsidies', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
               แก้ไข
@@ -2065,7 +2263,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <button onclick="deleteItem('budget-subsidies', ${s.id}, '${s.nameTh.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
               ลบ
-            </button>
+            </button>` : ""}
           </div>
         </td>
       </tr>`,
@@ -2073,9 +2271,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         .join("");
     }
 
-    function filterSubsidies() {
+    function filterSubsidies(): void {
       const q = (
-        document.getElementById("subsidySearch")?.value || ""
+        (document.getElementById("subsidySearch") as HTMLInputElement)?.value || ""
       ).toLowerCase();
       if (!q) {
         renderSubsidies(allSubsidies);
@@ -2091,22 +2289,27 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       );
     }
 
-    async function loadBudgetSubsidies() {
+    async function loadBudgetSubsidies(): Promise<void> {
       const tbody = document.getElementById("subsidiesTableBody");
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/budget-subsidies`,
         );
+        if (res.status === 403) {
+          if (tbody) tbody.innerHTML = noPermHtml("tr", 5);
+          return;
+        }
         const json = await res.json();
         allSubsidies = json.data || [];
         renderSubsidies(allSubsidies);
       } catch {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
       }
     }
 
-    function renderSubsidyTypes(data) {
+    function renderSubsidyTypes(data: any[]): void {
       const tbody = document.getElementById("subsidyTypesTableBody");
+      if (!tbody) return;
       if (!data.length) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">ไม่พบข้อมูล</td></tr>`;
         return;
@@ -2120,6 +2323,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         <td class="px-4 py-3">${statusBadge(s.isActive)}</td>
         <td class="px-4 py-3 text-right">
           <div class="flex gap-1 justify-end">
+            ${hasPermission("settings.manage") ? `
             <button onclick="editBudgetItem('subsidy-types', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
               แก้ไข
@@ -2127,7 +2331,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <button onclick="deleteItem('budget-subsidy-types', ${s.id}, '${s.nameTh.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
               ลบ
-            </button>
+            </button>` : ""}
           </div>
         </td>
       </tr>`,
@@ -2135,12 +2339,12 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         .join("");
     }
 
-    function filterSubsidyTypes() {
+    function filterSubsidyTypes(): void {
       const q = (
-        document.getElementById("subsidyTypeSearch")?.value || ""
+        (document.getElementById("subsidyTypeSearch") as HTMLInputElement)?.value || ""
       ).toLowerCase();
       const subsidyId =
-        document.getElementById("subsidyTypeFilter")?.value || "";
+        (document.getElementById("subsidyTypeFilter") as HTMLSelectElement)?.value || "";
       let data = allSubsidyTypes;
       if (subsidyId)
         data = data.filter((s) => String(s.subsidyId) === subsidyId);
@@ -2153,12 +2357,16 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       renderSubsidyTypes(data);
     }
 
-    async function loadBudgetSubsidyTypes() {
+    async function loadBudgetSubsidyTypes(): Promise<void> {
       const tbody = document.getElementById("subsidyTypesTableBody");
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/budget-subsidy-types`,
         );
+        if (res.status === 403) {
+          if (tbody) tbody.innerHTML = noPermHtml("tr", 5);
+          return;
+        }
         const json = await res.json();
         allSubsidyTypes = json.data || [];
         // Populate filter dropdown
@@ -2172,11 +2380,11 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         }
         renderSubsidyTypes(allSubsidyTypes);
       } catch {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">โหลดข้อมูลล้มเหลว</td></tr>`;
       }
     }
 
-    function renderGroups(data) {
+    function renderGroups(data: any[]): void {
       const container = document.getElementById("groupsTableBody");
       if (!container) return;
       if (!data.length) {
@@ -2209,6 +2417,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <div class="flex items-center gap-2 px-3 flex-shrink-0">
               ${statusBadge(s.isActive)}
               <div class="flex gap-1 ml-1">
+                ${hasPermission("settings.manage") ? `
                 <button onclick="editBudgetItem('groups', ${s.id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                   แก้ไข
@@ -2216,7 +2425,7 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
                 <button onclick="deleteItem('budget-groups', ${s.id}, '${safeName}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-500 bg-red-50 hover:bg-red-100 rounded transition-colors">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                   ลบ
-                </button>
+                </button>` : ""}
               </div>
             </div>
           </div>`;
@@ -2225,11 +2434,11 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       container.innerHTML = html;
     }
 
-    function filterGroups() {
+    function filterGroups(): void {
       const q = (
-        document.getElementById("groupSearch")?.value || ""
+        (document.getElementById("groupSearch") as HTMLInputElement)?.value || ""
       ).toLowerCase();
-      const typeId = document.getElementById("groupTypeFilter")?.value || "";
+      const typeId = (document.getElementById("groupTypeFilter") as HTMLSelectElement)?.value || "";
       let data = allGroups;
       if (typeId) data = data.filter((s) => String(s.budgetTypeId) === typeId);
       if (q)
@@ -2241,12 +2450,16 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       renderGroups(data);
     }
 
-    async function loadBudgetGroups() {
+    async function loadBudgetGroups(): Promise<void> {
       const container = document.getElementById("groupsTableBody");
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/budget-groups`,
         );
+        if (res.status === 403) {
+          if (container) container.innerHTML = noPermHtml("div");
+          return;
+        }
         const json = await res.json();
         allGroups = json.data || [];
         // Populate filter dropdown — เฉพาะชื่อกลุ่มที่มีในข้อมูลจริง
@@ -2308,8 +2521,9 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
           (a.name || "").localeCompare(b.name || "", "th"),
         );
 
-      const actionBtns = (id: number, safeName: string) => `
-        <div class="flex gap-1 ml-1 flex-shrink-0">
+      const actionBtns = (id: number, safeName: string) =>
+        hasPermission("settings.manage")
+          ? `<div class="flex gap-1 ml-1 flex-shrink-0">
           <button onclick="editBudgetItem('expense-details', ${id})" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-[#006664] bg-[#006664]/10 hover:bg-[#006664]/20 rounded transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             แก้ไข
@@ -2318,7 +2532,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             ลบ
           </button>
-        </div>`;
+        </div>`
+          : "";
 
       let html = "";
       for (const main of roots) {
@@ -2381,18 +2596,18 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       container.innerHTML = html;
     }
 
-    (window as any).toggleExpenseNode = function (id: number) {
+    (window as any).toggleExpenseNode = function (id: number): void {
       if (collapsedExpenseNodes.has(id)) collapsedExpenseNodes.delete(id);
       else collapsedExpenseNodes.add(id);
       filterExpenseDetails();
     };
 
-    function filterExpenseDetails() {
+    function filterExpenseDetails(): void {
       const q = (
-        document.getElementById("expenseSearch")?.value || ""
+        (document.getElementById("expenseSearch") as HTMLInputElement)?.value || ""
       ).toLowerCase();
       const groupId =
-        document.getElementById("expenseGroupFilter")?.value || "";
+        (document.getElementById("expenseGroupFilter") as HTMLSelectElement)?.value || "";
 
       const all = allExpenseDetails as any[];
 
@@ -2428,12 +2643,16 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       renderExpenseDetails(all.filter((s) => matchedIds.has(s.id)));
     }
 
-    async function loadBudgetExpenseDetails() {
+    async function loadBudgetExpenseDetails(): Promise<void> {
       const container = document.getElementById("expenseDetailsContainer");
       try {
         const res = await (window as any).apiFetch(
           `${API}/api/settings/budget-expense-details`,
         );
+        if (res.status === 403) {
+          if (container) container.innerHTML = noPermHtml("div");
+          return;
+        }
         const json = await res.json();
         allExpenseDetails = json.data || [];
         const sel = document.getElementById("expenseGroupFilter");
@@ -2457,59 +2676,83 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       }
     }
 
-    function onDetailTypeChange() {
+    function onDetailTypeChange(): void {
       const isSub = (document.getElementById("budgetDetailTypeSub") as HTMLInputElement).checked;
       if (isSub) {
-        document.getElementById("budgetParentRow").classList.add("hidden");
-        document.getElementById("budgetSubParentRow").classList.remove("hidden");
+        const parentRow = document.getElementById("budgetParentRow");
+        const subParentRow = document.getElementById("budgetSubParentRow");
+        if (parentRow && subParentRow) {
+          parentRow.classList.add("hidden");
+          subParentRow.classList.remove("hidden");
+        }
         // populate with all active main items
         const mainItems = allExpenseDetails
           .filter((s: any) => s.detailType === "main" && s.isActive)
           .sort((a: any, b: any) => (a.name || "").localeCompare(b.name || "", "th"));
-        const subSel = document.getElementById("budgetSubParentId");
-        subSel.innerHTML =
-          '<option value="">-- เลือกหัวข้อหลัก --</option>' +
-          mainItems.map((s: any) => {
-            const groupName = s.budgetGroup?.name || allGroups.find((g: any) => g.id === s.budgetGroupId)?.name || "";
-            return `<option value="${s.id}">${s.name}${groupName ? ` (${groupName})` : ""}</option>`;
-          }).join("");
+        const subSel = document.getElementById("budgetSubParentId") as HTMLSelectElement | null;
+        if (subSel) {
+          subSel.innerHTML =
+            '<option value="">-- เลือกหัวข้อหลัก --</option>' +
+            mainItems.map((s: any) => {
+              const groupName = s.budgetGroup?.name || allGroups.find((g: any) => g.id === s.budgetGroupId)?.name || "";
+              return `<option value="${s.id}">${s.name}${groupName ? ` (${groupName})` : ""}</option>`;
+            }).join("");
+        }
       } else {
-        document.getElementById("budgetParentRow").classList.remove("hidden");
-        document.getElementById("budgetSubParentRow").classList.add("hidden");
+        const parentRow = document.getElementById("budgetParentRow");
+        const subParentRow = document.getElementById("budgetSubParentRow");
+        if (parentRow && subParentRow) {
+          parentRow.classList.remove("hidden");
+          subParentRow.classList.add("hidden");
+        }
       }
     }
 
-    function onExpenseGroupChange() {
+    function onExpenseGroupChange(): void {
       // no-op: group change doesn't affect sub-parent list (sub-parent shows all main items)
     }
 
-    function openBudgetModal(type) {
-      document.getElementById("budgetModalId").value = "";
-      document.getElementById("budgetModalType").value = type;
-      document.getElementById("budgetCode").value = "";
-      document.getElementById("budgetNameTh").value = "";
-      document.getElementById("budgetNameEn").value = "";
-      document.getElementById("budgetIsActiveRow").classList.add("hidden");
+    function openBudgetModal(type: string): void {
+      if (!hasPermission("settings.manage")) {
+        (window as any).showToast(
+          "ท่านไม่มีสิทธิ์แก้ไขข้อมูลนี้ เนื่องจากท่านไม่ได้รับสิทธิ์จัดการการตั้งค่า",
+          "error",
+        );
+        return;
+      }
+      const idEl = document.getElementById("budgetModalId") as HTMLInputElement | null;
+      const typeEl = document.getElementById("budgetModalType") as HTMLInputElement | null;
+      const codeEl = document.getElementById("budgetCode") as HTMLInputElement | null;
+      const nameThEl = document.getElementById("budgetNameTh") as HTMLInputElement | null;
+      const nameEnEl = document.getElementById("budgetNameEn") as HTMLInputElement | null;
+      const isActiveRowEl = document.getElementById("budgetIsActiveRow");
+      
+      if (idEl) idEl.value = "";
+      if (typeEl) typeEl.value = type;
+      if (codeEl) codeEl.value = "";
+      if (nameThEl) nameThEl.value = "";
+      if (nameEnEl) nameEnEl.value = "";
+      if (isActiveRowEl) isActiveRowEl.classList.add("hidden");
       // reset expense-details specific rows
-      document.getElementById("budgetDetailTypeRow").classList.add("hidden");
-      document.getElementById("budgetSubParentRow").classList.add("hidden");
-      (document.getElementById("budgetSubParentId") as HTMLSelectElement).value = "";
+      document.getElementById("budgetDetailTypeRow")?.classList.add("hidden");
+      document.getElementById("budgetSubParentRow")?.classList.add("hidden");
+      (document.getElementById("budgetSubParentId") as HTMLSelectElement | null)!.value = "";
 
       const parentRow = document.getElementById("budgetParentRow");
       const parentLabel = document.getElementById("budgetParentLabel");
-      const parentSel = document.getElementById("budgetParentId");
+      const parentSel = document.getElementById("budgetParentId") as HTMLSelectElement | null;
       const codeRow = document.getElementById("budgetCodeRow");
       const nameEnRow = document.getElementById("budgetNameEnRow");
       const nameLbl = document.getElementById("budgetNameThLabel");
 
-      const titles = {
+      const titles: Record<string, string> = {
         subsidies: "เพิ่มงบอุดหนุน",
         "subsidy-types": "เพิ่มประเภทงบอุดหนุน",
         groups: "เพิ่มกลุ่มงบอุดหนุน",
         "expense-details": "เพิ่มรายละเอียดค่าใช้จ่าย",
       };
-      document.getElementById("budgetModalTitle").textContent =
-        titles[type] || "เพิ่มข้อมูล";
+      document.getElementById("budgetModalTitle")!.textContent =
+        titles[type as keyof typeof titles] || "เพิ่มข้อมูล";
 
       // groups/expense-details ไม่มี code/nameEn ใน schema
       const isNameOnly = type === "groups" || type === "expense-details";
@@ -2521,46 +2764,46 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
           : 'ชื่อ (ไทย) <span class="text-red-500">*</span>';
 
       if (type === "subsidies") {
-        parentRow.classList.add("hidden");
+        parentRow?.classList.add("hidden");
       } else if (type === "subsidy-types") {
-        parentRow.classList.remove("hidden");
-        parentLabel.innerHTML = 'งบอุดหนุน <span class="text-red-500">*</span>';
-        parentSel.innerHTML =
+        parentRow?.classList.remove("hidden");
+        if (parentLabel) parentLabel.innerHTML = 'งบอุดหนุน <span class="text-red-500">*</span>';
+        if (parentSel) parentSel.innerHTML =
           '<option value="">-- เลือกงบอุดหนุน --</option>' +
           allSubsidies
             .filter((s) => s.isActive)
             .map((s) => `<option value="${s.id}">${s.nameTh}</option>`)
             .join("");
       } else if (type === "groups") {
-        parentRow.classList.remove("hidden");
-        parentLabel.innerHTML =
+        parentRow?.classList.remove("hidden");
+        if (parentLabel) parentLabel.innerHTML =
           'ประเภทงบอุดหนุน <span class="text-red-500">*</span>';
-        parentSel.innerHTML =
+        if (parentSel) parentSel.innerHTML =
           '<option value="">-- เลือกประเภทงบอุดหนุน --</option>' +
           allSubsidyTypes
             .filter((s) => s.isActive)
             .map((s) => `<option value="${s.id}">${s.nameTh}</option>`)
             .join("");
       } else if (type === "expense-details") {
-        parentRow.classList.remove("hidden");
-        parentLabel.innerHTML =
+        parentRow?.classList.remove("hidden");
+        if (parentLabel) parentLabel.innerHTML =
           'กลุ่มงบอุดหนุน <span class="text-red-500">*</span>';
-        parentSel.innerHTML =
+        if (parentSel) parentSel.innerHTML =
           '<option value="">-- เลือกกลุ่มงบอุดหนุน --</option>' +
           allGroups
             .filter((s) => s.isActive)
             .map((s) => `<option value="${s.id}">${s.name}</option>`)
             .join("");
         // show detail type radio, reset to main
-        document.getElementById("budgetDetailTypeRow").classList.remove("hidden");
-        (document.getElementById("budgetDetailTypeMain") as HTMLInputElement).checked = true;
-        document.getElementById("budgetSubParentRow").classList.add("hidden");
+        document.getElementById("budgetDetailTypeRow")?.classList.remove("hidden");
+        (document.getElementById("budgetDetailTypeMain") as HTMLInputElement | null)!.checked = true;
+        document.getElementById("budgetSubParentRow")?.classList.add("hidden");
       }
 
       openModal("budgetModal");
     }
 
-    function editBudgetItem(type, id) {
+    function editBudgetItem(type: string, id: number): void {
       let item;
       if (type === "subsidies") item = allSubsidies.find((s) => s.id === id);
       else if (type === "subsidy-types")
@@ -2574,32 +2817,32 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       openBudgetModal(type);
 
       if (item) {
-        document.getElementById("budgetModalId").value = id;
+        (document.getElementById("budgetModalId") as HTMLInputElement | null)!.value = String(id);
         // groups และ expense-details ใช้ field `name` (ไม่มี code/nameTh)
         const isNameOnly = type === "groups" || type === "expense-details";
-        document.getElementById("budgetCode").value = isNameOnly
+        (document.getElementById("budgetCode") as HTMLInputElement | null)!.value = isNameOnly
           ? ""
           : item.code || "";
-        document.getElementById("budgetNameTh").value = isNameOnly
+        (document.getElementById("budgetNameTh") as HTMLInputElement | null)!.value = isNameOnly
           ? item.name
           : item.nameTh || "";
-        document.getElementById("budgetNameEn").value = item.nameEn || "";
-        document.getElementById("budgetIsActiveRow").classList.remove("hidden");
-        document.getElementById("budgetIsActive").checked = item.isActive;
+        (document.getElementById("budgetNameEn") as HTMLInputElement | null)!.value = item.nameEn || "";
+        document.getElementById("budgetIsActiveRow")?.classList.remove("hidden");
+        (document.getElementById("budgetIsActive") as HTMLInputElement | null)!.checked = item.isActive;
 
-        const titles = {
+        const titles: Record<string, string> = {
           subsidies: "แก้ไขงบอุดหนุน",
           "subsidy-types": "แก้ไขประเภทงบอุดหนุน",
           groups: "แก้ไขกลุ่มงบอุดหนุน",
           "expense-details": "แก้ไขรายละเอียดค่าใช้จ่าย",
         };
-        document.getElementById("budgetModalTitle").textContent =
-          titles[type] || "แก้ไขข้อมูล";
+        (document.getElementById("budgetModalTitle") as HTMLElement | null)!.textContent =
+          titles[type as keyof typeof titles] || "แก้ไขข้อมูล";
 
         if (type === "subsidy-types" && item.subsidyId) {
-          document.getElementById("budgetParentId").value = item.subsidyId;
+          (document.getElementById("budgetParentId") as HTMLSelectElement | null)!.value = String(item.subsidyId);
         } else if (type === "groups" && item.budgetTypeId) {
-          document.getElementById("budgetParentId").value = item.budgetTypeId;
+          (document.getElementById("budgetParentId") as HTMLSelectElement | null)!.value = String(item.budgetTypeId);
         } else if (type === "expense-details") {
           // set detail type radio
           const isSub = item.detailType === "sub";
@@ -2608,44 +2851,60 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
 
           if (isSub) {
             // for sub: hide group row, show sub-parent row
-            document.getElementById("budgetParentRow").classList.add("hidden");
-            document.getElementById("budgetSubParentRow").classList.remove("hidden");
+            const parentRow = document.getElementById("budgetParentRow");
+            const subParentRow = document.getElementById("budgetSubParentRow");
+            if (parentRow && subParentRow) {
+              parentRow.classList.add("hidden");
+              subParentRow.classList.remove("hidden");
+            }
             // populate sub-parent with all active main items
             const mainItems = allExpenseDetails
               .filter((s: any) => s.detailType === "main" && s.isActive && s.id !== item.id)
               .sort((a: any, b: any) => (a.name || "").localeCompare(b.name || "", "th"));
             const subSel = document.getElementById("budgetSubParentId");
-            subSel.innerHTML =
+            if (subSel) subSel.innerHTML =
               '<option value="">-- เลือกหัวข้อหลัก --</option>' +
               mainItems.map((s: any) => {
                 const groupName = s.budgetGroup?.name || allGroups.find((g: any) => g.id === s.budgetGroupId)?.name || "";
                 return `<option value="${s.id}">${s.name}${groupName ? ` (${groupName})` : ""}</option>`;
               }).join("");
-            if (item.parentId) (subSel as HTMLSelectElement).value = String(item.parentId);
+            if (item.parentId && subSel) (subSel as HTMLSelectElement).value = String(item.parentId);
           } else {
             // for main: show group row, hide sub-parent row
-            document.getElementById("budgetParentRow").classList.remove("hidden");
-            document.getElementById("budgetSubParentRow").classList.add("hidden");
+            const parentRow = document.getElementById("budgetParentRow");
+            const subParentRow = document.getElementById("budgetSubParentRow");
+            if (parentRow && subParentRow) {
+              parentRow.classList.remove("hidden");
+              subParentRow.classList.add("hidden");
+            }
             let groupId = item.budgetGroupId;
-            if (groupId) document.getElementById("budgetParentId").value = groupId;
+            if (groupId) {
+              const parentIdEl = document.getElementById("budgetParentId") as HTMLSelectElement | null;
+              if (parentIdEl) parentIdEl.value = groupId;
+            }
           }
         }
       }
     }
 
-    async function saveBudgetItem() {
-      const id = document.getElementById("budgetModalId").value;
-      const type = document.getElementById("budgetModalType").value;
-      const code = document.getElementById("budgetCode").value.trim();
-      const nameTh = document.getElementById("budgetNameTh").value.trim();
-      const nameEn =
-        document.getElementById("budgetNameEn").value.trim() || undefined;
-      const parentId = document.getElementById("budgetParentId").value
-        ? parseInt(document.getElementById("budgetParentId").value)
-        : undefined;
-      const isActive = id
-        ? document.getElementById("budgetIsActive").checked
-        : undefined;
+    async function saveBudgetItem(): Promise<void> {
+      const idEl = document.getElementById("budgetModalId") as HTMLInputElement | null;
+      const typeEl = document.getElementById("budgetModalType") as HTMLInputElement | null;
+      const codeEl = document.getElementById("budgetCode") as HTMLInputElement | null;
+      const nameThEl = document.getElementById("budgetNameTh") as HTMLInputElement | null;
+      const nameEnEl = document.getElementById("budgetNameEn") as HTMLInputElement | null;
+      const parentIdEl = document.getElementById("budgetParentId") as HTMLSelectElement | null;
+      const isActiveEl = document.getElementById("budgetIsActive") as HTMLInputElement | null;
+      
+      if (!idEl || !typeEl || !codeEl || !nameThEl || !nameEnEl || !parentIdEl) return;
+      
+      const id = idEl.value;
+      const type = typeEl.value;
+      const code = codeEl.value.trim();
+      const nameTh = nameThEl.value.trim();
+      const nameEn = nameEnEl.value.trim() || undefined;
+      const parentId = parentIdEl.value ? parseInt(parentIdEl.value) : undefined;
+      const isActive = id && isActiveEl ? isActiveEl.checked : undefined;
 
       // groups และ expense-details ใช้ field `name` แทน nameTh/code
       const isNameOnly = type === "groups" || type === "expense-details";
@@ -2692,13 +2951,13 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
         }
       }
 
-      const endpointMap = {
+      const endpointMap: Record<string, string> = {
         subsidies: "budget-subsidies",
         "subsidy-types": "budget-subsidy-types",
         groups: "budget-groups",
         "expense-details": "budget-expense-details",
       };
-      const endpoint = endpointMap[type];
+      const endpoint = endpointMap[type as keyof typeof endpointMap];
 
       let body: any;
       if (type === "groups") {
@@ -2754,10 +3013,33 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     // =====================
     // Delete (generic)
     // =====================
-    function deleteItem(type, id, label) {
-      document.getElementById("confirmMsg").textContent =
-        `ต้องการลบ "${label}" ใช่หรือไม่?`;
-      const btn = document.getElementById("confirmDeleteBtn");
+    function deleteItem(type: string, id: number, label: string): void {
+      if (type === "org" && !canManageOrg(id)) {
+        (window as any).showToast(
+          "ท่านไม่มีสิทธิ์แก้ไขข้อมูลนี้ เนื่องจากท่านไม่ได้สังกัดหน่วยงานที่ต้องการดำเนินการ",
+          "error"
+        );
+        return;
+      }
+      const budgetTypes = [
+        "budget-subsidies",
+        "budget-subsidy-types",
+        "budget-groups",
+        "budget-expense-details",
+      ];
+      if (budgetTypes.includes(type) && !hasPermission("settings.manage")) {
+        (window as any).showToast(
+          "ท่านไม่มีสิทธิ์แก้ไขข้อมูลนี้ เนื่องจากท่านไม่ได้รับสิทธิ์จัดการการตั้งค่า",
+          "error",
+        );
+        return;
+      }
+      const confirmMsg = document.getElementById("confirmMsg");
+      if (confirmMsg) {
+        confirmMsg.textContent = `ต้องการลบ "${label}" ใช่หรือไม่?`;
+      }
+      const btn = document.getElementById("confirmDeleteBtn") as HTMLButtonElement | null;
+      if (!btn) return;
       btn.onclick = async () => {
         try {
           let url;
@@ -2834,17 +3116,17 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
     _w.onDetailTypeChange = onDetailTypeChange;
     _w.onExpenseGroupChange = onExpenseGroupChange;
 
-    const budgetTabLoaded = {
+    const budgetTabLoaded: Record<string, boolean> = {
       subsidies: false,
       "subsidy-types": false,
       groups: false,
       "expense-details": false,
     };
     const origSwitchBudgetTab = switchBudgetTab;
-    window.switchBudgetTab = function (tab) {
+    (window as any).switchBudgetTab = function (tab: string): void {
       origSwitchBudgetTab(tab);
-      if (!budgetTabLoaded[tab]) {
-        budgetTabLoaded[tab] = true;
+      if (!budgetTabLoaded[tab as keyof typeof budgetTabLoaded]) {
+        budgetTabLoaded[tab as keyof typeof budgetTabLoaded] = true;
         if (tab === "subsidies") loadBudgetSubsidies();
         else if (tab === "subsidy-types") loadBudgetSubsidyTypes();
         else if (tab === "groups") loadBudgetGroups();
@@ -2892,13 +3174,17 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
       ];
       const role = activeAffiliation?.role;
       if (!allowedRoles.includes(role)) {
-        document.getElementById("accessDenied").classList.remove("hidden");
+        document.getElementById("accessDenied")?.classList.remove("hidden");
         return;
       }
 
       currentRole = role;
       currentAffiliationOrg = activeAffiliation?.organization ?? null;
-      document.getElementById("settingsContent").classList.remove("hidden");
+      document.getElementById("settingsContent")?.classList.remove("hidden");
+
+      if (role !== "super_admin") {
+        document.getElementById("addOrgBtn")?.classList.add("hidden");
+      }
 
       // Fetch /api/auth/me พร้อม auto-refresh เมื่อ token หมดอายุ
       async function fetchMe() {
@@ -2961,6 +3247,8 @@ import AuthLayout from "../layouts/AuthenticatedLayout.astro";
 
       // Load initial data (token is now fresh)
       await loadCampuses();
+      await loadMyPermissions();
+      applyBudgetPermissions();
       await loadOrganizations();
       loadPermissionMatrix();
       loadBudgetSubsidies();

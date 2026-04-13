@@ -1,0 +1,1583 @@
+---
+import AuthLayout from '../../layouts/AuthenticatedLayout.astro';
+---
+
+<AuthLayout title="แก้ไขข้อมูลโครงการ">
+
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="relative rounded-sm overflow-hidden mb-5 shadow-lg"
+       style="background: linear-gradient(135deg, #0c2957 0%, #0a4068 45%, #006664 100%);">
+    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #e97316, #f59e0b, #e97316);"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 65%);"></div>
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
+         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+
+    <div class="relative z-10 p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <!-- Left: title -->
+        <div class="flex items-start gap-3">
+          <a href="/projects" class="mt-1 shrink-0 w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-colors" title="กลับ">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </a>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-white text-lg font-bold leading-tight">แก้ไขข้อมูลโครงการ</h1>
+              <span id="headerTypeBadge" class="hidden inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-500/90 text-white border border-orange-400/50">
+                โครงการย่อย
+              </span>
+            </div>
+            <p class="text-white/70 text-sm mt-0.5" id="headerBreadcrumb">แก้ไขข้อมูลรายละเอียดโครงการที่เลือก</p>
+          </div>
+        </div>
+        <!-- Right: step indicator -->
+        <div class="shrink-0 flex items-center gap-2 sm:mt-1">
+          <span class="text-white/50 text-xs">ขั้นตอน</span>
+          <span id="stepBadge" class="px-3 py-1 rounded-full text-sm font-bold bg-orange-500 text-white">1/3</span>
+        </div>
+      </div>
+
+      <!-- Step Nav -->
+      <div class="mt-5 flex items-center gap-0">
+        <!-- Step 1 -->
+        <div class="flex items-center gap-2">
+          <div id="stepCircle1" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
+                                        bg-orange-500 border-orange-500 text-white">1</div>
+          <span id="stepLabel1" class="text-white text-xs font-semibold hidden sm:block">ข้อมูลพื้นฐาน</span>
+        </div>
+        <div id="stepLine1" class="flex-1 h-0.5 mx-2 rounded transition-all bg-white/20 min-w-[20px]"></div>
+        <!-- Step 2 -->
+        <div class="flex items-center gap-2">
+          <div id="stepCircle2" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
+                                        bg-white/10 border-white/30 text-white/50">2</div>
+          <span id="stepLabel2" class="text-white/50 text-xs hidden sm:block">รายละเอียดโครงการ</span>
+        </div>
+        <div id="stepLine2" class="flex-1 h-0.5 mx-2 rounded transition-all bg-white/20 min-w-[20px]"></div>
+        <!-- Step 3 -->
+        <div class="flex items-center gap-2">
+          <div id="stepCircle3" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
+                                        bg-white/10 border-white/30 text-white/50">3</div>
+          <span id="stepLabel3" class="text-white/50 text-xs hidden sm:block">เป้าหมาย/ตัวชี้วัด</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LOADING STATE ══ -->
+  <div id="pageLoading" class="flex flex-col items-center justify-center py-20 gap-3 text-gray-400">
+    <svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+    </svg>
+    <p class="text-sm">กำลังโหลดข้อมูลโครงการ...</p>
+  </div>
+
+  <!-- ══ STEP 1: ข้อมูลพื้นฐาน ══ -->
+  <div id="step1" class="hidden space-y-4">
+    <!-- Main card -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <!-- Card header -->
+      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/60">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-green-100 border border-green-200 flex items-center justify-center">
+            <svg class="w-4 h-4 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h2 class="text-sm font-bold text-[#0a1f3d]">ข้อมูลพื้นฐานโครงการ</h2>
+        </div>
+      </div>
+
+      <div class="p-5 space-y-5">
+        <!-- โครงการหลัก section -->
+        <div id="parentProjectSection" class="hidden">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">โครงการหลัก</p>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-orange-100 text-orange-700 border border-orange-200">
+              โครงการย่อย
+            </span>
+          </div>
+
+          <!-- Parent project info card -->
+          <div class="rounded-md border border-green-200 bg-green-50 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-[#0a1f3d] leading-snug" id="parentName">—</p>
+                <p class="text-xs text-gray-500 mt-0.5">รหัสโครงการ: <span class="font-mono text-[#006664] font-semibold" id="parentCode">—</span></p>
+              </div>
+              <div class="shrink-0 text-right sm:text-right">
+                <p class="text-[11px] text-gray-400">งบประมาณทั้งสิ้น</p>
+                <p class="text-sm font-bold text-[#0a1f3d]" id="parentInitialBudget">—</p>
+                <p class="text-[11px] text-gray-400 mt-1">หน่วยงาน</p>
+                <p class="text-xs text-gray-600" id="parentOrgName">—</p>
+              </div>
+            </div>
+            <div class="mt-2 pt-2 border-t border-green-200 flex items-center gap-1.5">
+              <span class="text-[11px] text-gray-500">งบประมาณคงเหลือ:</span>
+              <span class="text-sm font-bold text-rose-600" id="parentAllocatedBudget">—</span>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- Project name field -->
+        <div>
+          <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+            ชื่อโครงการ
+            <span class="text-rose-500 ml-0.5">*</span>
+          </label>
+          <textarea id="subName" rows="3"
+            placeholder="กรอกชื่อโครงการย่อย ให้ชัดเจนและสามารถระบุวัตถุประสงค์ได้"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors resize-none leading-relaxed"></textarea>
+        </div>
+
+        <!-- Document reference -->
+        <div>
+          <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+            อ้างอิงเลขที่เอกสาร
+            <span class="text-[11px] font-normal text-gray-400 ml-1">(ไม่บังคับ)</span>
+          </label>
+          <input id="docRef" type="text"
+            placeholder="เช่น DOC-2024-001"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors font-mono"/>
+        </div>
+
+        <!-- Budget + หน่วยงานที่รับผิดชอบ + หัวหน้า + ผู้รับผิดชอบ -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4">
+          <!-- Budget allocation field -->
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+              จำนวนเงินในปีจัดสรร
+              <span class="text-rose-500 ml-0.5">*</span>
+            </label>
+            <div class="relative">
+              <input id="subBudget" type="text" inputmode="decimal"
+                placeholder="กรอกจำนวนเงิน"
+                class="w-full pl-4 pr-12 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors"/>
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium pointer-events-none">บาท</span>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1" id="budgetHint">ต้องไม่เกินงบประมาณคงเหลือ</p>
+          </div>
+
+          <!-- หน่วยงานที่รับผิดชอบโครงการ -->
+          <div class="lg:col-span-4">
+            <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+              หน่วยงานที่รับผิดชอบโครงการ
+              <span class="text-rose-500 ml-0.5">*</span>
+            </label>
+            <select id="deptSelect"
+              class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors appearance-none">
+              <option value="">— เลือกหน่วยงาน —</option>
+            </select>
+            <p class="text-[10px] text-gray-400 mt-1">หน่วยงานหลักหรือย่อยที่รับผิดชอบโครงการนี้</p>
+          </div>
+
+          <!-- หัวหน้าโครงการ -->
+          <div class="lg:col-span-3">
+            <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+              หัวหน้าโครงการ <span class="text-rose-500">*</span>
+            </label>
+            <div id="leadDropdownWrap" class="relative">
+              <div class="relative">
+                <input id="leadSearch" type="text" autocomplete="off"
+                  placeholder="พิมพ์ชื่อหรือชื่อผู้ใช้เพื่อค้นหา..."
+                  class="w-full pl-4 pr-10 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors"/>
+                <svg id="leadClearBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 cursor-pointer hover:text-rose-500"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="clearLead()">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </div>
+              <div id="leadDropdownPanel"
+                class="hidden absolute z-30 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-xl overflow-hidden max-h-52 overflow-y-auto">
+                <div id="leadDropdownItems" class="py-1">
+                  <p class="px-4 py-3 text-xs text-gray-400">กำลังโหลด...</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-400 mt-1" id="hintLead">เลือกหัวหน้าโครงการจากรายชื่อผู้ใช้ในระบบ</p>
+          </div>
+
+          <!-- ผู้รับผิดชอบโครงการ -->
+          <div class="lg:col-span-3">
+            <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+              ผู้รับผิดชอบโครงการ
+              <span class="text-[11px] font-normal text-gray-400 ml-1">(ไม่บังคับ)</span>
+            </label>
+            <div id="responsibleDropdownWrap" class="relative">
+              <div class="relative">
+                <input id="responsibleSearch" type="text" autocomplete="off"
+                  placeholder="พิมพ์ชื่อเพื่อค้นหา..."
+                  class="w-full pl-4 pr-10 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors"/>
+                <svg id="responsibleClearBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 cursor-pointer hover:text-rose-500"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="clearResponsible()">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </div>
+              <div id="responsibleDropdownPanel"
+                class="hidden absolute z-30 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-xl overflow-hidden max-h-52 overflow-y-auto">
+                <div id="responsibleDropdownItems" class="py-1">
+                  <p class="px-4 py-3 text-xs text-gray-400">กำลังโหลด...</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-400 mt-1">บุคคลที่รับผิดชอบดำเนินโครงการ</p>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+            หมายเหตุ
+            <span class="text-[11px] font-normal text-gray-400 ml-1">(ไม่บังคับ)</span>
+          </label>
+          <textarea id="notes" rows="3"
+            placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)"
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors resize-none leading-relaxed"></textarea>
+        </div>
+      </div>
+
+      <!-- Card footer: next button -->
+      <div class="px-5 py-4 bg-gray-50/60 border-t border-gray-100 flex items-center justify-between gap-3">
+        <a href="/projects" class="text-sm text-gray-500 hover:text-[#006664] transition-colors">
+          กลับไปรายการโครงการ
+        </a>
+        <button id="btnStep1Next"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#006664] hover:bg-[#005554] text-white text-sm font-semibold rounded-md transition-colors shadow-sm disabled:opacity-60">
+          <svg id="step1Spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+          <span id="step1BtnText">บันทึกและดำเนินการต่อ</span>
+          <svg id="step1Arrow" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tip panel -->
+    <div class="rounded-md border border-blue-200 bg-blue-50 px-4 py-3.5">
+      <p class="text-xs font-semibold text-blue-700 mb-1.5">คำแนะนำ: ข้อมูลพื้นฐานโครงการ</p>
+      <ul class="space-y-1 text-xs text-blue-600 list-disc list-inside leading-relaxed">
+        <li>เลือกโครงการหลักที่ต้องการสร้างโครงการย่อยให้ถูกต้อง</li>
+        <li>ประมาณการงบประมาณที่ต้องการสำหรับโครงการย่อยนี้</li>
+        <li>ชื่อโครงการควรสื่อถึงกิจกรรมหรือขอบเขตงานที่ชัดเจน</li>
+        <li>กำหนดงบประมาณสำรองไว้สำหรับค่าใช้จ่ายที่ไม่คาดคิด</li>
+        <li>เลือกกลุ่มประมาณให้ตรงกับประเภทของกิจกรรมโครงการ</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2: รายละเอียดโครงการ ══ -->
+  <div id="step2" class="hidden space-y-4">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <!-- Card header -->
+      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2 bg-gray-50/60">
+        <div class="w-8 h-8 rounded-lg bg-orange-100 border border-orange-200 flex items-center justify-center">
+          <svg class="w-4 h-4 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h2 class="text-sm font-bold text-[#0a1f3d]">รายละเอียดโครงการ</h2>
+      </div>
+
+      <div class="p-5 space-y-5">
+        <!-- Auto code section -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">การสร้างรหัสโครงการ</p>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-50 text-teal-700 border border-teal-200">
+              รหัสโดยอัตโนมัติ
+            </span>
+          </div>
+          <div class="rounded-md border border-teal-200 bg-teal-50 p-4">
+            <p class="text-[11px] text-gray-500 mb-1">รหัสโครงการย่อย (สร้างอัตโนมัติ)</p>
+            <p class="text-base font-bold text-[#006664] font-mono" id="generatedCode">—</p>
+            <p class="text-[11px] text-gray-400 mt-0.5">สร้างจากรหัสหลัก: <span id="parentCodeRef" class="font-mono text-gray-600">—</span></p>
+          </div>
+        </div>
+
+        <!-- Budget dropdowns: compact 4-col grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-[#0a1f3d] mb-1">
+              งบประมาณ <span class="text-rose-500">*</span>
+            </label>
+            <select id="subsidySelect"
+              class="w-full px-2.5 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors appearance-none">
+              <option value="">-- เลือก --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#0a1f3d] mb-1">
+              ประเภทงบประมาณ <span class="text-rose-500">*</span>
+            </label>
+            <select id="budgetTypeSelect"
+              class="w-full px-2.5 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors appearance-none">
+              <option value="">-- เลือก --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#0a1f3d] mb-1">
+              กลุ่มประมาณ <span class="text-rose-500">*</span>
+            </label>
+            <select id="budgetGroupSelect"
+              class="w-full px-2.5 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors appearance-none">
+              <option value="">-- เลือก --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#0a1f3d] mb-1">
+              ปีงบประมาณ <span class="text-rose-500">*</span>
+            </label>
+            <select id="yearSelect"
+              class="w-full px-2.5 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors appearance-none">
+              <option value="">-- เลือก --</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Budget display -->
+        <div class="rounded-md border border-gray-200 bg-gray-50 p-4">
+          <p class="text-xs font-semibold text-gray-500 mb-1">งบประมาณสำหรับโครงการย่อยนี้</p>
+          <p class="text-2xl font-bold text-[#0a1f3d]" id="displayBudget">0.00 <span class="text-base font-medium text-gray-400">บาท</span></p>
+          <p class="text-[11px] text-gray-400 mt-1" id="displayBudgetNote">จัดสรรจากงบประมาณหลัก</p>
+        </div>
+
+        <div class="border-t border-dashed border-gray-200 my-1"></div>
+
+
+        <!-- ── ความสอดคล้องกับยุทธศาสตร์ ── -->
+        <div>
+          <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            ความสอดคล้องกับยุทธศาสตร์
+          </p>
+          <div class="space-y-2">
+
+            <!-- ยุทธศาสตร์ มก. -->
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button type="button" onclick="toggleAccordion('acc-univ')"
+                class="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-sm font-semibold text-[#0a1f3d] transition-colors text-left">
+                <span class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded bg-[#0c2957] flex items-center justify-center text-white text-[9px] font-bold shrink-0">มก.</span>
+                  สอดคล้องกับยุทธศาสตร์ มก.
+                  <span id="cnt-univ" class="text-[11px] text-[#006664] font-medium"></span>
+                </span>
+                <svg id="arrow-univ" class="w-4 h-4 text-gray-400 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id="acc-univ" class="hidden px-4 py-3 bg-white border-t border-gray-100">
+                <div id="stratUnivContent" class="text-xs text-gray-400">กำลังโหลด...</div>
+              </div>
+            </div>
+
+            <!-- ยุทธศาสตร์ วิทยาเขต -->
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button type="button" onclick="toggleAccordion('acc-campus')"
+                class="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-sm font-semibold text-[#0a1f3d] transition-colors text-left">
+                <span class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded bg-teal-700 flex items-center justify-center text-white text-[9px] font-bold shrink-0">วข.</span>
+                  สอดคล้องกับยุทธศาสตร์ วิทยาเขต
+                  <span id="cnt-campus" class="text-[11px] text-[#006664] font-medium"></span>
+                </span>
+                <svg id="arrow-campus" class="w-4 h-4 text-gray-400 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id="acc-campus" class="hidden px-4 py-3 bg-white border-t border-gray-100">
+                <div id="stratCampusContent" class="text-xs text-gray-400">กำลังโหลด...</div>
+              </div>
+            </div>
+
+            <!-- ยุทธศาสตร์หน่วยงาน -->
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button type="button" onclick="toggleAccordion('acc-dept')"
+                class="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-sm font-semibold text-[#0a1f3d] transition-colors text-left">
+                <span class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded bg-emerald-700 flex items-center justify-center text-white text-[9px] font-bold shrink-0">หน่วย</span>
+                  สอดคล้องกับยุทธศาสตร์หน่วยงาน
+                  <span id="cnt-dept" class="text-[11px] text-[#006664] font-medium"></span>
+                </span>
+                <svg id="arrow-dept" class="w-4 h-4 text-gray-400 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id="acc-dept" class="hidden px-4 py-3 bg-white border-t border-gray-100">
+                <div id="stratDeptContent" class="text-xs text-gray-400">กำลังโหลด...</div>
+              </div>
+            </div>
+
+            <!-- ยุทธศาสตร์คณบดีส่วนงาน -->
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button type="button" onclick="toggleAccordion('acc-dean')"
+                class="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-sm font-semibold text-[#0a1f3d] transition-colors text-left">
+                <span class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded bg-indigo-700 flex items-center justify-center text-white text-[9px] font-bold shrink-0">คณบ.</span>
+                  สอดคล้องกับยุทธศาสตร์คณบดีส่วนงาน
+                  <span id="cnt-dean" class="text-[11px] text-[#006664] font-medium"></span>
+                </span>
+                <svg id="arrow-dean" class="w-4 h-4 text-gray-400 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id="acc-dean" class="hidden px-4 py-3 bg-white border-t border-gray-100">
+                <div id="stratDeanContent" class="text-xs text-gray-400">กำลังโหลด...</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="border-t border-dashed border-gray-200 my-1"></div>
+
+        <!-- ── SDGs ── -->
+        <div>
+          <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
+            ความสอดคล้องกับ SDGs
+          </p>
+          <div class="space-y-2">
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button type="button" onclick="toggleAccordion('acc-sdg')"
+                class="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-sm font-semibold text-[#0a1f3d] transition-colors text-left">
+                <span class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded bg-rose-700 flex items-center justify-center text-white text-[9px] font-bold shrink-0">SDG</span>
+                  สอดคล้องกับ SDGs
+                  <span id="cntSdgs" class="text-[11px] text-[#006664] font-medium"></span>
+                </span>
+                <svg id="arrow-sdg" class="w-4 h-4 text-gray-400 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id="acc-sdg" class="hidden px-4 py-3 bg-white border-t border-gray-100">
+                <div id="sdgGrid" class="flex flex-wrap gap-2">
+                  <p class="text-xs text-gray-400">กำลังโหลด...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-dashed border-gray-200 my-1"></div>
+
+        <!-- ── เนื้อหาโครงการ ── -->
+        <div>
+          <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            เนื้อหาโครงการ
+          </p>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+                หลักการและเหตุผล
+                <span class="text-rose-500 ml-0.5">*</span>
+              </label>
+              <textarea id="rationale" rows="4"
+                placeholder="อธิบายที่มา ความสำคัญ และความจำเป็นของโครงการย่อยนี้"
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors resize-none leading-relaxed"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+                วัตถุประสงค์
+                <span class="text-rose-500 ml-0.5">*</span>
+              </label>
+              <textarea id="objectives" rows="3"
+                placeholder="ระบุวัตถุประสงค์ของโครงการย่อย เช่น เพื่อพัฒนา... เพื่อส่งเสริม..."
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors resize-none leading-relaxed"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-[#0a1f3d] mb-1.5">
+                กลุ่มเป้าหมาย
+                <span class="text-rose-500 ml-0.5">*</span>
+              </label>
+              <textarea id="targetGroup" rows="3"
+                placeholder="เช่น นิสิต อาจารย์ เจ้าหน้าที่ ชุมชน"
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors resize-none leading-relaxed"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Card footer -->
+      <div class="px-5 py-4 bg-gray-50/60 border-t border-gray-100 flex items-center justify-between gap-3">
+        <button id="btnStep2Back"
+          class="text-sm text-gray-500 hover:text-[#006664] transition-colors">
+          ← ย้อนกลับ
+        </button>
+        <button id="btnStep2Next"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#006664] hover:bg-[#005554] text-white text-sm font-semibold rounded-md transition-colors shadow-sm">
+          บันทึกและดำเนินการต่อ
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom panels -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="rounded-md border border-blue-200 bg-blue-50 px-4 py-3.5">
+        <p class="text-xs font-semibold text-blue-700 mb-1.5">คำแนะนำ: ข้อมูลพื้นฐานโครงการ</p>
+        <ul class="space-y-1 text-xs text-blue-600 list-disc list-inside leading-relaxed">
+          <li>เลือกโครงการหลักที่ต้องการสร้างโครงการย่อยให้ถูกต้อง</li>
+          <li>ประมาณการงบประมาณที่ต้องการสำหรับโครงการย่อยนี้</li>
+          <li>ชื่อโครงการควรสื่อถึงกิจกรรมหรือขอบเขตงานที่ชัดเจน</li>
+          <li>กำหนดงบประมาณสำรองไว้สำหรับค่าใช้จ่ายที่ไม่คาดคิด</li>
+          <li>เลือกกลุ่มประมาณให้ตรงกับประเภทของกิจกรรมโครงการ</li>
+        </ul>
+      </div>
+      <div class="rounded-md border border-purple-200 bg-purple-50 px-4 py-3.5">
+        <p class="text-xs font-semibold text-purple-700 mb-2 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          ความคืบหน้าการสร้าง
+        </p>
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-purple-700 font-medium">ขั้นตอนที่ 1: ข้อมูลพื้นฐาน</span>
+            <span class="ml-auto text-green-600 font-semibold text-[10px]">เสร็จแล้ว</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+              <span class="text-white text-[10px] font-bold">2</span>
+            </div>
+            <span class="text-purple-700 font-medium">ขั้นตอนที่ 2: รายละเอียดโครงการ</span>
+            <span class="ml-auto text-orange-500 font-semibold text-[10px]">กำลังสร้าง</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-purple-200 border border-purple-300 flex items-center justify-center shrink-0">
+              <span class="text-purple-400 text-[10px] font-bold">3</span>
+            </div>
+            <span class="text-purple-400">ขั้นตอนที่ 3: เป้าหมาย/ตัวชี้วัด</span>
+            <span class="ml-auto text-purple-300 font-semibold text-[10px]">รอดำเนินการ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3: เป้าหมาย/ตัวชี้วัด ══ -->
+  <div id="step3" class="hidden space-y-4">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <!-- Card header -->
+      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/60">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-purple-100 border border-purple-200 flex items-center justify-center">
+            <svg class="w-4 h-4 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h2 class="text-sm font-bold text-[#0a1f3d]">เป้าหมาย / ตัวชี้วัดโครงการ</h2>
+        </div>
+        <button id="btnAddTarget"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#006664] bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          เพิ่มตัวชี้วัด
+          <span id="targetCounter" class="ml-0.5 px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-700 font-bold text-[10px]">0/5</span>
+        </button>
+      </div>
+
+      <div class="p-5">
+        <!-- Targets list -->
+        <div id="targetsList" class="space-y-3">
+          <!-- Populated dynamically -->
+        </div>
+        <div id="noTargets" class="py-8 flex flex-col items-center gap-2 text-gray-400">
+          <svg class="w-9 h-9 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          <p class="text-sm font-medium">ยังไม่มีตัวชี้วัด</p>
+          <p class="text-xs">กด "เพิ่มตัวชี้วัด" เพื่อกำหนดเป้าหมายของโครงการย่อย</p>
+        </div>
+      </div>
+
+      <!-- Card footer -->
+      <div class="px-5 py-4 bg-gray-50/60 border-t border-gray-100 flex items-center justify-between gap-3">
+        <button id="btnStep3Back"
+          class="text-sm text-gray-500 hover:text-[#006664] transition-colors">
+          ← ย้อนกลับ
+        </button>
+        <button id="btnSubmit"
+          class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#006664] hover:bg-[#005554] text-white text-sm font-semibold rounded-md transition-colors shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          บันทึกรายการโครงการ
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom panels -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="rounded-md border border-blue-200 bg-blue-50 px-4 py-3.5">
+        <p class="text-xs font-semibold text-blue-700 mb-1.5">คำแนะนำ: เป้าหมาย/ตัวชี้วัด</p>
+        <ul class="space-y-1 text-xs text-blue-600 list-disc list-inside leading-relaxed">
+          <li>กำหนดเป้าหมายที่วัดผลได้ชัดเจน (SMART)</li>
+          <li>ระบุหน่วยนับให้ชัดเจน เช่น คน, ครั้ง, ชิ้น</li>
+          <li>ตัวชี้วัดควรสัมพันธ์กับวัตถุประสงค์ของโครงการ</li>
+          <li>ไม่จำเป็นต้องมีตัวชี้วัดหากยังไม่พร้อม (เพิ่มภายหลังได้)</li>
+        </ul>
+      </div>
+      <div class="rounded-md border border-purple-200 bg-purple-50 px-4 py-3.5">
+        <p class="text-xs font-semibold text-purple-700 mb-2 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          ความคืบหน้าการสร้าง
+        </p>
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-purple-600">ขั้นตอนที่ 1: ข้อมูลพื้นฐาน</span>
+            <span class="ml-auto text-green-600 font-semibold text-[10px]">เสร็จแล้ว</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-purple-600">ขั้นตอนที่ 2: รายละเอียดโครงการ</span>
+            <span class="ml-auto text-green-600 font-semibold text-[10px]">เสร็จแล้ว</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <div class="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+              <span class="text-white text-[10px] font-bold">3</span>
+            </div>
+            <span class="text-purple-700 font-medium">ขั้นตอนที่ 3: เป้าหมาย/ตัวชี้วัด</span>
+            <span class="ml-auto text-orange-500 font-semibold text-[10px]">กำลังสร้าง</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = (import.meta as any).env.PUBLIC_API_URL || 'http://localhost:3000';
+
+    // ── State ──
+    let currentStep = 1;
+    let parentProject: any = null;
+    let orgList: any[] = [];
+    let subsidyList: any[] = [];
+    let budgetTypeList: any[] = [];
+    let budgetGroupList: any[] = [];
+    let targets: { name: string; value: string; unit: string }[] = [{ name: 'ข้อ 1 ', value: '', unit: '' }];
+
+    // New state for Step 2 additions
+    let userList: any[] = [];
+    let selectedLeadUserId: number | null = null;
+    let selectedLeadUserName = '';
+    let selectedResponsibleUserId: number | null = null;
+    let selectedResponsibleUserName = '';
+    let selectedUnivTacticIds: number[] = [];
+    let selectedCampusTacticIds: number[] = [];
+    let selectedDeptStrategyIds: number[] = [];
+    let selectedDeanTacticIds: number[] = [];
+    let selectedSdgIds: number[] = [];
+    // loaded flags
+    let univLoaded = false, campusLoaded = false, deptLoaded = false, deanLoaded = false, sdgsLoaded = false, usersLoaded = false;
+    // Step save state
+    let createdProjectId: number | null = null;
+
+    // ── Helpers ──
+    function formatBaht(v: any) {
+      const n = parseFloat(String(v ?? 0));
+      if (isNaN(n)) return '0.00';
+      return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function getParam(key: string) {
+      return new URLSearchParams(window.location.search).get(key) || '';
+    }
+
+    // ── Step navigation UI ──
+    function setStep(n: number) {
+      currentStep = n;
+      document.getElementById('step1')!.classList.toggle('hidden', n !== 1);
+      document.getElementById('step2')!.classList.toggle('hidden', n !== 2);
+      document.getElementById('step3')!.classList.toggle('hidden', n !== 3);
+      document.getElementById('stepBadge')!.textContent = `${n}/3`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      const circles = [1, 2, 3].map(i => document.getElementById(`stepCircle${i}`)!);
+      const labels  = [1, 2, 3].map(i => document.getElementById(`stepLabel${i}`)!);
+
+      circles.forEach((c, i) => {
+        const step = i + 1;
+        if (step < n) {
+          c.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all bg-green-500 border-green-500 text-white';
+          c.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+        } else if (step === n) {
+          c.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all bg-orange-500 border-orange-500 text-white';
+          c.innerHTML = String(step);
+        } else {
+          c.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all bg-white/10 border-white/30 text-white/50';
+          c.innerHTML = String(step);
+        }
+        const labelActive = step <= n;
+        labels[i].className = labelActive
+          ? 'text-white text-xs font-semibold hidden sm:block'
+          : 'text-white/50 text-xs hidden sm:block';
+      });
+
+      const line1 = document.getElementById('stepLine1')!;
+      const line2 = document.getElementById('stepLine2')!;
+      line1.className = `flex-1 h-0.5 mx-2 rounded transition-all min-w-[20px] ${n > 1 ? 'bg-green-400' : 'bg-white/20'}`;
+      line2.className = `flex-1 h-0.5 mx-2 rounded transition-all min-w-[20px] ${n > 2 ? 'bg-green-400' : 'bg-white/20'}`;
+    }
+
+    // New state holding the project being edited
+    let editProject: any = null;
+
+    // ── Load Project Info ──
+    async function loadProjectInfo() {
+      const id = getParam('id');
+      if (!id) {
+        showError('ไม่พบรหัสโครงการ กรุณากลับไปเลือกโครงการอีกครั้ง');
+        return;
+      }
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/projects/${id}`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        editProject = data.data;
+
+        // Apply Parent section if type == sub
+        if (editProject.parentId && editProject.projectType === 'sub') {
+           const pRes = await (window as any).apiFetch(`${API}/api/projects/${editProject.parentId}`);
+           const pData = await pRes.json();
+           if (pData.success) {
+               parentProject = pData.data;
+               document.getElementById('parentProjectSection')!.classList.remove('hidden');
+               document.getElementById('headerTypeBadge')!.classList.remove('hidden');
+               
+               const p = parentProject;
+               (document.getElementById('parentName') as HTMLElement).textContent = p.projectName;
+               (document.getElementById('parentCode') as HTMLElement).textContent = p.projectCode || '—';
+               (document.getElementById('parentOrgName') as HTMLElement).textContent = p.organization?.nameTh || '—';
+               (document.getElementById('parentInitialBudget') as HTMLElement).textContent = `${formatBaht(p.initialBudget)} บาท`;
+               (document.getElementById('parentAllocatedBudget') as HTMLElement).textContent = `${formatBaht(p.allocatedBudget)} บาท`;
+
+               (document.getElementById('budgetHint') as HTMLElement).textContent = `ต้องไม่เกิน ${formatBaht(p.allocatedBudget)} บาท (งบคงเหลือโครงการหลัก)`;
+               (document.getElementById('headerBreadcrumb') as HTMLElement).textContent = `โครงการหลัก: ${p.projectName}`;
+               
+               const parentCodeRef = document.getElementById('parentCodeRef');
+               if (parentCodeRef) parentCodeRef.textContent = p.projectCode || '—';
+               const infoParentCode = document.getElementById('infoParentCode');
+               if (infoParentCode) infoParentCode.textContent = p.projectCode || '—';
+           }
+        } else {
+           (document.getElementById('headerBreadcrumb') as HTMLElement).textContent = `แก้ไขข้อมูลรายละเอียดโครงการที่เลือก`;
+           (document.getElementById('budgetHint') as HTMLElement).textContent = `กรอกงบประมาณตามที่จัดสรร`;
+           document.getElementById('parentProjectSection')!.classList.add('hidden');
+        }
+
+        createdProjectId = editProject.id;
+        applyProjectData();
+      } catch (e: any) {
+        showError(e.message || 'โหลดข้อมูลโครงการไม่สำเร็จ');
+      }
+    }
+
+    async function applyProjectData() {
+      const ep = editProject;
+      // Step 1
+      (document.getElementById('subName') as HTMLInputElement).value = ep.projectName || '';
+      (document.getElementById('docRef') as HTMLInputElement).value = ep.documentReference || '';
+      (document.getElementById('subBudget') as HTMLInputElement).value = formatBaht(ep.initialBudget || 0);
+      (document.getElementById('notes') as HTMLInputElement).value = ep.notes || '';
+      
+      const count = (parentProject?.subProjectCount ?? 0) + 1;
+      (document.getElementById('generatedCode') as HTMLElement).textContent = ep.projectCode || (parentProject ? `${parentProject.projectCode}-${String(count).padStart(2, '0')}` : '(ยังไม่มีรหัสหลัก)');
+
+      // Generic helper to wait for options to load and select
+      const selectOptionWhenReady = (selectId: string, val: string, maxAttempts = 50) => {
+        let attempts = 0;
+        const optLoop = () => {
+          const sel = document.getElementById(selectId) as HTMLSelectElement;
+          if (!sel) return;
+          const matched = Array.from(sel.options).find(o => o.value === val);
+          if (matched) { matched.selected = true; }
+          else if (++attempts < maxAttempts) { setTimeout(optLoop, 100); }
+        };
+        optLoop();
+      };
+
+      // Pre-populate dept select (wait for orgs to load if needed)
+      const deptId = ep.details?.[0]?.departmentId;
+      if (deptId) { selectOptionWhenReady('deptSelect', String(deptId)); }
+
+      // Wait and populate Step 2 dropdowns
+      if (ep.budgetTypeId)  { selectOptionWhenReady('budgetTypeSelect', String(ep.budgetTypeId)); }
+      if (ep.budgetGroupId) { selectOptionWhenReady('budgetGroupSelect', String(ep.budgetGroupId)); }
+      if (ep.year)          { selectOptionWhenReady('yearSelect', String(ep.year)); }
+
+      // For subsidy, it relies on budgetTypeList matching
+      if (ep.budgetTypeId) {
+        let attempts = 0;
+        const typeLoop = () => {
+          const matchedType = budgetTypeList.find(t => t.id === ep.budgetTypeId);
+          if (matchedType && matchedType.subsidyId) {
+            selectOptionWhenReady('subsidySelect', String(matchedType.subsidyId));
+          } else if (++attempts < 50 && budgetTypeList.length === 0) {
+            setTimeout(typeLoop, 100);
+          }
+        };
+        typeLoop();
+      }
+
+      if (ep.details && ep.details.length > 0) {
+         const det = ep.details[0];
+
+         // Responsible user: look up name from userList (load if needed)
+         const responsibleManagerId = det.projectManagerId;
+         if (responsibleManagerId) {
+           selectedResponsibleUserId = responsibleManagerId;
+           // Ensure users are loaded so we can get the name
+           if (!usersLoaded) await loadUsers();
+           const found = userList.find((u: any) => u.id === responsibleManagerId);
+           selectedResponsibleUserName = found?.nameTh || found?.username || String(responsibleManagerId);
+           renderResponsibleSelect();
+         }
+
+         (document.getElementById('rationale') as HTMLInputElement).value = det.principlesAndReasons || '';
+         (document.getElementById('objectives') as HTMLInputElement).value = det.objectives || '';
+         (document.getElementById('targetGroup') as HTMLInputElement).value = det.targetGroup || '';
+         
+         const strats = det.strategyAlignments;
+         if (strats) {
+            selectedUnivTacticIds = strats.univ || [];
+            selectedCampusTacticIds = strats.campus || [];
+            selectedDeptStrategyIds = strats.dept || [];
+            selectedDeanTacticIds = strats.dean || [];
+
+            if (selectedUnivTacticIds.length > 0) {
+              const el = document.getElementById('cnt-univ');
+              if (el) el.textContent = `(${selectedUnivTacticIds.length})`;
+            }
+            if (selectedCampusTacticIds.length > 0) {
+              const el = document.getElementById('cnt-campus');
+              if (el) el.textContent = `(${selectedCampusTacticIds.length})`;
+            }
+            if (selectedDeptStrategyIds.length > 0) {
+              const el = document.getElementById('cnt-dept');
+              if (el) el.textContent = `(${selectedDeptStrategyIds.length})`;
+            }
+            if (selectedDeanTacticIds.length > 0) {
+              const el = document.getElementById('cnt-dean');
+              if (el) el.textContent = `(${selectedDeanTacticIds.length})`;
+            }
+         }
+         
+         const sdgs = det.sdgs;
+         if (sdgs && sdgs.length > 0) {
+            selectedSdgIds = sdgs.map((s: any) => s.sdgId);
+            document.getElementById('cntSdgs')!.textContent = `(${selectedSdgIds.length})`;
+            
+            // Sync DOM immediately in case sdgs loaded before project profile
+            document.querySelectorAll('#sdgGrid input[type="checkbox"]').forEach((el: any) => {
+              if (selectedSdgIds.includes(parseInt(el.value))) el.checked = true;
+            });
+         }
+
+         const targetsData = det.targets;
+         if (targetsData && targetsData.length > 0) {
+            targets = targetsData.map((t: any) => ({ name: t.targetDescription.replace(/ \(เป้าหมาย: .*\)/, ''), value: t.targetValue, unit: t.measurementUnit || '' }));
+         }
+      }
+      
+      selectedLeadUserId = ep.leadUserId;      
+      if (ep.leadUserId) {
+        selectedLeadUserName = ep.lead?.nameTh || ep.lead?.username || String(ep.leadUserId);
+        renderLeadSelect();
+      }
+      renderTargets();
+
+      syncBudgetDisplay();
+      document.getElementById('pageLoading')!.style.display = 'none';
+      setStep(1);
+    }
+
+    function showError(msg: string) {
+      document.getElementById('pageLoading')!.innerHTML = `
+        <div class="flex flex-col items-center gap-3 text-rose-500">
+          <svg class="w-10 h-10 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
+          <p class="text-sm font-medium">${msg}</p>
+          <a href="/projects" class="text-sm text-[#006664] hover:underline">← กลับไปรายการโครงการ</a>
+        </div>`;
+    }
+
+    // ── Load dropdowns ──
+    async function loadOrgs() {
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/organizations`);
+        const data = await res.json();
+        if (!data.success) return;
+        orgList = data.data || [];
+        const deptSel = document.getElementById('deptSelect') as HTMLSelectElement;
+        orgList.forEach(o => {
+          const label = `${'\u00a0\u00a0'.repeat(o.orgLevel === 'department' ? 1 : 0)}${o.nameTh}`;
+          deptSel.appendChild(new Option(label, String(o.id)));
+        });
+        const hintOrg = document.getElementById('hintOrg');
+        if (hintOrg) hintOrg.textContent = `หน่วยงานรับผิดชอบ: ${orgList.length} รายการ`;
+        // Pre-select dept from editProject
+        if (editProject?.details && editProject.details.length > 0) {
+          const deptId = editProject.details[0].departmentId;
+          Array.from(deptSel.options).forEach(o => { if (o.value === String(deptId)) o.selected = true; });
+        }
+      } catch {}
+    }
+
+    async function loadSubsidies() {
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/settings/budget-subsidies`);
+        const data = await res.json();
+        if (!data.success) return;
+        subsidyList = data.data || [];
+        const sel = document.getElementById('subsidySelect') as HTMLSelectElement;
+        subsidyList.forEach(s => sel.appendChild(new Option(s.nameTh, String(s.id))));
+      } catch {}
+    }
+
+    async function loadBudgetTypes() {
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/settings/budget-subsidy-types`);
+        const data = await res.json();
+        if (!data.success) return;
+        budgetTypeList = data.data || [];
+        const sel = document.getElementById('budgetTypeSelect') as HTMLSelectElement;
+        budgetTypeList.forEach(t => sel.appendChild(new Option(t.nameTh, String(t.id))));
+        if (editProject?.budgetTypeId) {
+           Array.from(sel.options).forEach(o => { if (o.value === String(editProject.budgetTypeId)) o.selected = true; });
+           
+           // Auto-select corresponding subsidy
+           const matchedType = budgetTypeList.find(t => t.id === editProject.budgetTypeId);
+           if (matchedType && matchedType.subsidyId) {
+             const trySelectSubsidy = () => {
+               const subSel = document.getElementById('subsidySelect') as HTMLSelectElement;
+               const options = Array.from(subSel.options);
+               if (options.length > 1) {
+                 const targetO = options.find(o => o.value === String(matchedType.subsidyId));
+                 if (targetO) targetO.selected = true;
+               } else {
+                 setTimeout(trySelectSubsidy, 100);
+               }
+             };
+             trySelectSubsidy();
+           }
+        }
+      } catch {}
+    }
+
+    async function loadBudgetGroups() {
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/settings/budget-groups`);
+        const data = await res.json();
+        if (!data.success) return;
+        budgetGroupList = data.data || [];
+        const sel = document.getElementById('budgetGroupSelect') as HTMLSelectElement;
+        budgetGroupList.forEach(g => sel.appendChild(new Option(g.name, String(g.id))));
+        if (editProject?.budgetGroupId) {
+           Array.from(sel.options).forEach(o => { if (o.value === String(editProject.budgetGroupId)) o.selected = true; });
+        }
+      } catch {}
+    }
+
+    async function loadYears() {
+      try {
+        const res  = await (window as any).apiFetch(`${API}/api/projects/years`);
+        const data = await res.json();
+        if (!data.success) return;
+        const sel = document.getElementById('yearSelect') as HTMLSelectElement;
+        (data.data || []).forEach((y: string) => sel.appendChild(new Option(`ปีงบประมาณ ${y}`, y)));
+        if (editProject?.year) {
+          Array.from(sel.options).forEach(o => { if (o.value === editProject.year) o.selected = true; });
+        }
+      } catch {}
+    }
+
+    // ── Budget display sync ──
+    function syncBudgetDisplay() {
+      const raw = (document.getElementById('subBudget') as HTMLInputElement).value.replace(/,/g, '');
+      const n = parseFloat(raw) || 0;
+      (document.getElementById('displayBudget') as HTMLElement).innerHTML =
+        `${formatBaht(n)} <span class="text-base font-medium text-gray-400">บาท</span>`;
+      const parentName = parentProject?.name || 'โครงการหลัก';
+      (document.getElementById('displayBudgetNote') as HTMLElement).textContent =
+        `จัดสรรจากงบประมาณหลัก: ${parentName.substring(0, 40)}${parentName.length > 40 ? '…' : ''}`;
+      // Budget overage check
+      const remaining = parseFloat(String(parentProject?.allocatedBudget ?? 0));
+      const budgetInput = document.getElementById('subBudget') as HTMLInputElement;
+      const hint = document.getElementById('budgetHint')!;
+      if (n > remaining) {
+        budgetInput.classList.add('border-rose-400', 'focus:border-rose-500');
+        budgetInput.classList.remove('border-gray-300', 'focus:border-[#006664]');
+        hint.textContent = `⚠️ จำนวนเงินเกินงบประมาณคงเหลือ ${formatBaht(remaining)} บาท`;
+        hint.classList.add('text-rose-500'); hint.classList.remove('text-gray-400');
+      } else {
+        budgetInput.classList.remove('border-rose-400', 'focus:border-rose-500');
+        budgetInput.classList.add('border-gray-300', 'focus:border-[#006664]');
+        hint.textContent = `ต้องไม่เกิน ${formatBaht(remaining)} บาท (งบคงเหลือโครงการหลัก)`;
+        hint.classList.remove('text-rose-500'); hint.classList.add('text-gray-400');
+      }
+    }
+    const subBudgetEl = document.getElementById('subBudget') as HTMLInputElement;
+    subBudgetEl.addEventListener('input', () => {
+      let val = subBudgetEl.value.replace(/[^0-9.,]/g, '');
+      const parts = val.split('.');
+      if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('').replace(/\./g, '');
+      subBudgetEl.value = val;
+      syncBudgetDisplay();
+    });
+    
+    subBudgetEl.addEventListener('blur', () => {
+      let val = subBudgetEl.value.replace(/,/g, '');
+      if (!val) return;
+      const n = parseFloat(val);
+      if (!isNaN(n)) {
+        subBudgetEl.value = formatBaht(n);
+        syncBudgetDisplay();
+      }
+    });
+
+    // ── Target management ──
+    function renderTargets() {
+      const list    = document.getElementById('targetsList')!;
+      const noTgt   = document.getElementById('noTargets')!;
+      const btnAdd  = document.getElementById('btnAddTarget') as HTMLButtonElement;
+      const counter = document.getElementById('targetCounter')!;
+
+      noTgt.classList.toggle('hidden', targets.length > 0);
+      list.innerHTML = targets.map((t, i) => `
+        <div class="flex items-start gap-3 p-3.5 rounded-md border border-gray-200 bg-gray-50 group">
+          <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="sm:col-span-2">
+              <input value="${t.name}" onchange="updateTarget(${i},'name',this.value)"
+                placeholder="ชื่อตัวชี้วัด / เป้าหมาย"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] bg-white"/>
+            </div>
+            <div class="flex gap-2">
+              <input value="${t.value}" onchange="updateTarget(${i},'value',this.value)"
+                placeholder="ค่าเป้าหมาย" type="text"
+                class="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] bg-white"/>
+              <input value="${t.unit}" onchange="updateTarget(${i},'unit',this.value)"
+                placeholder="หน่วย" type="text"
+                class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] bg-white"/>
+            </div>
+          </div>
+          <button onclick="removeTarget(${i})"
+            class="shrink-0 mt-0.5 w-7 h-7 rounded-lg text-gray-300 hover:text-rose-500 hover:bg-rose-50 flex items-center justify-center transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>`).join('');
+
+      counter.textContent = `${targets.length}/5`;
+      btnAdd.disabled = targets.length >= 5;
+    }
+
+    (window as any).updateTarget = (i: number, key: string, val: string) => {
+      (targets[i] as any)[key] = val;
+    };
+    (window as any).removeTarget = (i: number) => {
+      targets.splice(i, 1);
+      renderTargets();
+    };
+
+    document.getElementById('btnAddTarget')!.addEventListener('click', () => {
+      if (targets.length >= 5) {
+        (window as any).showToast('เพิ่มตัวชี้วัดได้สูงสุด 5 ข้อ', 'error');
+        return;
+      }
+      targets.push({ name: `ข้อ ${targets.length + 1} `, value: '', unit: '' });
+      renderTargets();
+    });
+
+    // ── Extras (Users, Strategies, SDGs) ──
+    async function loadUsers() {
+      if (usersLoaded) return;
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/users`);
+        const data = await res.json();
+        if (data.success) {
+          userList = data.data || [];
+          usersLoaded = true;
+        }
+      } catch {}
+    }
+
+    const leadInput = document.getElementById('leadSearch') as HTMLInputElement;
+    const leadPanel = document.getElementById('leadDropdownPanel')!;
+    const leadItems = document.getElementById('leadDropdownItems')!;
+    const leadClear = document.getElementById('leadClearBtn')!;
+
+    function renderLeadSelect() {
+      if (selectedLeadUserId) {
+        leadInput.value = selectedLeadUserName;
+        leadInput.readOnly = true;
+        leadClear.classList.remove('hidden');
+        leadPanel.classList.add('hidden');
+      } else {
+        leadInput.value = '';
+        leadInput.readOnly = false;
+        leadClear.classList.add('hidden');
+      }
+    }
+
+    (window as any).clearLead = () => {
+      selectedLeadUserId = null;
+      selectedLeadUserName = '';
+      renderLeadSelect();
+      leadInput.focus();
+    };
+
+    (window as any).selectLead = (id: number, name: string) => {
+      selectedLeadUserId = id;
+      selectedLeadUserName = name;
+      renderLeadSelect();
+    };
+
+    leadInput.addEventListener('focus', () => {
+       if (!selectedLeadUserId) leadInput.dispatchEvent(new Event('input'));
+    });
+
+    leadInput.addEventListener('input', () => {
+      if (selectedLeadUserId) return;
+      const q = leadInput.value.toLowerCase().trim();
+      let filtered = userList;
+      if (q) {
+        filtered = userList.filter(u => 
+          (u.nameTh && u.nameTh.toLowerCase().includes(q)) || 
+          (u.email && u.email.toLowerCase().includes(q)) ||
+          (u.username && u.username.toLowerCase().includes(q))
+        );
+      }
+      filtered = filtered.slice(0, 50);
+
+      if (filtered.length === 0) {
+        leadItems.innerHTML = '<p class="px-4 py-3 text-sm text-gray-500">ไม่พบผู้ใช้</p>';
+      } else {
+        leadItems.innerHTML = filtered.map(u => `
+          <button type="button" onclick="selectLead(${u.id}, '${(u.nameTh || u.username || '').replace(/'/g, "\\'")}')"
+            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none flex items-center justify-between group">
+            <div>
+              <p class="font-medium text-[#0a1f3d]">${u.nameTh || u.username || 'ไม่มีชื่อผู้ใช้'}</p>
+              <p class="text-[11px] text-gray-500">${u.email || u.username}</p>
+            </div>
+          </button>
+        `).join('');
+      }
+      leadPanel.classList.remove('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('leadDropdownWrap')!.contains(e.target as Node)) {
+        leadPanel.classList.add('hidden');
+      }
+    });
+
+    (window as any).toggleAccordion = (id: string) => {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(id.replace('acc-', 'arrow-'));
+      if (el && icon) {
+        el.classList.toggle('hidden');
+        icon.style.transform = el.classList.contains('hidden') ? '' : 'rotate(180deg)';
+      }
+      
+      if (id === 'acc-univ' && !univLoaded) loadStrategies('university', 'stratUnivContent', 'cnt-univ', 'univ').then(() => univLoaded = true);
+      if (id === 'acc-campus' && !campusLoaded) loadStrategies('campus', 'stratCampusContent', 'cnt-campus', 'campus').then(() => campusLoaded = true);
+      if (id === 'acc-dept' && !deptLoaded) loadStrategies('departments', 'stratDeptContent', 'cnt-dept', 'dept').then(() => deptLoaded = true);
+      if (id === 'acc-dean' && !deanLoaded) loadStrategies('dean', 'stratDeanContent', 'cnt-dean', 'dean').then(() => deanLoaded = true);
+      if (id === 'acc-sdg' && !sdgsLoaded) loadSdgs();
+    };
+
+    async function loadStrategies(type: string, containerId: string, counterId: string, arrType: string) {
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/strategies/${type}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const strats = data.data || [];
+        const cont = document.getElementById(containerId)!;
+
+        let selectedArr = selectedUnivTacticIds;
+        if(arrType === 'campus') selectedArr = selectedCampusTacticIds;
+        else if(arrType === 'dept') selectedArr = selectedDeptStrategyIds;
+        else if(arrType === 'dean') selectedArr = selectedDeanTacticIds;
+
+        if (strats.length === 0) {
+          cont.innerHTML = '<p class="text-sm text-gray-400">ไม่มียุทธศาสตร์</p>';
+          return;
+        }
+
+        cont.innerHTML = strats.map((s: any) => `
+          <div class="mb-3 last:mb-0">
+            <p class="text-sm font-semibold text-[#0a1f3d] mb-1">${s.name || s.nameTh || 'ไม่มีชื่อยุทธศาสตร์'}</p>
+            <div class="space-y-1.5 pl-4 border-l-2 border-gray-100">
+              ${(s.tactics || (arrType === 'dept' ? [s] : [])).map((t: any) => {
+                const checked = selectedArr.includes(t.id) ? 'checked' : '';
+                return `
+                <label class="flex items-start gap-2 cursor-pointer group">
+                  <input type="checkbox" value="${t.id}" ${checked}
+                    onchange="updateStratCount('${counterId}', this, '${arrType}')"
+                    class="mt-0.5 rounded border-gray-300 text-[#006664] focus:ring-[#006664]/30"/>
+                  <span class="text-xs text-gray-600 group-hover:text-[#006664] transition-colors leading-relaxed">
+                    ${t.name || t.nameTh}
+                  </span>
+                </label>`;
+              }).join('')}
+            </div>
+          </div>
+        `).join('');
+      } catch {}
+    }
+
+    (window as any).updateStratCount = (counterId: string, el: HTMLInputElement, arrType: string) => {
+      let arr = selectedUnivTacticIds;
+      if (arrType === 'campus') arr = selectedCampusTacticIds;
+      else if (arrType === 'dept') arr = selectedDeptStrategyIds;
+      else if (arrType === 'dean') arr = selectedDeanTacticIds;
+      
+      const val = parseInt(el.value);
+      if (el.checked) {
+        if (!arr.includes(val)) arr.push(val);
+      } else {
+        const idx = arr.indexOf(val);
+        if (idx !== -1) arr.splice(idx, 1);
+      }
+      document.getElementById(counterId)!.textContent = arr.length > 0 ? `(${arr.length})` : '';
+    };
+
+    async function loadSdgs() {
+      if (sdgsLoaded) return;
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/sdgs`);
+        const data = await res.json();
+        if (!data.success) return;
+        const sdgs = data.data || [];
+        const cont = document.getElementById('sdgGrid')!;
+        
+        const mainSdgs = sdgs.filter((s: any) => !s.parentId);
+        
+        if (mainSdgs.length === 0) {
+          cont.innerHTML = '<p class="text-xs text-gray-400">ไม่พบข้อมูล SDGs</p>';
+          return;
+        }
+
+        cont.innerHTML = mainSdgs.map((main: any) => {
+          const subs = sdgs.filter((s: any) => s.parentId === main.id);
+          const itemsToRender = subs.length > 0 ? subs : [main];
+          
+          return `
+          <div class="mb-3 last:mb-0">
+            <p class="text-sm font-semibold text-[#0a1f3d] mb-1">${main.displayName || main.display_name || main.name}</p>
+            <div class="space-y-1.5 pl-4 border-l-2 border-gray-100">
+              ${itemsToRender.map((sub: any) => {
+                const checked = selectedSdgIds.includes(sub.id) ? 'checked' : '';
+                return `
+                <label class="flex items-start gap-2 cursor-pointer group">
+                  <input type="checkbox" value="${sub.id}" ${checked} onchange="updateSdgCount(this)"
+                    class="mt-0.5 rounded border-gray-300 text-[#006664] focus:ring-[#006664]/30"/>
+                  <span class="text-xs text-gray-600 group-hover:text-[#006664] transition-colors leading-relaxed">
+                    ${sub.displayName || sub.display_name || sub.name}
+                  </span>
+                </label>`
+              }).join('')}
+            </div>
+          </div>`
+        }).join('');
+        
+        sdgsLoaded = true;
+      } catch {}
+    }
+
+    (window as any).updateSdgCount = (el: HTMLInputElement) => {
+      const val = parseInt(el.value);
+      if (el.checked) {
+        if (!selectedSdgIds.includes(val)) selectedSdgIds.push(val);
+      } else {
+        const idx = selectedSdgIds.indexOf(val);
+        if (idx !== -1) selectedSdgIds.splice(idx, 1);
+      }
+      document.getElementById('cntSdgs')!.textContent = selectedSdgIds.length > 0 ? `(${selectedSdgIds.length})` : '';
+    };
+
+    // ── Responsible user search (Step 1) ──
+    const responsibleInput = document.getElementById('responsibleSearch') as HTMLInputElement;
+    const responsiblePanel = document.getElementById('responsibleDropdownPanel')!;
+    const responsibleItems = document.getElementById('responsibleDropdownItems')!;
+    const responsibleClear = document.getElementById('responsibleClearBtn')!;
+
+    function renderResponsibleSelect() {
+      if (selectedResponsibleUserId) {
+        responsibleInput.value = selectedResponsibleUserName;
+        responsibleClear.classList.remove('hidden');
+      } else {
+        responsibleInput.value = '';
+        responsibleClear.classList.add('hidden');
+      }
+    }
+
+    responsibleInput.addEventListener('focus', async () => {
+      if (!usersLoaded) await loadUsers();
+      responsiblePanel.classList.remove('hidden');
+      const q = responsibleInput.value.trim().toLowerCase();
+      const filtered = userList.filter(u =>
+        (u.nameTh || '').toLowerCase().includes(q) ||
+        (u.email || '').toLowerCase().includes(q)
+      ).slice(0, 20);
+      responsibleItems.innerHTML = filtered.length === 0
+        ? '<p class="px-4 py-3 text-xs text-gray-400">ไม่พบรายชื่อ</p>'
+        : filtered.map(u => {
+            const name = (u.nameTh || '').replace(/"/g, '&quot;');
+            return `<button type="button" class="w-full px-4 py-2.5 text-left hover:bg-teal-50 group" data-uid="${u.id}" data-uname="${name}" onclick="_pickResponsible(this)">
+              <p class="text-sm font-medium text-[#0a1f3d] group-hover:text-[#006664]">${u.nameTh || ''}</p>
+              <p class="text-xs text-gray-400">${u.email || ''}</p>
+            </button>`;
+          }).join('');
+    });
+
+    responsibleInput.addEventListener('input', () => {
+      const q = responsibleInput.value.trim().toLowerCase();
+      if (selectedResponsibleUserId) { selectedResponsibleUserId = null; selectedResponsibleUserName = ''; responsibleClear.classList.add('hidden'); }
+      const filtered = userList.filter(u =>
+        (u.nameTh || '').toLowerCase().includes(q) ||
+        (u.email || '').toLowerCase().includes(q)
+      ).slice(0, 20);
+      responsiblePanel.classList.remove('hidden');
+      responsibleItems.innerHTML = filtered.length === 0
+        ? '<p class="px-4 py-3 text-xs text-gray-400">ไม่พบรายชื่อ</p>'
+        : filtered.map(u => {
+            const name = (u.nameTh || '').replace(/"/g, '&quot;');
+            return `<button type="button" class="w-full px-4 py-2.5 text-left hover:bg-teal-50 group" data-uid="${u.id}" data-uname="${name}" onclick="_pickResponsible(this)">
+              <p class="text-sm font-medium text-[#0a1f3d] group-hover:text-[#006664]">${u.nameTh || ''}</p>
+              <p class="text-xs text-gray-400">${u.email || ''}</p>
+            </button>`;
+          }).join('');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('responsibleDropdownWrap')?.contains(e.target as Node))
+        responsiblePanel.classList.add('hidden');
+    });
+
+    (window as any)._pickResponsible = (btn: HTMLElement) => {
+      const id = Number(btn.dataset.uid);
+      const name = btn.dataset.uname || '';
+      (window as any).selectResponsibleUser(id, name);
+    };
+    (window as any).selectResponsibleUser = (id: number, name: string) => {
+      selectedResponsibleUserId = id;
+      selectedResponsibleUserName = name;
+      renderResponsibleSelect();
+      responsiblePanel.classList.add('hidden');
+    };
+    (window as any).clearResponsible = () => {
+      selectedResponsibleUserId = null;
+      selectedResponsibleUserName = '';
+      renderResponsibleSelect();
+    };
+    // ── Step 1 → 2: save basic project to DB ──
+    document.getElementById('btnStep1Next')!.addEventListener('click', async () => {
+      const name   = (document.getElementById('subName') as HTMLTextAreaElement).value.trim();
+      const budget = (document.getElementById('subBudget') as HTMLInputElement).value.replace(/,/g,'').trim();
+      const dept   = (document.getElementById('deptSelect') as HTMLSelectElement).value;
+      if (!name) { (window as any).showToast('กรุณากรอกชื่อโครงการย่อย', 'error'); document.getElementById('subName')!.focus(); return; }
+      if (!budget) { (window as any).showToast('กรุณากรอกจำนวนเงินที่จัดสรร', 'error'); document.getElementById('subBudget')!.focus(); return; }
+      const n = parseFloat(budget);
+      const remaining = parseFloat(String(parentProject?.allocatedBudget ?? 0));
+      if (n > remaining) { (window as any).showToast(`จำนวนเงินเกินงบประมาณคงเหลือ ${formatBaht(remaining)} บาท`, 'error'); document.getElementById('subBudget')!.focus(); return; }
+      if (!dept) { (window as any).showToast('กรุณาเลือกหน่วยงานที่รับผิดชอบโครงการ', 'error'); return; }
+      if (!selectedLeadUserId) { (window as any).showToast('กรุณาเลือกหัวหน้าโครงการ', 'error'); return; }
+
+
+
+      const btn = document.getElementById('btnStep1Next') as HTMLButtonElement;
+      const spinner = document.getElementById('step1Spinner')!;
+      const arrow = document.getElementById('step1Arrow')!;
+      const btnText = document.getElementById('step1BtnText')!;
+      btn.disabled = true; spinner.classList.remove('hidden'); arrow.classList.add('hidden'); btnText.textContent = 'กำลังบันทึก...';
+
+      try {
+        const payload: any = {
+            projectName:      name,
+            initialBudget:    budget,
+            departmentId:     Number(dept) || null,
+            year:             parentProject?.year || editProject?.year || '2568',
+            documentReference: (document.getElementById('docRef') as HTMLInputElement).value.trim() || null,
+            notes:            (document.getElementById('notes') as HTMLTextAreaElement).value.trim() || null,
+            responsibleUserId: selectedResponsibleUserId,
+            leadUserId:       selectedLeadUserId,
+        };
+
+        const res = await (window as any).apiFetch(`${API}/api/projects/${createdProjectId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'บันทึกแก้ไขไม่สำเร็จ');
+        
+        // Update parent remaining budget in UI
+        if (parentProject) {
+          const raw = budget;
+          const subBudgetNum = parseFloat(raw) || 0;
+          const currentRemaining = parseFloat(String(parentProject.allocatedBudget ?? 0));
+          parentProject.allocatedBudget = Math.max(0, currentRemaining - subBudgetNum);
+          
+          // Note: In a full edit scenario, we'll want to either fetch parent from API repeatedly or do accurate diffing.
+          // But here since we do a PATCH and it may update parent, let's keep UI sync basic.
+          applyProjectData(); // Refresh UI including hints
+        }
+
+        (window as any).showToast('บันทึกข้อมูลพื้นฐานเรียบร้อยแล้ว', 'success');
+        syncBudgetDisplay();
+        setStep(2);
+        if (subsidyList.length === 0)   loadSubsidies();
+        if (budgetTypeList.length === 0) loadBudgetTypes();
+        if (budgetGroupList.length === 0) loadBudgetGroups();
+        if ((document.getElementById('yearSelect') as HTMLSelectElement).options.length <= 1) loadYears();
+        loadSdgs();
+      } catch (e: any) {
+        (window as any).showToast(e.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', 'error');
+      } finally {
+        btn.disabled = false; spinner.classList.add('hidden'); arrow.classList.remove('hidden'); btnText.textContent = 'บันทึกและดำเนินการต่อ';
+      }
+    });
+
+    // ── Step 2 back / save details to DB ──
+    document.getElementById('btnStep2Back')!.addEventListener('click', () => setStep(1));
+    document.getElementById('btnStep2Next')!.addEventListener('click', async () => {
+      if (!createdProjectId) { (window as any).showToast('เกิดข้อผิดพลาด: ยังไม่ได้บันทึกข้อมูลขั้นตอนที่ 1', 'error'); return; }
+      const dept = (document.getElementById('deptSelect') as HTMLSelectElement).value;
+      const year = (document.getElementById('yearSelect') as HTMLSelectElement).value;
+      const rationale = (document.getElementById('rationale') as HTMLTextAreaElement).value.trim();
+      const objectives = (document.getElementById('objectives') as HTMLTextAreaElement).value.trim();
+      const targetGroup = (document.getElementById('targetGroup') as HTMLTextAreaElement).value.trim();
+
+      if (!year) { (window as any).showToast('กรุณาเลือกปีงบประมาณ', 'error'); return; }
+      if (!rationale) { (window as any).showToast('กรุณากรอกหลักการและเหตุผล', 'error'); document.getElementById('rationale')?.focus(); return; }
+      if (!objectives) { (window as any).showToast('กรุณากรอกวัตถุประสงค์', 'error'); document.getElementById('objectives')?.focus(); return; }
+      if (!targetGroup) { (window as any).showToast('กรุณากรอกกลุ่มเป้าหมาย', 'error'); document.getElementById('targetGroup')?.focus(); return; }
+
+      const btn = document.getElementById('btnStep2Next') as HTMLButtonElement;
+      btn.disabled = true; btn.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> กำลังบันทึก...`;
+
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/projects/${createdProjectId}/details`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            orgId:         Number(dept) || editProject?.orgId || null,
+            budgetTypeId:  Number((document.getElementById('budgetTypeSelect') as HTMLSelectElement).value) || null,
+            budgetGroupId: Number((document.getElementById('budgetGroupSelect') as HTMLSelectElement).value) || null,
+            year,
+            rationale:     (document.getElementById('rationale') as HTMLTextAreaElement).value.trim(),
+            objectives:    (document.getElementById('objectives') as HTMLTextAreaElement).value.trim(),
+            targetGroup:   (document.getElementById('targetGroup') as HTMLInputElement).value.trim(),
+            sdgs:          selectedSdgIds,
+            strategyAlignments: {
+              univ: selectedUnivTacticIds,
+              campus: selectedCampusTacticIds,
+              dept: selectedDeptStrategyIds,
+              dean: selectedDeanTacticIds
+            }
+          }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'บันทึกไม่สำเร็จ');
+        (window as any).showToast('บันทึกรายละเอียดโครงการเรียบร้อยแล้ว', 'success');
+        setStep(3);
+        renderTargets();
+      } catch (e: any) {
+        (window as any).showToast(e.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = `บันทึกและดำเนินการต่อ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>`;
+      }
+    });
+
+    // ── Step 3 back / submit targets ──
+    document.getElementById('btnStep3Back')!.addEventListener('click', () => setStep(2));
+    document.getElementById('btnSubmit')!.addEventListener('click', async () => {
+      if (!createdProjectId) { (window as any).showToast('เกิดข้อผิดพลาด: ยังไม่ดำเนินการขั้นตอน 1-2 ให้ครบถ้วน', 'error'); return; }
+      
+      if (targets.length === 0) { 
+        (window as any).showToast('กรุณาระบุเป้าหมาย/ตัวชี้วัดอย่างน้อย 1 ข้อ', 'error'); 
+        return; 
+      }
+
+      // Validate each indicator's contents
+      for (let i = 0; i < targets.length; i++) {
+        const t = targets[i];
+        if (!t.name?.trim()) {
+          (window as any).showToast(`กรุณากรอกชื่อตัวชี้วัดในข้อที่ ${i+1}`, 'error');
+          return;
+        }
+        if (!t.value?.trim()) {
+          (window as any).showToast(`กรุณากรอกค่าเป้าหมายในข้อที่ ${i+1}`, 'error');
+          return;
+        }
+        if (!t.unit?.trim()) {
+          (window as any).showToast(`กรุณากรอกหน่วยในข้อที่ ${i+1}`, 'error');
+          return;
+        }
+      }
+      const btn = document.getElementById('btnSubmit') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> กำลังบันทึก...`;
+      try {
+        const res = await (window as any).apiFetch(`${API}/api/projects/${createdProjectId}/targets`, {
+          method: 'PATCH',
+          body: JSON.stringify({ targets }),
+        });
+        const data = await res.json();
+        if (!data.success) { console.error('Backend error:', data.error); throw new Error(data.message || 'บันทึกแก้ไขไม่สำเร็จ'); }
+        (window as any).showToast('แก้ไขบันทึกโครงการสำเร็จ', 'success');
+        setTimeout(() => { window.location.href = '/projects'; }, 1500);
+      } catch (e: any) {
+        (window as any).showToast(e.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', 'error');
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> บันทึกรายการโครงการ`;
+      }
+    });
+
+    // ── Boot ──
+    // รอจนกว่า layout จะ define window.apiFetch ก่อนเรียก (script ordering issue)
+    (function waitForApiFetch() {
+      if (typeof (window as any).apiFetch === 'function') {
+        loadProjectInfo();
+        renderTargets();
+        loadOrgs();        // โหลดหน่วยงานตั้งแต่ต้น เพื่อให้ deptSelect ใน Step 1 มีข้อมูล
+        loadUsers();       // โหลดรายชื่อผู้ใช้ตั้งแต่ต้น เพื่อให้ responsible search พร้อมใช้งาน
+        loadSubsidies();   // โหลด dropdown Step 2 ไว้ล่วงหน้าทันที
+        loadBudgetTypes();
+        loadBudgetGroups();
+        loadYears();
+        loadSdgs();
+      } else {
+        requestAnimationFrame(waitForApiFetch);
+      }
+    })();
+  </script>
+
+</AuthLayout>

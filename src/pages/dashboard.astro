@@ -13,12 +13,12 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #006664, #d4de3a, #b2bb1e);"></div>
     <!-- Decorative glows -->
     <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
-         style="background: radial-gradient(circle, rgba(178,187,30,0.12) 0%, transparent 65%);"></div>
+        style="background: radial-gradient(circle, rgba(178,187,30,0.12) 0%, transparent 65%);"></div>
     <div class="absolute left-1/3 -bottom-10 w-56 h-56 rounded-full pointer-events-none"
-         style="background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);"></div>
+        style="background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);"></div>
     <!-- Diagonal stripe texture -->
     <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
-         style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
+        style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 12px);"></div>
 
     <div class="relative z-10 p-5 sm:p-5">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
@@ -150,7 +150,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   </div>
 
   <!-- ═══════════════════════════════════════════════
-       TOOLBAR — Date / Filter / Actions
+      TOOLBAR — Date / Filter / Actions
   ════════════════════════════════════════════════ -->
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-3 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <!-- Left: Breadcrumb + DateTime -->
@@ -198,7 +198,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   </div>
 
   <!-- ═══════════════════════════════════════════════
-       SECTION TITLE: ภาพรวมระบบ
+      SECTION TITLE: ภาพรวมระบบ
   ════════════════════════════════════════════════ -->
   <div class="flex items-center gap-3 mb-4">
     <div class="w-1 h-6 bg-[#0f2d5e] rounded-full"></div>
@@ -207,12 +207,12 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   </div>
 
   <!-- ═══════════════════════════════════════════════
-       MANAGEMENT CARDS — Row 1 (4 columns)
+      MANAGEMENT CARDS — Row 1 (4 columns)
   ════════════════════════════════════════════════ -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
 
     <!-- จัดการโครงการ -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
+    <a href="/projects" class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group block no-underline">
       <div class="p-4 sm:p-5">
         <div class="flex items-start justify-between mb-4">
           <div class="w-11 h-11 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-200 group-hover:bg-amber-100 transition-colors">
@@ -231,7 +231,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
       </div>
-    </div>
+    </a>
 
     <!-- การอนุมัติ -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#0f2d5e]/30 transition-all cursor-pointer group">
@@ -313,7 +313,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
           </div>
-          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardUserCount">0</span>
+          <span class="text-2xl sm:text-3xl font-bold text-[#0a1f3d]" id="cardUserCount"></span>
         </div>
         <h3 class="text-sm sm:text-base font-semibold text-[#0a1f3d] mb-0.5 group-hover:text-[#0f2d5e]">จัดการผู้ใช้ระบบ (ส่วนงาน)</h3>
         <p class="text-xs text-gray-500">เพิ่ม แก้ไข และลบผู้ใช้งานในหน่วยงาน</p>
@@ -743,7 +743,43 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
 
       // โหลดประกาศสำคัญ
       loadDashboardAnnouncements();
+
+      // โหลดสถิติโครงการ
+      loadProjectStats();
     });
+
+    async function loadProjectStats() {
+      try {
+        const token = localStorage.getItem('ku_access_token');
+        const res = await fetch(`${API}/api/projects?limit=1`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        const total: number = data.total ?? 0;
+        const stats: Record<string, number> = data.stats ?? {};
+
+        // โครงการทั้งหมด (hero + card)
+        const pendingCount = stats.pending_approval ?? 0;
+        const approvedCount = stats.approved ?? 0;
+        const inProgressCount = stats.active ?? 0;
+
+        const set = (id: string, val: number) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = String(val);
+        };
+
+        set('statTotal',      total);
+        set('statPending',    pendingCount);
+        set('statApproved',   approvedCount);
+        set('statInProgress', inProgressCount);
+        set('cardProjectCount',  total);
+        set('cardApprovalCount', pendingCount);
+      } catch {
+        // ปล่อยให้แสดง 0 เดิม
+      }
+    }
 
     async function loadDashboardAnnouncements() {
       const loading = document.getElementById('dashAnnLoading');

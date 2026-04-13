@@ -67,28 +67,51 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
 
   <!-- SEARCH + FILTER -->
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-4">
-    <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3">
-      <!-- Search Input -->
-      <div class="relative flex-1">
+    <div class="px-4 sm:px-5 py-3 border-b border-gray-100 flex flex-wrap lg:flex-nowrap items-center gap-2">
+      <!-- Search -->
+      <div class="relative w-full lg:w-64 lg:flex-none lg:shrink-0">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         <input id="searchInput" type="text" placeholder="ค้นหาชื่อ, username, email..."
           class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
       </div>
-      <!-- Right Toolbar -->
-      <div class="flex items-center gap-2">
-        <select id="filterOrg" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow w-full sm:w-auto min-w-[150px] max-w-full">
-          <option value="">ทุกหน่วยงาน</option>
-        </select>
-        <select id="filterStatus" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow w-full sm:w-auto min-w-[120px] max-w-full">
-          <option value="">ทุกสถานะ</option>
-          <option value="active">ใช้งานอยู่</option>
-          <option value="inactive">ระงับแล้ว</option>
-        </select>
-        <button id="btnAddUser" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-violet-500 hover:bg-violet-600 rounded-lg transition-colors shadow-md ml-auto sm:ml-0 shrink-0 whitespace-nowrap">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          เพิ่มผู้ใช้ใหม่
-        </button>
-      </div>
+      <!-- หน่วยงานหลัก -->
+      <select id="filterOrg" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-7 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow flex-1 lg:flex-none lg:w-64 min-w-0">
+      </select>
+      <!-- หน่วยงานย่อย -->
+      <select id="filterSubOrg" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-7 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow flex-1 lg:flex-none lg:w-72 min-w-0">
+        <option value="">ทุกหน่วยงานย่อย</option>
+      </select>
+      <!-- สิทธิ์ผู้ใช้งานระบบ -->
+      <select id="filterRole" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-7 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow flex-1 lg:flex-none lg:w-64 min-w-0">
+        <option value="">ทุกระดับสิทธิ์</option>
+        <optgroup label="— ระดับมหาวิทยาลัย —">
+          <option value="super_admin">Super Admin (ผู้ดูแลระบบสูงสุด)</option>
+          <option value="univ_executive">Univ Executive (ผู้บริหาร ม.)</option>
+          <option value="univ_officer">Univ Officer (เจ้าหน้าที่ ม.)</option>
+        </optgroup>
+        <optgroup label="— ระดับวิทยาเขต —">
+          <option value="campus_executive">Campus Executive (ผู้บริหารวิทยาเขต)</option>
+          <option value="campus_officer">Campus Officer (เจ้าหน้าที่วิทยาเขต)</option>
+        </optgroup>
+        <optgroup label="— ระดับหน่วยงาน —">
+          <option value="faculty_executive">Faculty Executive (ผู้บริหารหน่วยงาน)</option>
+          <option value="unit_head">Unit Head (หัวหน้าหน่วยงานย่อย)</option>
+          <option value="org_admin">Org Admin (ผู้ดูแลระบบส่วนงาน)</option>
+          <option value="project_lead">Project Lead (หัวหน้าโครงการ)</option>
+          <option value="staff">Staff (อาจารย์/เจ้าหน้าที่)</option>
+        </optgroup>
+      </select>
+      <!-- สถานะ -->
+      <select id="filterStatus" class="border border-gray-200 rounded-lg text-sm px-3 py-2 pr-7 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow flex-1 lg:flex-none lg:w-28 min-w-0">
+        <option value="">ทุกสถานะ</option>
+        <option value="active">ใช้งานอยู่</option>
+        <option value="inactive">ระงับแล้ว</option>
+      </select>
+      <!-- ปุ่มเพิ่มผู้ใช้ -->
+      <button id="btnAddUser" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-violet-500 hover:bg-violet-600 rounded-lg transition-colors shadow-md shrink-0 whitespace-nowrap ml-auto lg:ml-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        เพิ่มผู้ใช้ใหม่
+      </button>
     </div>
 
     <!-- TABLE -->
@@ -99,15 +122,14 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
             <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide w-8">#</th>
             <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">ผู้ใช้งาน</th>
             <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide hidden md:table-cell">หน่วยงานหลัก</th>
-            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">ตำแหน่ง</th>
-            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">ระดับสิทธิ์</th>
-            <th class="text-left px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">สถานะ</th>
+            <th class="text-center px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">ระดับสิทธิ์</th>
+            <th class="text-center px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide">สถานะ</th>
             <th class="text-center px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wide w-24">จัดการ</th>
           </tr>
         </thead>
         <tbody id="userTableBody" class="divide-y divide-gray-100">
           <tr id="loadingRow">
-            <td colspan="7" class="px-4 py-12 text-center align-top">
+            <td colspan="6" class="px-4 py-12 text-center align-top">
               <div class="flex flex-col items-center gap-2 text-gray-400">
                 <svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                 <p class="text-sm">กำลังโหลดข้อมูล...</p>
@@ -128,9 +150,9 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   <!-- ══════════ ADD USER MODAL ══════════ -->
   <div id="addUserModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="addUserBackdrop"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 rounded-t-2xl"
-           style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
+          style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
         <div class="flex items-center gap-2">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
           <h2 class="text-white font-bold text-base">เพิ่มผู้ใช้ใหม่</h2>
@@ -152,15 +174,17 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
           </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Username <span class="text-red-500">*</span></label>
-          <input id="addUsername" type="text" placeholder="เช่น john.doe"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Email <span class="text-red-500">*</span></label>
-          <input id="addEmail" type="email" placeholder="example@ku.th"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Username <span class="text-red-500">*</span></label>
+            <input id="addUsername" type="text" placeholder="เช่น john.doe"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Email <span class="text-red-500">*</span></label>
+            <input id="addEmail" type="email" placeholder="example@ku.th"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -177,14 +201,32 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         <div class="border-t border-gray-100 pt-3">
           <p class="text-xs font-semibold text-gray-600 mb-2">สังกัดเริ่มต้น (ถ้ามี)</p>
           <div class="grid grid-cols-2 gap-3">
+            <!-- หน่วยงานหลัก เช่น คณะอุตสาหกรรมเกษตร -->
             <div>
-              <label class="block text-xs text-gray-500 mb-1">หน่วยงาน</label>
+              <label class="block text-xs text-gray-500 mb-1">หน่วยงานหลัก</label>
               <select id="addOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
                 <option value="">-- ไม่ระบุ --</option>
               </select>
             </div>
+            <!-- หน่วยงานย่อย เช่น ภาควิชา -->
             <div>
-              <label class="block text-xs text-gray-500 mb-1">บทบาท</label>
+              <label class="block text-xs text-gray-500 mb-1">หน่วยงานย่อย</label>
+              <select id="addSubOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="">-- ไม่ระบุ --</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 gap-1">
+            <div class="mt-2 mb-2">
+              <label class="block text-xs text-gray-500 mb-1">ตำแหน่ง</label>
+              <input id="addPositionTitle" type="text" placeholder="เช่น อาจารย์, นักวิชาการ"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+            </div>
+            <!-- เส้นคั่น divider -->
+            <div class="border-t border-sky-600 border-dashed my-0.5"></div>
+            <!-- บทบาท -->
+            <div class=" mt-1">
+              <label class="block text-xs text-gray-500 mb-1">บทบาท หน้าที่ในระบบ</label>
               <select id="addRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
                 <option value="staff">Staff (อาจารย์/เจ้าหน้าที่)</option>
                 <option value="project_lead">Project Lead (หัวหน้าโครงการ)</option>
@@ -193,11 +235,6 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
                 <option value="unit_head">Unit Head (หัวหน้าหน่วยงานย่อย)</option>
               </select>
             </div>
-          </div>
-          <div class="mt-2">
-            <label class="block text-xs text-gray-500 mb-1">ตำแหน่ง</label>
-            <input id="addPositionTitle" type="text" placeholder="เช่น อาจารย์, นักวิชาการ"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
           </div>
         </div>
         <div id="addUserError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
@@ -212,9 +249,9 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
   <!-- ══════════ EDIT USER MODAL ══════════ -->
   <div id="editUserModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="editUserBackdrop"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 rounded-t-2xl"
-           style="background: linear-gradient(135deg, #0c2957, #0a4068);">
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 rounded-t-2xl"
+          style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
         <div class="flex items-center gap-2">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
           <h2 class="text-white font-bold text-base">แก้ไขข้อมูลผู้ใช้</h2>
@@ -223,32 +260,111 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-      <form id="editUserForm" class="px-6 py-5 space-y-4">
+      <form id="editUserForm" class="overflow-y-auto px-6 py-5 space-y-4">
         <input type="hidden" id="editUserId"/>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (ไทย) <span class="text-red-500">*</span></label>
-            <input id="editNameTh" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+            <input id="editNameTh" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-600 mb-1">ชื่อ-นามสกุล (อังกฤษ)</label>
-            <input id="editNameEn" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+            <input id="editNameEn" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
           </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Email</label>
-          <input id="editEmail" type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Username</label>
+            <input id="editUsername" type="text" disabled
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Email <span class="text-red-500">*</span></label>
+            <input id="editEmail" type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">เบอร์โทร</label>
-          <input id="editPhone" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"/>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">เบอร์โทร</label>
+            <input id="editPhone" type="text" placeholder="0xx-xxx-xxxx"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">รหัสผ่านใหม่</label>
+            <input id="editPassword" type="password" placeholder="(ไม่บังคับ)"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+          </div>
+        </div>
+        <div class="border-t border-gray-100 pt-3">
+          <p class="text-xs font-semibold text-gray-600 mb-2">สังกัดหลัก</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">หน่วยงานหลัก</label>
+              <select id="editOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="">-- ไม่ระบุ --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">หน่วยงานย่อย</label>
+              <select id="editSubOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="">-- ไม่ระบุ --</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 gap-1">
+            <div class="mt-2 mb-2">
+              <label class="block text-xs text-gray-500 mb-1">ตำแหน่ง</label>
+              <input id="editPositionTitle" type="text" placeholder="เช่น อาจารย์, นักวิชาการ"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500"/>
+            </div>
+            <div class="border-t border-sky-600 border-dashed my-0.5"></div>
+            <div class="mt-1">
+              <label class="block text-xs text-gray-500 mb-1">บทบาท หน้าที่ในระบบ</label>
+              <select id="editRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 appearance-none dropdown-arrow">
+                <option value="staff">Staff (อาจารย์/เจ้าหน้าที่)</option>
+                <option value="project_lead">Project Lead (หัวหน้าโครงการ)</option>
+                <option value="org_admin">Org Admin (ผู้ดูแลระบบส่วนงาน)</option>
+                <option value="faculty_executive">Faculty Executive (ผู้บริหารหน่วยงาน)</option>
+                <option value="unit_head">Unit Head (หัวหน้าหน่วยงานย่อย)</option>
+              </select>
+            </div>
+          </div>
         </div>
         <div id="editUserError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
         <div class="flex justify-end gap-2 pt-1">
           <button type="button" id="editUserCancel" class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">ยกเลิก</button>
-          <button type="submit" id="editUserSubmit" class="px-5 py-2 text-sm bg-[#0c2957] hover:bg-[#0a2040] text-white font-semibold rounded-lg transition-colors">บันทึก</button>
+          <button type="submit" id="editUserSubmit" class="px-5 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg transition-colors">บันทึก</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ══════════ CONFIRM ACTION MODAL ══════════ -->
+  <div id="confirmModal" class="fixed inset-0 z-200 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col">
+      <!-- header -->
+      <div id="confirmHeader" class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 rounded-t-2xl">
+        <div id="confirmIconWrap" class="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
+          <svg id="confirmIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+        </div>
+        <h3 id="confirmTitle" class="text-base font-semibold text-gray-800"></h3>
+      </div>
+      <!-- body -->
+      <div class="px-5 py-4">
+        <p id="confirmBody" class="text-sm text-gray-600 leading-relaxed"></p>
+      </div>
+      <!-- footer -->
+      <div class="flex items-center justify-end gap-2 px-5 py-3 border-t border-gray-100 rounded-b-2xl">
+        <button id="confirmCancelBtn"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all">
+          ยกเลิก
+        </button>
+        <button id="confirmOkBtn"
+          class="px-4 py-2 text-sm font-semibold rounded-lg transition-all">
+          ยืนยัน
+        </button>
+      </div>
     </div>
   </div>
 
@@ -257,7 +373,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="affBackdrop"></div>
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 rounded-t-2xl"
-           style="background: linear-gradient(135deg, #065f46, #059669);">
+          style="background: linear-gradient(135deg, #065f46, #059669);">
         <div class="flex items-center gap-2">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           <h2 class="text-white font-bold text-base">จัดการสังกัด — <span id="affUserName" class="font-normal"></span></h2>
@@ -271,28 +387,63 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         <div id="affList" class="space-y-2"></div>
         <!-- Add affiliation form -->
         <div class="border-t border-gray-100 pt-3">
-          <p class="text-xs font-semibold text-gray-600 mb-2">เพิ่มสังกัดใหม่</p>
-          <div class="grid grid-cols-2 gap-2">
-            <select id="affNewOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
-              <option value="">-- เลือกหน่วยงาน --</option>
-            </select>
-            <select id="affNewRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
-              <option value="staff">Staff</option>
-              <option value="project_lead">Project Lead</option>
-              <option value="org_admin">Org Admin</option>
-              <option value="faculty_executive">Faculty Executive</option>
-              <option value="unit_head">Unit Head</option>
-            </select>
+          <p class="text-xs font-semibold text-gray-600 mb-3">เพิ่มสังกัดใหม่</p>
+          <div class="space-y-3">
+            <!-- หน่วยงานหลัก | หน่วยงานย่อย -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">หน่วยงานหลัก</label>
+                <select id="affNewOrgId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
+                  <option value="">-- ไม่ระบุ --</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">หน่วยงานย่อย</label>
+                <select id="affNewSubDepId" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
+                  <option value="">-- ไม่ระบุ --</option>
+                </select>
+              </div>
+            </div>
+            <!-- ตำแหน่ง -->
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">ตำแหน่ง</label>
+              <input id="affNewPosition" type="text" placeholder="เช่น อาจารย์, นักวิชาการ"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"/>
+            </div>
+            <!-- divider -->
+            <div class="border-t border-sky-600 border-dashed"></div>
+            <!-- บทบาท -->
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">บทบาท หน้าที่ในระบบ</label>
+              <select id="affNewRole" class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 appearance-none dropdown-arrow">
+                <optgroup label="— ระดับมหาวิทยาลัย —">
+                  <option value="super_admin">Super Admin (ผู้ดูแลระบบสูงสุด)</option>
+                  <option value="univ_executive">Univ Executive (ผู้บริหาร ม.)</option>
+                  <option value="univ_officer">Univ Officer (เจ้าหน้าที่ ม.)</option>
+                </optgroup>
+                <optgroup label="— ระดับวิทยาเขต —">
+                  <option value="campus_executive">Campus Executive (ผู้บริหารวิทยาเขต)</option>
+                  <option value="campus_officer">Campus Officer (เจ้าหน้าที่วิทยาเขต)</option>
+                </optgroup>
+                <optgroup label="— ระดับหน่วยงาน —">
+                  <option value="faculty_executive">Faculty Executive (ผู้บริหารหน่วยงาน)</option>
+                  <option value="unit_head">Unit Head (หัวหน้าหน่วยงานย่อย)</option>
+                  <option value="org_admin">Org Admin (ผู้ดูแลระบบส่วนงาน)</option>
+                  <option value="project_lead">Project Lead (หัวหน้าโครงการ)</option>
+                  <option value="staff">Staff (อาจารย์/เจ้าหน้าที่)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div id="affError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
+            <!-- Buttons -->
+            <div class="flex justify-end gap-2 pt-1">
+              <button type="button" id="affClearBtn"
+                class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">ล้างข้อมูล</button>
+              <button id="btnAddAff"
+                class="px-5 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors">บันทึกข้อมูล</button>
+            </div>
           </div>
-          <div class="mt-2">
-            <input id="affNewPosition" type="text" placeholder="ตำแหน่ง (ถ้ามี)" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"/>
-          </div>
-          <button id="btnAddAff" class="mt-2 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-600 hover:text-white transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            เพิ่มสังกัด
-          </button>
         </div>
-        <div id="affError" class="hidden text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2"></div>
       </div>
       <div class="shrink-0 px-6 py-3 border-t border-gray-100">
         <button id="affDone" class="w-full py-2 text-sm font-semibold text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">ปิด</button>
@@ -300,13 +451,6 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     </div>
   </div>
 
-  <!-- TOAST -->
-  <div id="toast" class="fixed bottom-5 right-5 z-[100] hidden">
-    <div id="toastInner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white min-w-56 max-w-xs">
-      <svg id="toastIcon" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
-      <span id="toastMsg"></span>
-    </div>
-  </div>
 
   <script>
     const API = import.meta.env.PUBLIC_API_URL;
@@ -314,6 +458,8 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     let currentPage = 1;
     const PAGE_SIZE = 15;
     let orgList: any[] = [];
+    let myOrgId: number | null = null;    // org_id หน่วยงานหลักของผู้ใช้ที่ login
+    let mySubDepId: number | null = null; // sub_dep_id หน่วยงานย่อยของผู้ใช้ที่ login
 
     // ──────────── helpers ────────────
     function token() { return localStorage.getItem('ku_access_token') || ''; }
@@ -354,19 +500,8 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       return res;
     }
 
-    function showToast(msg: string, ok = true) {
-      const t = document.getElementById('toast')!;
-      const inner = document.getElementById('toastInner')!;
-      const icon = document.getElementById('toastIcon')!;
-      const msgEl = document.getElementById('toastMsg')!;
-      inner.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white min-w-56 max-w-xs ${ok ? 'bg-emerald-600' : 'bg-red-600'}`;
-      icon.innerHTML = ok
-        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
-        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
-      msgEl.textContent = msg;
-      t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 3500);
-    }
+    const showToast = (msg: string, ok = true) =>
+      (window as any).showToast(msg, ok ? 'success' : 'error');
 
     function roleBadge(role: string) {
       const map: Record<string, { label: string; cls: string }> = {
@@ -382,22 +517,42 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         staff:             { label: 'อาจารย์/เจ้าหน้าที่', cls: 'bg-gray-100 text-gray-600' },
       };
       const item = map[role] || { label: role, cls: 'bg-gray-100 text-gray-600' };
-      return `<span class="inline-flex items-center px-2 py-0.5 rounded text-[13px] font-semibold ${item.cls}">${item.label}</span>`;
+      return `<span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-[11px] font-semibold text-center ${item.cls}">${item.label}</span>`;
     }
 
     // ──────────── fetch users ────────────
     async function loadUsers() {
       const tbody = document.getElementById('userTableBody')!;
-      tbody.innerHTML = `<tr id="loadingRow"><td colspan="7" class="px-4 py-12 text-center"><div class="flex flex-col items-center gap-2 text-gray-400"><svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg><p class="text-sm">กำลังโหลด...</p></div></td></tr>`;
+      tbody.innerHTML = `<tr id="loadingRow"><td colspan="6" class="px-4 py-12 text-center"><div class="flex flex-col items-center gap-2 text-gray-400"><svg class="w-8 h-8 animate-spin opacity-40" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg><p class="text-sm">กำลังโหลด...</p></div></td></tr>`;
       try {
         const res = await apiFetch(`${API}/api/users`);
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
-        allUsers = data.data || [];
+        const rawUsers = data.data || [];
+
+        // กรองเฉพาะผู้ใช้ในสังกัด: mainOrg + child orgs ทั้งหมด
+        // ตรวจสอบเฉพาะ PRIMARY affiliation เพื่อป้องกัน user นอกคณะที่มี secondary affiliation ภายในจากการปรากฏ
+        if (myOrgId) {
+          const childOrgIds = orgList
+            .filter((o: any) => Number(o.parentId) === myOrgId)
+            .map((o: any) => Number(o.id));
+          const scopeOrgIds = new Set([myOrgId, ...childOrgIds]);
+          allUsers = rawUsers.filter((u: any) => {
+            // ใช้ primary affiliation เป็นตัวกำหนดสังกัดหลักของ user
+            const primaryAff =
+              u.affiliations?.find((a: any) => a.isPrimary) ??
+              u.affiliations?.[0] ??
+              null;
+            return primaryAff && scopeOrgIds.has(Number(primaryAff.organization?.id));
+          });
+        } else {
+          allUsers = rawUsers;
+        }
+
         currentPage = 1;
         renderTable();
       } catch (e: any) {
-        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-sm text-red-500">${e.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-10 text-center text-sm text-red-500">${e.message}</td></tr>`;
       }
     }
 
@@ -415,19 +570,46 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       };
     }
 
+    // ──────────── org filter helper ────────────
+    // allUsers ถูก pre-filter ด้วย scopeOrgIds = {myOrgId, ...childIds} แล้ว
+    // ดังนั้น user ใน allUsers มีแค่ 2 แบบ:
+    //   แบบ A: org_id = myOrgId, sub_dep_id = X  (สังกัดคณะ ระบุหน่วยงานย่อย)
+    //   แบบ B: org_id = childId, sub_dep_id = null (หน่วยงานย่อยเป็น primary org)
+    //
+    // กฎ filter:
+    function matchOrgFilter(u: any, orgId: string, subOrgId: string): boolean {
+      if (!orgId && !subOrgId) return true;
+
+      const affs: any[] = u.affiliations || [];
+      if (!affs.length) return false;
+
+      if (subOrgId) {
+        const selectedSubId = Number(subOrgId);
+        // เช็คทุก affiliation: ตรงกับ subDep.id หรือ org_id (legacy)
+        return affs.some((a: any) => {
+          if (a.subDep != null && Number(a.subDep.id) === selectedSubId) return true;
+          if (Number(a.organization?.id) === selectedSubId) return true;
+          return false;
+        });
+      }
+
+      // เลือก orgId แต่ไม่เลือก subOrgId → เช็คทุก affiliation
+      const selectedOrgId = Number(orgId);
+      return affs.some((a: any) => Number(a.organization?.id) === selectedOrgId);
+    }
+
     function renderTable() {
       const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
       const status = (document.getElementById('filterStatus') as HTMLSelectElement).value;
+      const role = (document.getElementById('filterRole') as HTMLSelectElement).value;
       const orgId = (document.getElementById('filterOrg') as HTMLSelectElement).value;
+      const subOrgId = (document.getElementById('filterSubOrg') as HTMLSelectElement).value;
 
       let filtered = allUsers.filter(u => {
         const matchSearch = !search || u.nameTh?.toLowerCase().includes(search) || u.username?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search);
         const matchStatus = !status || (status === 'active' && u.isActive) || (status === 'inactive' && !u.isActive);
-        const matchOrg = !orgId || u.affiliations?.some((a: any) =>
-          String(a.organization?.id).trim() === String(orgId).trim() ||
-          (a.subDep && String(a.subDep?.id).trim() === String(orgId).trim())
-        );
-        return matchSearch && matchStatus && matchOrg;
+        const matchRole = !role || u.affiliations?.some((a: any) => a.role === role);
+        return matchSearch && matchStatus && matchRole && matchOrgFilter(u, orgId, subOrgId);
       });
 
       const active = allUsers.filter(u => u.isActive).length;
@@ -449,7 +631,7 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
 
       const tbody = document.getElementById('userTableBody')!;
       if (!pageItems.length) {
-        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-12 text-center text-sm text-gray-400">ไม่พบผู้ใช้งาน</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-12 text-center text-sm text-gray-400">ไม่พบผู้ใช้งาน</td></tr>`;
         return;
       }
 
@@ -462,37 +644,23 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         const primaryCell = primary
           ? `<p class="text-xs font-medium text-gray-700 leading-tight">${primary.nameTh}</p>`
           : `<p class="text-xs text-gray-400 italic">ไม่ระบุ</p>`;
-        const positionsCell = (() => {
-          const affs: any[] = u.affiliations || [];
-          const withPos = affs.filter((a: any) => a.positionTitle);
-          if (!withPos.length) return `<p class="text-xs text-gray-300">—</p>`;
-          return withPos.map((a: any, idx: number) => {
-            const isPrimary = a.isPrimary;
-            const dot = isPrimary
-              ? `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#006664;margin-right:4px;flex-shrink:0;margin-top:3px"></span>`
-              : `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#d1d5db;margin-right:4px;flex-shrink:0;margin-top:3px"></span>`;
-            return `<div class="flex items-start gap-0 ${idx > 0 ? 'mt-1.5' : ''}">` +
-              dot +
-              `<div>` +
-              `<p class="text-xs font-medium text-gray-700 leading-tight">${a.positionTitle}</p>` +
-              `<p class="text-[11px] text-gray-400 leading-tight">${a.organization?.nameTh || ''}</p>` +
-              `</div></div>`;
-          }).join('');
-        })();
-        const affsAll: any[] = u.affiliations || [];
+        const affsAll: any[] = (u.affiliations || []).slice().sort((a: any, b: any) => a.id - b.id);
 
         // Build inline affiliation list for user cell
         const affInline = affsAll.length
-          ? affsAll.map((a: any) => {
-              const dotColor = a.isPrimary ? '#006664' : '#9ca3af';
+          ? affsAll.map((a: any, idx: number) => {
+              const isFirst = idx === 0;
+              const dotColor = isFirst ? '#006664' : '#9ca3af';
+              const textColor = isFirst ? '#006664' : '#374151';
+              const orgColor = isFirst ? '#006664' : '#6b7280';
               const pos = a.positionTitle || '';
-              const org = a.organization?.nameTh || '';
+              const org = a.subDep?.nameTh || a.organization?.nameTh || '';
               return `<div style="display:flex;align-items:flex-start;gap:5px;margin-top:3px">` +
                 `<span style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-top:3px"></span>` +
-                `<span style="font-size:13px;color:#374151;line-height:1.3">` +
+                `<span style="font-size:13px;color:${textColor};line-height:1.3">` +
                 (pos ? `<span style="font-weight:500">${pos}</span>` : '') +
-                (pos && org ? `<span style="color:#9ca3af"> · </span>` : '') +
-                (org ? `<span style="color:#6b7280">${org}</span>` : '') +
+                (pos && org ? `<span style="color:${isFirst ? '#00a896' : '#9ca3af'}"> · </span>` : '') +
+                (org ? `<span style="color:${orgColor}">${org}</span>` : '') +
                 `</span></div>`;
             }).join('')
           : `<span style="font-size:13px;color:#d1d5db">—</span>`;
@@ -514,11 +682,9 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
             <td class="px-4 py-4 hidden md:table-cell align-top text-[14px]">
               <div class="flex flex-col justify-start pt-1">${primaryCell}</div>
             </td>
-            <td class="px-4 py-4 hidden lg:table-cell max-w-[220px] align-top text-[14px]">
-              <div class="flex flex-col justify-start pt-1">${positionsCell}</div>
-            </td>
-            <td class="px-4 py-4 align-top">
-              <div class="flex flex-col justify-start pt-1">${roleBadge(role)}</div>
+
+            <td class="px-4 py-4 align-top text-center">
+              <div class="flex flex-col items-center pt-1">${roleBadge(role)}</div>
             </td>
             <td class="px-4 py-4 align-top">
               <div class="flex flex-col justify-start pt-1">${statusBadge}</div>
@@ -615,19 +781,224 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
         const data = await res.json();
         orgList = data.data || data.organizations || [];
 
-        ['addOrgId', 'affNewOrgId'].forEach(selId => {
-          const sel = document.getElementById(selId) as HTMLSelectElement;
-          if (sel) populateSelect(sel, '-- เลือกหน่วยงาน --', orgList);
-        });
+        // affNewOrgId → แสดงเฉพาะหน่วยงานหลัก (top-level) เหมือน addOrgId/editOrgId
+        const affNewOrgIdSel = document.getElementById('affNewOrgId') as HTMLSelectElement;
+        if (affNewOrgIdSel) {
+          while (affNewOrgIdSel.options.length > 0) affNewOrgIdSel.remove(0);
+          const mainOrg = myOrgId ? orgList.find((o: any) => Number(o.id) === myOrgId) : null;
+          if (mainOrg) {
+            const opt = document.createElement('option');
+            opt.value = String(mainOrg.id); opt.textContent = mainOrg.nameTh;
+            affNewOrgIdSel.appendChild(opt);
+            affNewOrgIdSel.value = String(mainOrg.id);
+          } else {
+            const topLevelOrgs = orgList.filter((o: any) => !o.parentId || o.parentId === null);
+            const optNone = document.createElement('option');
+            optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+            affNewOrgIdSel.appendChild(optNone);
+            for (const o of topLevelOrgs) {
+              const opt = document.createElement('option');
+              opt.value = String(o.id); opt.textContent = o.nameTh;
+              affNewOrgIdSel.appendChild(opt);
+            }
+          }
+          updateAffSubOrgDropdown();
+        }
 
-        const filterSel = document.getElementById('filterOrg') as HTMLSelectElement;
-        if (filterSel) populateSelect(filterSel, 'ทุกหน่วยงาน', orgList);
+        // addOrgId และ editOrgId → แสดงเฉพาะหน่วยงานหลัก (top-level) เหมือน filterOrg
+        for (const selId of ['addOrgId', 'editOrgId']) {
+          const sel = document.getElementById(selId) as HTMLSelectElement;
+          if (!sel) continue;
+          while (sel.options.length > 0) sel.remove(0);
+          const mainOrg = myOrgId ? orgList.find((o: any) => Number(o.id) === myOrgId) : null;
+          if (mainOrg) {
+            const opt = document.createElement('option');
+            opt.value = String(mainOrg.id); opt.textContent = mainOrg.nameTh;
+            sel.appendChild(opt);
+            sel.value = String(mainOrg.id);
+          } else {
+            const topLevelOrgs = orgList.filter((o: any) => !o.parentId || o.parentId === null);
+            const optNone = document.createElement('option');
+            optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+            sel.appendChild(optNone);
+            for (const o of topLevelOrgs) {
+              const opt = document.createElement('option');
+              opt.value = String(o.id); opt.textContent = o.nameTh;
+              sel.appendChild(opt);
+            }
+          }
+        }
+        updateAddSubOrgDropdown();
+
+        // addOrgId → แสดงเฉพาะหน่วยงานหลัก (เหมือน filterOrg)
+        const addOrgIdSel = document.getElementById('addOrgId') as HTMLSelectElement;
+        if (addOrgIdSel) {
+          while (addOrgIdSel.options.length > 0) addOrgIdSel.remove(0);
+          const mainOrg = myOrgId ? orgList.find((o: any) => Number(o.id) === myOrgId) : null;
+          if (mainOrg) {
+            const opt = document.createElement('option');
+            opt.value = String(mainOrg.id);
+            opt.textContent = mainOrg.nameTh;
+            addOrgIdSel.appendChild(opt);
+            addOrgIdSel.value = String(mainOrg.id);
+          } else {
+            const topLevelOrgs = orgList.filter((o: any) => !o.parentId || o.parentId === null);
+            const optNone = document.createElement('option');
+            optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+            addOrgIdSel.appendChild(optNone);
+            for (const o of topLevelOrgs) {
+              const opt = document.createElement('option');
+              opt.value = String(o.id); opt.textContent = o.nameTh;
+              addOrgIdSel.appendChild(opt);
+            }
+          }
+          updateAddSubOrgDropdown();
+        }
+
+        // สร้าง filterOrg: แสดงเฉพาะหน่วยงานหลักของผู้ใช้ (top-level เท่านั้น ไม่รวมหน่วยงานย่อย)
+        const filterOrgSel = document.getElementById('filterOrg') as HTMLSelectElement;
+        if (filterOrgSel) {
+          while (filterOrgSel.options.length > 0) filterOrgSel.remove(0);
+
+          // หน่วยงานหลัก = org ที่ผู้ใช้ login สังกัดอยู่ (myOrgId)
+          const mainOrg = myOrgId ? orgList.find((o: any) => Number(o.id) === myOrgId) : null;
+
+          if (mainOrg) {
+            // มี myOrgId → แสดงเฉพาะหน่วยงานหลักเดียว (ไม่ปน child)
+            const optAll = document.createElement('option');
+            optAll.value = '';
+            optAll.textContent = 'ทุกหน่วยงานหลัก';
+            filterOrgSel.appendChild(optAll);
+
+            const optMain = document.createElement('option');
+            optMain.value = String(mainOrg.id);
+            optMain.textContent = mainOrg.nameTh;
+            filterOrgSel.appendChild(optMain);
+
+            filterOrgSel.value = String(mainOrg.id); // default = หน่วยงานหลัก
+          } else {
+            // fallback: ไม่รู้ myOrgId → แสดงเฉพาะ top-level orgs (parentId = null/undefined)
+            const topLevelOrgs = orgList.filter((o: any) => !o.parentId || o.parentId === null);
+            const optAll = document.createElement('option');
+            optAll.value = '';
+            optAll.textContent = 'ทุกหน่วยงานหลัก';
+            filterOrgSel.appendChild(optAll);
+            for (const o of topLevelOrgs) {
+              const opt = document.createElement('option');
+              opt.value = String(o.id);
+              opt.textContent = o.nameTh;
+              filterOrgSel.appendChild(opt);
+            }
+          }
+        }
+
+        // สร้าง filterSubOrg: แสดงหน่วยงานย่อยภายใต้หน่วยงานหลัก และ default ตาม subDep ของ user
+        updateSubOrgFilter(mySubDepId);
       } catch {}
+    }
+
+    function updateSubOrgFilter(defaultSubDepId: number | null = null) {
+      const filterOrgSel = document.getElementById('filterOrg') as HTMLSelectElement;
+      const filterSubOrgSel = document.getElementById('filterSubOrg') as HTMLSelectElement;
+      if (!filterSubOrgSel) return;
+
+      const selectedOrgId = filterOrgSel?.value ? Number(filterOrgSel.value) : (myOrgId ?? null);
+      const childOrgs = selectedOrgId
+        ? orgList.filter((o: any) => Number(o.parentId) === selectedOrgId)
+        : [];
+
+      while (filterSubOrgSel.options.length > 0) filterSubOrgSel.remove(0);
+
+      const optAll = document.createElement('option');
+      optAll.value = '';
+      optAll.textContent = 'ทุกหน่วยงานย่อย';
+      filterSubOrgSel.appendChild(optAll);
+
+      for (const o of childOrgs) {
+        const opt = document.createElement('option');
+        opt.value = String(o.id);
+        opt.textContent = o.nameTh;
+        filterSubOrgSel.appendChild(opt);
+      }
+
+      // ตั้งค่า default: ใช้ defaultSubDepId ถ้าส่งมา (init เท่านั้น) ไม่งั้น reset เป็นทุกหน่วยงาน
+      filterSubOrgSel.value = defaultSubDepId ? String(defaultSubDepId) : '';
+    }
+
+    function updateAddSubOrgDropdown() {
+      const addOrgIdSel = document.getElementById('addOrgId') as HTMLSelectElement;
+      const addSubOrgIdSel = document.getElementById('addSubOrgId') as HTMLSelectElement;
+      if (!addSubOrgIdSel) return;
+
+      const selectedOrgId = addOrgIdSel?.value ? Number(addOrgIdSel.value) : null;
+      const childOrgs = selectedOrgId
+        ? orgList.filter((o: any) => Number(o.parentId) === selectedOrgId)
+        : [];
+
+      while (addSubOrgIdSel.options.length > 0) addSubOrgIdSel.remove(0);
+
+      const optNone = document.createElement('option');
+      optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+      addSubOrgIdSel.appendChild(optNone);
+
+      for (const o of childOrgs) {
+        const opt = document.createElement('option');
+        opt.value = String(o.id); opt.textContent = o.nameTh;
+        addSubOrgIdSel.appendChild(opt);
+      }
+      addSubOrgIdSel.value = '';
+    }
+
+    function updateEditSubOrgDropdown() {
+      const editOrgIdSel = document.getElementById('editOrgId') as HTMLSelectElement;
+      const editSubOrgIdSel = document.getElementById('editSubOrgId') as HTMLSelectElement;
+      if (!editSubOrgIdSel) return;
+
+      const selectedOrgId = editOrgIdSel?.value ? Number(editOrgIdSel.value) : null;
+      const childOrgs = selectedOrgId
+        ? orgList.filter((o: any) => Number(o.parentId) === selectedOrgId)
+        : [];
+
+      while (editSubOrgIdSel.options.length > 0) editSubOrgIdSel.remove(0);
+
+      const optNone = document.createElement('option');
+      optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+      editSubOrgIdSel.appendChild(optNone);
+
+      for (const o of childOrgs) {
+        const opt = document.createElement('option');
+        opt.value = String(o.id); opt.textContent = o.nameTh;
+        editSubOrgIdSel.appendChild(opt);
+      }
+      editSubOrgIdSel.value = '';
+    }
+
+    function updateAffSubOrgDropdown() {
+      const orgSel = document.getElementById('affNewOrgId') as HTMLSelectElement;
+      const subSel = document.getElementById('affNewSubDepId') as HTMLSelectElement;
+      if (!subSel) return;
+      const selectedOrgId = orgSel?.value ? Number(orgSel.value) : null;
+      const childOrgs = selectedOrgId
+        ? orgList.filter((o: any) => Number(o.parentId) === selectedOrgId)
+        : [];
+      while (subSel.options.length > 0) subSel.remove(0);
+      const optNone = document.createElement('option');
+      optNone.value = ''; optNone.textContent = '-- ไม่ระบุ --';
+      subSel.appendChild(optNone);
+      for (const o of childOrgs) {
+        const opt = document.createElement('option');
+        opt.value = String(o.id); opt.textContent = o.nameTh;
+        subSel.appendChild(opt);
+      }
+      subSel.value = '';
     }
 
     // ──────────── Add User ────────────
     function openAddUserModal() {
       (document.getElementById('addUserForm') as HTMLFormElement).reset();
+      // คืนค่า addOrgId ให้เป็น main org แล้ว update sub-org
+      if (myOrgId) (document.getElementById('addOrgId') as HTMLSelectElement).value = String(myOrgId);
+      updateAddSubOrgDropdown();
       document.getElementById('addUserError')!.classList.add('hidden');
       showModal('addUserModal');
     }
@@ -639,7 +1010,8 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       const btn = document.getElementById('addUserSubmit') as HTMLButtonElement;
       btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
       try {
-        const orgId = (document.getElementById('addOrgId') as HTMLSelectElement).value;
+        const mainOrgId = (document.getElementById('addOrgId') as HTMLSelectElement).value;
+        const subOrgId = (document.getElementById('addSubOrgId') as HTMLSelectElement).value;
         const body: any = {
           username: (document.getElementById('addUsername') as HTMLInputElement).value.trim(),
           email: (document.getElementById('addEmail') as HTMLInputElement).value.trim(),
@@ -650,7 +1022,8 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           role: (document.getElementById('addRole') as HTMLSelectElement).value,
           positionTitle: (document.getElementById('addPositionTitle') as HTMLInputElement).value.trim() || undefined,
         };
-        if (orgId) body.orgId = Number(orgId);
+        if (mainOrgId) body.orgId = Number(mainOrgId);
+        if (subOrgId) body.subDepId = Number(subOrgId);
         const res = await apiFetch(`${API}/api/users`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
@@ -671,34 +1044,67 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     function openEditUser(id: number) {
       const u = allUsers.find(x => x.id === id);
       if (!u) return;
+      const primaryAff = u.affiliations?.find((a: any) => a.isPrimary) || u.affiliations?.[0] || null;
       (document.getElementById('editUserId') as HTMLInputElement).value = String(id);
       (document.getElementById('editNameTh') as HTMLInputElement).value = u.nameTh || '';
       (document.getElementById('editNameEn') as HTMLInputElement).value = u.nameEn || '';
+      (document.getElementById('editUsername') as HTMLInputElement).value = u.username || '';
       (document.getElementById('editEmail') as HTMLInputElement).value = u.email || '';
       (document.getElementById('editPhone') as HTMLInputElement).value = u.phone || '';
+      (document.getElementById('editPassword') as HTMLInputElement).value = '';
+      // organization = หน่วยงานหลัก (orgId), subDep = หน่วยงานย่อย (subDepId)
+      (document.getElementById('editOrgId') as HTMLSelectElement).value = primaryAff?.organization?.id ? String(primaryAff.organization.id) : '';
+      updateEditSubOrgDropdown();
+      (document.getElementById('editSubOrgId') as HTMLSelectElement).value = primaryAff?.subDep?.id ? String(primaryAff.subDep.id) : '';
+      (document.getElementById('editRole') as HTMLSelectElement).value = primaryAff?.role || 'staff';
+      (document.getElementById('editPositionTitle') as HTMLInputElement).value = primaryAff?.positionTitle || '';
       document.getElementById('editUserError')!.classList.add('hidden');
+      // store primary affiliation id for role/position update
+      (document.getElementById('editUserId') as HTMLInputElement).dataset.affId = primaryAff?.id ? String(primaryAff.id) : '';
       showModal('editUserModal');
     }
 
     document.getElementById('editUserForm')!.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const id = (document.getElementById('editUserId') as HTMLInputElement).value;
+      const idEl = document.getElementById('editUserId') as HTMLInputElement;
+      const id = idEl.value;
+      const affId = idEl.dataset.affId;
       const errEl = document.getElementById('editUserError')!;
       errEl.classList.add('hidden');
       const btn = document.getElementById('editUserSubmit') as HTMLButtonElement;
       btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
       try {
+        const password = (document.getElementById('editPassword') as HTMLInputElement).value;
+        const userBody: any = {
+          nameTh: (document.getElementById('editNameTh') as HTMLInputElement).value.trim(),
+          nameEn: (document.getElementById('editNameEn') as HTMLInputElement).value.trim() || undefined,
+          email: (document.getElementById('editEmail') as HTMLInputElement).value.trim(),
+          phone: (document.getElementById('editPhone') as HTMLInputElement).value.trim() || undefined,
+        };
+        if (password) userBody.password = password;
+
         const res = await apiFetch(`${API}/api/users/${id}`, {
           method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nameTh: (document.getElementById('editNameTh') as HTMLInputElement).value.trim(),
-            nameEn: (document.getElementById('editNameEn') as HTMLInputElement).value.trim() || undefined,
-            email: (document.getElementById('editEmail') as HTMLInputElement).value.trim(),
-            phone: (document.getElementById('editPhone') as HTMLInputElement).value.trim() || undefined,
-          }),
+          body: JSON.stringify(userBody),
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+
+        // update role/position/org on primary affiliation if we have one
+        if (affId) {
+          const role = (document.getElementById('editRole') as HTMLSelectElement).value;
+          const positionTitle = (document.getElementById('editPositionTitle') as HTMLInputElement).value.trim();
+          const editMainOrgId = (document.getElementById('editOrgId') as HTMLSelectElement).value;
+          const editSubOrgId = (document.getElementById('editSubOrgId') as HTMLSelectElement).value;
+          const affBody: any = { role, positionTitle: positionTitle || undefined };
+          if (editMainOrgId) affBody.orgId = Number(editMainOrgId);
+          affBody.subDepId = editSubOrgId ? Number(editSubOrgId) : null;
+          await apiFetch(`${API}/api/admin/affiliations/${affId}`, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(affBody),
+          });
+        }
+
         hideModal('editUserModal');
         showToast('แก้ไขข้อมูลสำเร็จ');
         await loadUsers();
@@ -709,10 +1115,62 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       }
     });
 
+    // ──────────── Confirm Modal ────────────
+    function showConfirm(opts: {
+      title: string;
+      body: string;
+      okLabel: string;
+      okClass: string;
+      iconPath: string;
+      iconClass: string;
+      headerClass: string;
+      onConfirm: () => void;
+    }) {
+      document.getElementById('confirmTitle')!.textContent = opts.title;
+      document.getElementById('confirmBody')!.textContent = opts.body;
+      const okBtn = document.getElementById('confirmOkBtn')!;
+      okBtn.textContent = opts.okLabel;
+      okBtn.className = `px-4 py-2 text-sm font-semibold rounded-lg transition-all ${opts.okClass}`;
+      (document.getElementById('confirmIcon') as SVGElement).innerHTML = opts.iconPath;
+      document.getElementById('confirmIconWrap')!.className = `w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${opts.iconClass}`;
+      document.getElementById('confirmHeader')!.className = `flex items-center gap-3 px-5 py-4 border-b border-gray-100 rounded-t-2xl ${opts.headerClass}`;
+
+      const cleanup = () => hideModal('confirmModal');
+      const newOk = okBtn.cloneNode(true) as HTMLElement;
+      okBtn.replaceWith(newOk);
+      newOk.addEventListener('click', () => { cleanup(); opts.onConfirm(); });
+      document.getElementById('confirmCancelBtn')!.onclick = cleanup;
+      showModal('confirmModal');
+    }
+
     // ──────────── Toggle Active ────────────
-    async function toggleActive(id: number, currentStatus: boolean) {
-      const action = currentStatus ? 'ระงับบัญชีนี้' : 'เปิดใช้งานบัญชีนี้';
-      if (!confirm(`ต้องการ${action}?`)) return;
+    function toggleActive(id: number, currentStatus: boolean) {
+      if (currentStatus) {
+        showConfirm({
+          title: 'ระงับบัญชีผู้ใช้งาน',
+          body: 'บัญชีนี้จะถูกระงับการใช้งาน ผู้ใช้จะไม่สามารถเข้าสู่ระบบได้จนกว่าจะเปิดใช้งานอีกครั้ง',
+          okLabel: 'ระงับบัญชี',
+          okClass: 'text-white bg-red-500 hover:bg-red-600',
+          iconPath: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>',
+          iconClass: 'bg-red-100 text-red-500',
+          headerClass: '',
+          onConfirm: () => doToggleActive(id),
+        });
+      } else {
+        showConfirm({
+          title: 'เปิดใช้งานบัญชีผู้ใช้งาน',
+          body: 'บัญชีนี้จะถูกเปิดใช้งาน ผู้ใช้จะสามารถเข้าสู่ระบบได้ตามปกติ',
+          okLabel: 'เปิดใช้งาน',
+          okClass: 'text-white bg-emerald-500 hover:bg-emerald-600',
+          iconPath: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+          iconClass: 'bg-emerald-100 text-emerald-600',
+          headerClass: '',
+          onConfirm: () => doToggleActive(id),
+        });
+      }
+    }
+
+    async function doToggleActive(id: number) {
       try {
         const res = await apiFetch(`${API}/api/users/${id}/toggle-active`, {
           method: 'PATCH',
@@ -731,6 +1189,10 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
       (document.getElementById('affUserId') as HTMLInputElement).value = String(userId);
       document.getElementById('affUserName')!.textContent = userName;
       document.getElementById('affError')!.classList.add('hidden');
+      // reset form
+      (document.getElementById('affNewPosition') as HTMLInputElement).value = '';
+      (document.getElementById('affNewRole') as HTMLSelectElement).value = 'staff';
+      updateAffSubOrgDropdown();
       showModal('affModal');
       await loadAffiliations(userId);
     }
@@ -747,60 +1209,115 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
           list.innerHTML = '<p class="text-xs text-gray-400 italic">ยังไม่มีสังกัด</p>';
           return;
         }
-        list.innerHTML = affs.map((a: any) => `
-          <div class="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
-            <div class="flex-1 min-w-0">
-              <p class="text-xs font-semibold text-gray-700 truncate">${a.organization?.nameTh || '—'}</p>
-              <div class="flex items-center gap-1.5 mt-0.5">${roleBadge(a.role)}${a.positionTitle ? `<span class="text-[11px] text-gray-400">${a.positionTitle}</span>` : ''}</div>
+        list.innerHTML = affs.map((a: any) => {
+          const primaryBadge = a.isPrimary
+            ? `<span style="display:inline-flex;align-items:center;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;background:#d1fae5;color:#065f46;margin-right:4px;">หลัก</span>`
+            : '';
+          const subDepRow = a.subDep?.nameTh
+            ? `<p style="font-size:11px;color:#6b7280;margin:2px 0 0;display:flex;align-items:center;gap:3px;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;opacity:.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                ${a.subDep.nameTh}
+               </p>`
+            : '';
+          const posRow = a.positionTitle
+            ? `<p style="font-size:11px;color:#9ca3af;margin:1px 0 0;">ตำแหน่ง: ${a.positionTitle}</p>`
+            : '';
+          return `
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 12px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;gap:8px;">
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin-bottom:3px;">
+                ${primaryBadge}
+                <span style="font-size:12px;font-weight:600;color:#1f2937;">${a.organization?.nameTh || '—'}</span>
+              </div>
+              ${subDepRow}
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px;">
+                ${roleBadge(a.role)}
+              </div>
+              ${posRow}
             </div>
             <button onclick="removeAffiliation(${a.id}, ${userId})"
-              class="ml-2 p-1 rounded text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0" title="ลบสังกัด">
+              class="p-1.5 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0 mt-0.5" title="ลบสังกัด">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
-          </div>`).join('');
+          </div>`;
+        }).join('');
       } catch (ex: any) {
         list.innerHTML = `<p class="text-xs text-red-500">${ex.message}</p>`;
       }
     }
 
-    async function removeAffiliation(affId: number, userId: number) {
-      if (!confirm('ต้องการลบสังกัดนี้?')) return;
-      try {
-        const res = await apiFetch(`${API}/api/admin/affiliations/${affId}`, {
-          method: 'DELETE',
-        });
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message);
-        showToast('ลบสังกัดสำเร็จ');
-        await loadAffiliations(userId);
-        await loadUsers();
-      } catch (ex: any) {
-        showToast(ex.message, false);
-      }
+    function removeAffiliation(affId: number, userId: number) {
+      showConfirm({
+        title: 'ลบสังกัดนี้',
+        body: 'สังกัดนี้จะถูกลบออกจากบัญชีผู้ใช้ ไม่สามารถย้อนกลับได้',
+        okLabel: 'ลบสังกัด',
+        okClass: 'text-white bg-red-500 hover:bg-red-600',
+        iconPath: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>',
+        iconClass: 'bg-red-100 text-red-500',
+        headerClass: '',
+        onConfirm: async () => {
+          try {
+            const res = await apiFetch(`${API}/api/admin/affiliations/${affId}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.message);
+            showToast('ลบสังกัดสำเร็จ');
+            loadAffiliations(userId);
+            loadUsers();
+          } catch (ex: any) {
+            showToast(ex.message, false);
+          }
+        },
+      });
     }
 
+    document.getElementById('affClearBtn')!.addEventListener('click', () => {
+      (document.getElementById('affNewPosition') as HTMLInputElement).value = '';
+      (document.getElementById('affNewRole') as HTMLSelectElement).value = 'staff';
+      updateAffSubOrgDropdown();
+      document.getElementById('affError')!.classList.add('hidden');
+    });
+
     document.getElementById('btnAddAff')!.addEventListener('click', async () => {
+      const btn = document.getElementById('btnAddAff') as HTMLButtonElement;
       const userId = Number((document.getElementById('affUserId') as HTMLInputElement).value);
       const orgId = Number((document.getElementById('affNewOrgId') as HTMLSelectElement).value);
+      const subDepIdRaw = (document.getElementById('affNewSubDepId') as HTMLSelectElement).value;
+      const subDepId = subDepIdRaw ? Number(subDepIdRaw) : null;
       const role = (document.getElementById('affNewRole') as HTMLSelectElement).value;
       const positionTitle = (document.getElementById('affNewPosition') as HTMLInputElement).value.trim();
       const errEl = document.getElementById('affError')!;
       errEl.classList.add('hidden');
-      if (!orgId) { errEl.textContent = 'กรุณาเลือกหน่วยงาน'; errEl.classList.remove('hidden'); return; }
+      if (!orgId) { errEl.textContent = 'กรุณาเลือกหน่วยงานหลัก'; errEl.classList.remove('hidden'); return; }
+
+      // lock ปุ่มระหว่างบันทึก
+      btn.disabled = true;
+      btn.textContent = 'กำลังบันทึก...';
+
       try {
         const res = await apiFetch(`${API}/api/admin/affiliations`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, orgId, role, positionTitle: positionTitle || undefined, isPrimary: false }),
+          body: JSON.stringify({ userId, orgId, subDepId, role, positionTitle: positionTitle || undefined, isPrimary: false }),
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
-        showToast('เพิ่มสังกัดสำเร็จ');
-        (document.getElementById('affNewOrgId') as HTMLSelectElement).value = '';
+
+        // reset form ทันที — ให้ผู้ใช้เพิ่มสังกัดถัดไปได้เลย
         (document.getElementById('affNewPosition') as HTMLInputElement).value = '';
-        await loadAffiliations(userId);
-        await loadUsers();
+        (document.getElementById('affNewRole') as HTMLSelectElement).value = 'staff';
+        updateAffSubOrgDropdown();
+        showToast('เพิ่มสังกัดสำเร็จ');
+
+        // refresh รายการและตารางหลักใน background (ไม่บล็อกฟอร์ม)
+        loadAffiliations(userId);
+        loadUsers();
+
+        // focus ช่องตำแหน่งเพื่อพร้อมกรอกครั้งถัดไป
+        (document.getElementById('affNewPosition') as HTMLInputElement).focus();
       } catch (ex: any) {
         errEl.textContent = ex.message; errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'บันทึกข้อมูล';
       }
     });
 
@@ -828,7 +1345,12 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     document.getElementById('btnAddUser')!.addEventListener('click', openAddUserModal);
     document.getElementById('searchInput')!.addEventListener('input', () => { currentPage = 1; renderTable(); });
     document.getElementById('filterStatus')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
-    document.getElementById('filterOrg')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
+    document.getElementById('filterRole')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
+    document.getElementById('filterOrg')!.addEventListener('change', () => { updateSubOrgFilter(); currentPage = 1; renderTable(); });
+    document.getElementById('filterSubOrg')!.addEventListener('change', () => { currentPage = 1; renderTable(); });
+    document.getElementById('addOrgId')!.addEventListener('change', () => { updateAddSubOrgDropdown(); });
+    document.getElementById('editOrgId')!.addEventListener('change', () => { updateEditSubOrgDropdown(); });
+    document.getElementById('affNewOrgId')!.addEventListener('change', () => { updateAffSubOrgDropdown(); });
 
     // expose to inline onclick handlers
     (window as any).openEditUser = openEditUser;
@@ -838,15 +1360,14 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     (window as any).goPage = (p: number) => {
       const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
       const status = (document.getElementById('filterStatus') as HTMLSelectElement).value;
+      const role = (document.getElementById('filterRole') as HTMLSelectElement).value;
       const orgId = (document.getElementById('filterOrg') as HTMLSelectElement).value;
+      const subOrgId = (document.getElementById('filterSubOrg') as HTMLSelectElement).value;
       const filtered = allUsers.filter(u => {
         const matchSearch = !search || u.nameTh?.toLowerCase().includes(search) || u.username?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search);
         const matchStatus = !status || (status === 'active' && u.isActive) || (status === 'inactive' && !u.isActive);
-        const matchOrg = !orgId || u.affiliations?.some((a: any) =>
-          String(a.organization?.id).trim() === String(orgId).trim() ||
-          (a.subDep && String(a.subDep?.id).trim() === String(orgId).trim())
-        );
-        return matchSearch && matchStatus && matchOrg;
+        const matchRole = !role || u.affiliations?.some((a: any) => a.role === role);
+        return matchSearch && matchStatus && matchRole && matchOrgFilter(u, orgId, subOrgId);
       });
       const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
       currentPage = Math.max(1, Math.min(p, totalPages));
@@ -855,8 +1376,20 @@ import AuthLayout from '../layouts/AuthenticatedLayout.astro';
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
-      await loadOrgs();   // โหลด org dropdown ก่อนเสมอ
-      await loadUsers();  // จากนั้น load users
+      // อ่าน orgId ของผู้ใช้ที่ login ก่อนเสมอ
+      try {
+        const activeAff = JSON.parse(localStorage.getItem('ku_active_affiliation') || 'null');
+        // ku_active_affiliation มี organization.id หรือ orgId (ขึ้นกับ version ที่บันทึก)
+        myOrgId = activeAff?.organization?.id
+          ? Number(activeAff.organization.id)
+          : (activeAff?.orgId ? Number(activeAff.orgId) : null);
+        // อ่าน subDep ของ user ที่ login (subDep.id หรือ subDepId)
+        mySubDepId = activeAff?.subDep?.id
+          ? Number(activeAff.subDep.id)
+          : (activeAff?.subDepId ? Number(activeAff.subDepId) : null);
+      } catch {}
+      await loadOrgs();   // โหลด org dropdown (ใช้ myOrgId สร้าง grouped dropdown)
+      await loadUsers();  // โหลด users (ใช้ myOrgId + child orgs กรองข้อมูล)
     });
   </script>
 
