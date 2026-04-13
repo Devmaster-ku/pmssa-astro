@@ -400,8 +400,8 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
             </div>
             <div class="text-right">
                <p class="text-[10px] text-gray-400 font-mono" id="displayFundingCode">—</p>
-               <p class="text-[10px] text-gray-400">ไม่ระบุกลุ่มงบ</p>
-               <span class="inline-block bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full mt-1 font-semibold">โครงการหลัก</span>
+               <p class="text-[10px] text-gray-400" id="displayBudgetGroup">ไม่ระบุกลุ่มงบ</p>
+               <span class="inline-block bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full mt-1 font-semibold" id="displayProjectType">โครงการหลัก</span>
             </div>
           </div>
 
@@ -1401,6 +1401,20 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
           `${formatBaht(projectData.initialBudget)} <span class="text-[14px]">บาท</span>`;
         document.getElementById("headerBreadcrumb")!.textContent =
           `โครงการ: ${projectData.projectName}`;
+
+        const typeEl = document.getElementById("displayProjectType")!;
+        if (projectData.projectType === "sub") {
+          typeEl.textContent = "โครงการย่อย";
+          typeEl.className = "inline-block bg-violet-100 text-violet-700 text-[10px] px-2 py-0.5 rounded-full mt-1 font-semibold";
+        } else {
+          typeEl.textContent = "โครงการหลัก";
+          typeEl.className = "inline-block bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full mt-1 font-semibold";
+        }
+        
+        if (projectData.budgetGroupName) {
+          document.getElementById("displayBudgetGroup")!.textContent =
+            projectData.budgetGroupName;
+        }
 
         if (implData) {
           (
