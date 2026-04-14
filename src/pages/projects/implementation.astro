@@ -429,45 +429,45 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
         <div class="border-t border-dashed border-gray-200 my-1"></div>
 
         <!-- ══ แผนการดำเนินงาน ══ -->
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <p
-              class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest flex items-center gap-1.5"
-            >
-              <svg
-                class="w-3.5 h-3.5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                ></path></svg
-              >
-              แผนการดำเนินงาน
-            </p>
+        <div class="rounded-xl border border-[#b2e1e0] bg-[#f0fdfa] p-5 shadow-sm">
+          <div class="flex flex-col xl:flex-row xl:items-center justify-between mb-5 gap-4">
+            <div class="flex items-center gap-3 shrink-0">
+              <div class="w-10 h-10 rounded-lg border-2 border-[#006664] bg-white flex items-center justify-center text-[#006664] shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-[16px] font-bold text-[#006664]">แผนการดำเนินงาน</h3>
+                <p class="text-[12px] text-[#006664]/80" id="workplanCountText">เพิ่มแผนงานได้สูงสุด 10 แผนงาน</p>
+              </div>
+            </div>
+            
+            <div class="flex-1 flex justify-start xl:justify-center overflow-hidden w-full lg:w-auto">
+              <!-- Red Border Box (Hidden until dates selected) -->
+              <div id="headerProjectDateBox" class="hidden bg-white rounded-lg py-2 px-5 shadow-sm border border-rose-500/80 items-center justify-center sm:gap-6 w-full sm:w-auto text-center gap-2 relative">
+                <div class="flex flex-col items-center">
+                  <span class="text-[10px] font-medium text-rose-500 uppercase tracking-widest mb-0.5">วันที่เริ่มดำเนินงาน</span>
+                  <span class="text-[13.5px] font-bold text-rose-700 block" id="headerProjectStartDate">—</span>
+                </div>
+                <div class="w-full sm:w-px h-px sm:h-8 bg-rose-200"></div>
+                <div class="flex flex-col items-center">
+                  <span class="text-[10px] font-medium text-rose-500 uppercase tracking-widest mb-0.5">วันที่สิ้นสุดดำเนินงาน</span>
+                  <span class="text-[13.5px] font-bold text-rose-700 block" id="headerProjectEndDate">—</span>
+                </div>
+              </div>
+            </div>
+
             <button
               id="btnAddWorkPlan"
               type="button"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#006664] bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition-colors cursor-pointer"
+              class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold text-white bg-[#006664] hover:bg-[#005554] rounded-lg transition-colors shadow-sm cursor-pointer whitespace-nowrap"
             >
-              <svg
-                class="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"></path></svg
-              >
-              เพิ่มแผนการดำเนินงาน
+              <span class="text-lg leading-none">+</span>
+              <span id="workplanBtnCountText">เพิ่มแผนงาน (0/10)</span>
             </button>
           </div>
-          <div id="workPlanList" class="space-y-3"></div>
+          <div id="workPlanList" class="space-y-4"></div>
         </div>
       </div>
 
@@ -575,13 +575,10 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
       <div class="p-5 space-y-5">
         <!-- Budget summary cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div
-            class="rounded-lg border border-teal-200 bg-teal-50/50 p-4 text-center"
-          >
-            <p class="text-[11px] text-gray-500 mb-1">งบประมาณตั้งต้น</p>
-            <p class="text-lg font-bold text-[#0a1f3d]" id="budgetCardInitial">
-              —
-            </p>
+          <div class="rounded-lg border border-teal-200 bg-teal-50/50 p-4">
+            <p class="text-[11px] text-gray-500 mb-1 text-center">งบประมาณตั้งต้น (รวมทุกแหล่ง)</p>
+            <p class="text-lg font-bold text-[#0a1f3d] text-center mb-2" id="budgetCardInitial">—</p>
+            <div id="budgetCardFundingList" class="space-y-1 border-t border-teal-200/60 pt-2"></div>
           </div>
           <div
             class="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4 text-center"
@@ -700,42 +697,35 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
 
         <!-- ผู้บริหารที่ลงนาม -->
         <div>
-          <div class="flex items-center justify-between mb-3">
-            <p
-              class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest flex items-center gap-1.5"
-            >
-              <svg
-                class="w-3.5 h-3.5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                ></path></svg
+          <div class="flex items-center justify-between mb-4">
+            <!-- Title -->
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style="background: linear-gradient(135deg, #006664, #B2BB1E)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M20 22v-5c0-1.885 0-2.828-.586-3.414S17.886 13 16 13l-4 9l-4-9c-1.886 0-2.828 0-3.414.586S4 15.115 4 17v5"/><path d="m12 15l-.5 4l.5 1.5l.5-1.5zm0 0l-1-2h2zm3.5-8.5v-1a3.5 3.5 0 0 0-7 0v1a3.5 3.5 0 1 0 7 0"/></g>
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-[#0a1f3d] leading-tight">ผู้บริหารที่ลงนามในโครงการ</p>
+                <p class="text-[10px] text-gray-400 leading-tight">Authorized Signatories</p>
+              </div>
+            </div>
+            <!-- Button with gradient border -->
+            <div class="p-px rounded-lg shrink-0" style="background: linear-gradient(135deg, #006664, #B2BB1E)">
+              <button
+                id="btnAddSignatory"
+                type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-[7px] bg-white transition-all duration-200 cursor-pointer"
+                style="color: #006664"
+                onmouseover="this.style.background='linear-gradient(135deg,#006664,#B2BB1E)';this.style.color='#fff'"
+                onmouseout="this.style.background='#fff';this.style.color='#006664'"
               >
-              ผู้บริหารที่มีลงนามในโครงการ
-            </p>
-            <button
-              id="btnAddSignatory"
-              type="button"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#006664] bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition-colors cursor-pointer"
-            >
-              <svg
-                class="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"></path></svg
-              >
-              เพิ่มผู้ลงนาม
-            </button>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                เพิ่มผู้ลงนาม
+              </button>
+            </div>
           </div>
           <div id="signatoryList" class="space-y-3"></div>
         </div>
@@ -916,13 +906,50 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
       status: string;
     }[] = [];
     let budgetUsages: any[] = [];
+    let expenseDetailOptions: { id: number; name: string }[] = [];
+    let subExpenseDetailOptions: { id: number; name: string; parentId: number | null }[] = [];
+    let signatoryUserOptions: { id: number; nameTh: string; positionTitle: string; positions: string[] }[] = [];
     let signatories: {
       userId: number | null;
       signatoryName: string;
       positionTitle: string;
+      positions: string[];
+      positionIndex: number;
     }[] = [];
 
     // ── Helpers ──
+    function numOnly(el: HTMLInputElement) {
+      let v = el.value.replace(/[^0-9.]/g, "");
+      const dot = v.indexOf(".");
+      if (dot !== -1) v = v.slice(0, dot + 1) + v.slice(dot + 1).replace(/\./g, "");
+      el.value = v;
+    }
+    (window as any).numOnly = numOnly;
+
+    function fmtAmt(v: any) {
+      const s = String(v ?? "").replace(/,/g, "").trim();
+      if (s === "" || s === "0") return "";
+      const n = parseFloat(s);
+      if (isNaN(n)) return "";
+      return n.toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    (window as any).fmtAmt = fmtAmt;
+
+    function sumSubItems(mainIdx: number) {
+      const bu = budgetUsages[mainIdx];
+      const subs: any[] = bu?.subItems || [];
+      const total = Math.round(subs.reduce((s: number, sub: any) => {
+        return s + (parseFloat(String(sub.amount || "0").replace(/,/g, "")) || 0);
+      }, 0) * 100) / 100;
+      bu.amount = total > 0 ? String(total) : "";
+      const mainInput = document.getElementById(`mainAmtInput_${mainIdx}`) as HTMLInputElement;
+      if (mainInput && document.activeElement !== mainInput) {
+        mainInput.value = fmtAmt(bu.amount);
+      }
+      updateBudgetCards();
+    }
+    (window as any).sumSubItems = sumSubItems;
+
     function formatBaht(v: any) {
       const n = parseFloat(String(v ?? 0));
       if (isNaN(n)) return "0.00";
@@ -1056,7 +1083,7 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
               </div>
               <div>
                 <label class="block text-[11px] font-semibold text-[#0a1f3d] mb-1.5">จำนวนเงิน (บาท) ${idx === 0 ? '<span class="text-rose-500">*</span>' : ''}</label>
-                <input type="text" inputmode="decimal" value="${fs.amount || ""}" onchange="fundingSources[${idx}].amount=this.value; updateFundingSummaryCustom();" oninput="fundingSources[${idx}].amount=this.value; updateFundingSummaryCustom();" placeholder="0.00" class="w-full px-3 py-2.5 text-[13px] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 text-[#0a1f3d]"/>
+                <input type="text" inputmode="decimal" value="${fmtAmt(fs.amount)}" onfocus="this.value=fundingSources[${idx}].amount||''" oninput="numOnly(this);fundingSources[${idx}].amount=this.value;updateFundingSummaryCustom();updateBudgetCards();" onblur="fundingSources[${idx}].amount=this.value.replace(/,/g,'');this.value=fmtAmt(this.value);updateFundingSummaryCustom();updateBudgetCards();" placeholder="0.00" class="w-full px-3 py-2.5 text-[13px] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 text-[#0a1f3d]"/>
               </div>
               <div>
                 <label class="block text-[11px] font-semibold text-[#0a1f3d] mb-1.5">ประเภทแหล่งเงิน ${idx === 0 ? '<span class="text-rose-500">*</span>' : ''}</label>
@@ -1080,6 +1107,7 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
         .join("");
         
       updateFundingSummaryCustom();
+      updateBudgetCards();
     }
     
     (window as any).updateFundingSummaryCustom = () => {
@@ -1121,46 +1149,532 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
        }
     };
 
+    const thMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const inlineFormatDate = (dString: string) => {
+      if(!dString) return "—";
+      const d = new Date(dString);
+      if(isNaN(d.valueOf())) return "—";
+      return d.getDate().toString().padStart(2, '0') + ' ' + thMonths[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+    };
+    
+    (window as any).updateWPDurationUI = (idx: number) => {
+      const wp = workPlans[idx];
+      let durationStr = "—";
+      let sDateStr = inlineFormatDate(wp.startDate);
+      let eDateStr = inlineFormatDate(wp.endDate);
+      if (wp.startDate && wp.endDate) {
+        const sd = new Date(wp.startDate);
+        const ed = new Date(wp.endDate);
+        if (!isNaN(sd.valueOf()) && !isNaN(ed.valueOf())) {
+          const diffTime = ed.valueOf() - sd.valueOf();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+          durationStr = diffDays > 0 ? `${diffDays} วัน` : "0 วัน";
+        }
+      }
+
+      const durEl = document.getElementById(`wpDurationDisplay_${idx}`);
+      const startEl = document.getElementById(`wpStartTextDisplay_${idx}`);
+      const endEl = document.getElementById(`wpEndTextDisplay_${idx}`);
+      if(durEl) durEl.textContent = durationStr;
+      if(startEl) startEl.textContent = sDateStr;
+      if(endEl) endEl.textContent = eDateStr;
+      
+      const sumStartEl = document.getElementById(`wpSummaryStart_${idx}`);
+      const sumEndEl = document.getElementById(`wpSummaryEnd_${idx}`);
+      if(sumStartEl) sumStartEl.textContent = sDateStr !== '—' ? sDateStr : 'ยังไม่ระบุ';
+      if(sumEndEl) sumEndEl.textContent = eDateStr !== '—' ? eDateStr : 'ยังไม่ระบุ';
+    };
+
+    (window as any).updateWPSummaryTitle = (idx: number, val: string) => {
+      workPlans[idx].title = val;
+      const sel = document.getElementById(`wpSummaryTitle_${idx}`);
+      if(sel) sel.innerHTML = val || '<span class="text-gray-400 italic font-normal">ยังไม่มีชื่อแผนงาน</span>';
+    };
+
+    (window as any).toggleWorkPlan = (idx: number) => {
+      workPlans[idx].isCollapsed = !workPlans[idx].isCollapsed;
+      const bodyEl = document.getElementById(`wpBody_${idx}`);
+      const btnTextEl = document.getElementById(`wpToggleText_${idx}`);
+      const btnIconEl = document.getElementById(`wpToggleIcon_${idx}`);
+      
+      if (bodyEl && btnTextEl && btnIconEl) {
+         if (workPlans[idx].isCollapsed) {
+           bodyEl.classList.add('hidden');
+           bodyEl.classList.remove('block');
+           document.getElementById(`wpSummary_${idx}`)?.classList.remove('hidden');
+           document.getElementById(`wpSummary_${idx}`)?.classList.add('flex');
+           btnTextEl.textContent = 'แสดง';
+           btnIconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>';
+         } else {
+           bodyEl.classList.remove('hidden');
+           bodyEl.classList.add('block');
+           document.getElementById(`wpSummary_${idx}`)?.classList.add('hidden');
+           document.getElementById(`wpSummary_${idx}`)?.classList.remove('flex');
+           btnTextEl.textContent = 'ซ่อน';
+           btnIconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
+         }
+      }
+    };
+
     function renderWorkPlans() {
       const c = document.getElementById("workPlanList")!;
+      
+      const countEl = document.getElementById("workplanBtnCountText");
+      if(countEl) countEl.textContent = `เพิ่มแผนงาน (${workPlans.length}/10)`;
+      
+      const countTextEl = document.getElementById("workplanCountText");
+      if(countTextEl) countTextEl.textContent = `เพิ่มแผนงานได้สูงสุด 10 แผนงาน (เพิ่มแล้ว ${workPlans.length} แผนงาน)`;
+      
       if (!workPlans.length) {
         c.innerHTML =
-          '<p class="text-xs text-gray-400 py-3 text-center">ยังไม่มีแผนการดำเนินงาน — กด "เพิ่มแผนการดำเนินงาน" เพื่อเพิ่ม</p>';
+          '<div class="py-8 text-center bg-white rounded-xl border border-dashed border-gray-300"><p class="text-sm text-gray-500 mb-2">ยังไม่มีแผนการดำเนินงาน</p><p class="text-xs text-gray-400">กด "เพิ่มแผนงาน" ด้านบนเพื่อเริ่มวางแผน</p></div>';
         return;
       }
       c.innerHTML = workPlans
         .map(
-          (wp, idx) => `
-        <div class="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-gray-500">แผนงาน #${idx + 1}</span>
-            <button onclick="removeWorkPlan(${idx})" class="text-rose-400 hover:text-rose-600 text-xs cursor-pointer">ลบ</button>
+          (wp: any, idx: number) => {
+            wp.isCollapsed = wp.isCollapsed || false;
+            let durationStr = "—";
+            let sDateStr = inlineFormatDate(wp.startDate);
+            let eDateStr = inlineFormatDate(wp.endDate);
+            if (wp.startDate && wp.endDate) {
+              const sd = new Date(wp.startDate);
+              const ed = new Date(wp.endDate);
+              if (!isNaN(sd.valueOf()) && !isNaN(ed.valueOf())) {
+                const diffTime = ed.valueOf() - sd.valueOf();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                durationStr = diffDays > 0 ? `${diffDays} วัน` : "0 วัน";
+              }
+            }
+            return `
+        <div class="bg-white rounded-xl border border-[#e0f2f2] p-5 sm:p-6 shadow-sm transition-all hover:border-[#006664]/30 hover:shadow-md relative overflow-hidden group/card">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-[#006664]"></div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+            <div class="flex items-start sm:items-center gap-3 overflow-hidden pr-4 flex-1">
+              <div class="w-8 h-8 rounded-full bg-[#e6f0f0] text-[#006664] font-black flex items-center justify-center text-sm shadow-inner shrink-0">${idx + 1}</div>
+              <div class="flex flex-col overflow-hidden w-full">
+                 <h4 class="font-bold text-[#006664] text-base whitespace-nowrap">แผนงานที่ ${idx + 1}</h4>
+                 <div id="wpSummary_${idx}" class="${wp.isCollapsed ? 'flex' : 'hidden'} flex-col sm:flex-row sm:items-center text-sm mt-0.5 gap-1 sm:gap-3 text-gray-500 truncate">
+                   <div class="font-medium text-[#0a1f3d] truncate w-full sm:max-w-[200px] md:max-w-[300px]" id="wpSummaryTitle_${idx}">${wp.title || '<span class="text-gray-400 italic font-normal">ยังไม่มีชื่อแผนงาน</span>'}</div>
+                   <div class="hidden sm:block text-gray-300">|</div>
+                   <div class="text-[12px] flex items-center gap-1.5 whitespace-nowrap text-gray-400">
+                      <svg class="w-3.5 h-3.5 text-[#00a896]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                      <span id="wpSummaryStart_${idx}">${sDateStr !== '—' ? sDateStr : 'ยังไม่ระบุ'}</span>
+                      <span class="text-gray-300">-</span>
+                      <span id="wpSummaryEnd_${idx}">${eDateStr !== '—' ? eDateStr : 'ยังไม่ระบุ'}</span>
+                   </div>
+                 </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="toggleWorkPlan(${idx})" class="px-3 py-1.5 text-[11px] font-medium text-[#006664] bg-[#e0f2f2] hover:bg-[#b2e1e0] rounded-md transition-colors flex items-center gap-1 cursor-pointer">
+                <svg id="wpToggleIcon_${idx}" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  ${wp.isCollapsed 
+                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>' 
+                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>'}
+                </svg> 
+                <span id="wpToggleText_${idx}">${wp.isCollapsed ? 'แสดง' : 'ซ่อน'}</span>
+              </button>
+              <button type="button" onclick="removeWorkPlan(${idx})" class="w-8 h-8 flex items-center justify-center text-rose-500 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 rounded-md transition-colors cursor-pointer" title="ลบแผนงาน">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+            </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">หัวข้อแผนการดำเนินงาน</label>
-              <input type="text" value="${wp.title || ""}" onchange="workPlans[${idx}].title=this.value" placeholder="ระบุหัวข้อ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">ผู้รับผิดชอบ</label>
-              <input type="text" value="${wp.responsiblePerson || ""}" onchange="workPlans[${idx}].responsiblePerson=this.value" placeholder="ชื่อผู้รับผิดชอบ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+          <div id="wpBody_${idx}" class="${wp.isCollapsed ? 'hidden' : 'block'}">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div class="md:col-span-2">
+              <label class="block text-[13px] font-semibold text-[#0a1f3d] mb-1.5">ชื่อแผนงาน</label>
+              <input type="text" value="${wp.title || ''}" onchange="updateWPSummaryTitle(${idx}, this.value)" placeholder="วางแผนออกแบบกิจกรรม..." class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors"/>
+            </div>
+            <div>
+              <label class="block text-[13px] font-semibold text-[#0a1f3d] mb-1.5">วันที่เริ่ม</label>
+              <div class="relative">
+                <input type="text" readonly value="${sDateStr !== '—' ? sDateStr : ''}" placeholder="mm/dd/yyyy" class="wp-start-picker w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors cursor-pointer bg-white" data-idx="${idx}"/>
+                <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[13px] font-semibold text-[#0a1f3d] mb-1.5">วันที่สิ้นสุด</label>
+              <div class="relative">
+                <input type="text" readonly value="${eDateStr !== '—' ? eDateStr : ''}" placeholder="mm/dd/yyyy" class="wp-end-picker w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] transition-colors cursor-pointer bg-white" data-idx="${idx}"/>
+                <svg class="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+            </div>
           </div>
-          <div class="mb-3"><label class="block text-xs font-medium text-gray-600 mb-1">รายละเอียด</label>
-            <textarea rows="2" onchange="workPlans[${idx}].description=this.value" placeholder="รายละเอียดแผนการดำเนินงาน..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] resize-none">${wp.description || ""}</textarea></div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">วันที่เริ่ม</label>
-              <input type="date" value="${wp.startDate || ""}" onchange="workPlans[${idx}].startDate=this.value" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">วันที่สิ้นสุด</label>
-              <input type="date" value="${wp.endDate || ""}" onchange="workPlans[${idx}].endDate=this.value" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">สถานะ</label>
-              <select onchange="workPlans[${idx}].status=this.value" class="w-full px-2.5 py-2 text-sm border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#006664]/30 appearance-none">
-                <option value="pending" ${wp.status === "pending" ? "selected" : ""}>รอดำเนินการ</option>
-                <option value="in_progress" ${wp.status === "in_progress" ? "selected" : ""}>กำลังดำเนินการ</option>
-                <option value="completed" ${wp.status === "completed" ? "selected" : ""}>เสร็จสิ้น</option>
-                <option value="cancelled" ${wp.status === "cancelled" ? "selected" : ""}>ยกเลิก</option>
-              </select></div>
+          <div class="mb-4">
+            <label class="block text-[13px] font-semibold text-[#0a1f3d] mb-1.5">คำอธิบายแผนงาน <span class="text-gray-400 font-normal text-xs">(รายละเอียดเพิ่มเติม, วัตถุประสงค์, กลุ่มเป้าหมาย)</span></label>
+            <textarea rows="2" onchange="workPlans[${idx}].description=this.value" placeholder="รายละเอียดเพิ่มเติมของแผนงาน..." class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] resize-none transition-colors leading-relaxed">${wp.description || ''}</textarea>
           </div>
-        </div>`,
+
+          <div class="bg-[#f4fbfc] rounded-lg p-3 sm:p-4 border border-[#e0f2f2] flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-2 sm:gap-4 mt-2">
+            <div class="flex-1 w-full flex flex-col items-center">
+              <p class="text-[11px] font-bold text-[#006664] mb-1 uppercase tracking-wider">ระยะเวลา</p>
+              <p class="text-[15px] font-black text-[#006664]" id="wpDurationDisplay_${idx}">${durationStr}</p>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-[#ccfbf1]"></div>
+            <div class="flex-1 w-full flex flex-col items-center">
+              <p class="text-[11px] font-bold text-[#00a896] mb-1 uppercase tracking-wider">เริ่มต้น</p>
+              <p class="text-[14px] font-bold text-[#006664]" id="wpStartTextDisplay_${idx}">${sDateStr}</p>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-[#ccfbf1]"></div>
+            <div class="flex-1 w-full flex flex-col items-center">
+              <p class="text-[11px] font-bold text-rose-500 mb-1 uppercase tracking-wider">สิ้นสุด</p>
+              <p class="text-[14px] font-bold text-rose-600" id="wpEndTextDisplay_${idx}">${eDateStr}</p>
+            </div>
+          </div>
+          </div>
+        </div>`;
+          }
         )
         .join("");
+
+      setTimeout(() => {
+        const ADP = (window as any).AirDatepicker;
+        const opts = (window as any).__airPickerOpts;
+        if(!ADP || !opts) return;
+        
+        document.querySelectorAll('.wp-start-picker').forEach((el: any) => {
+          const idx = parseInt(el.getAttribute('data-idx'));
+          const dpStr = workPlans[idx].startDate;
+          new ADP(el, {
+            ...opts,
+            selectedDates: dpStr ? [new Date(dpStr)] : [],
+            onSelect({ date }: any) {
+              workPlans[idx].startDate = date ? toISODate(date) : '';
+              if((window as any).updateWPDurationUI) (window as any).updateWPDurationUI(idx);
+            }
+          });
+        });
+        document.querySelectorAll('.wp-end-picker').forEach((el: any) => {
+          const idx = parseInt(el.getAttribute('data-idx'));
+          const dpStr = workPlans[idx].endDate;
+          new ADP(el, {
+            ...opts,
+            selectedDates: dpStr ? [new Date(dpStr)] : [],
+            onSelect({ date }: any) {
+              workPlans[idx].endDate = date ? toISODate(date) : '';
+              if((window as any).updateWPDurationUI) (window as any).updateWPDurationUI(idx);
+            }
+          });
+        });
+      }, 0);
     }
+
+    // ── Signatory dropdown helpers ──
+    function buildSignatoryDropdown(idx: number, currentName: string, currentUserId: number | null) {
+      const hasSelection = !!currentUserId;
+      const escaped = currentName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return `
+        <div class="relative">
+          <input
+            type="text"
+            id="sigDropInput_${idx}"
+            value="${escaped}"
+            oninput="onSignatoryInput(${idx},this.value)"
+            onfocus="onSignatoryFocus(${idx})"
+            onblur="onSignatoryBlur(${idx})"
+            placeholder="ค้นหาชื่อผู้บุคลากรในหน่วยงาน..."
+            autocomplete="off"
+            class="w-full px-3 ${hasSelection ? 'pr-8 border-[#006664]/40 bg-teal-50/40' : 'pr-3 border-gray-200'} py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"
+          />
+          <button type="button" id="sigDropClear_${idx}" onmousedown="onSignatoryClear(${idx})"
+            class="${hasSelection ? 'flex' : 'hidden'} absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center w-4 h-4 rounded-full bg-gray-400 hover:bg-rose-400 text-white text-[10px] leading-none cursor-pointer"
+            title="ล้างการเลือก">✕</button>
+          <div id="sigDropList_${idx}" class="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 hidden max-h-52 overflow-y-auto text-sm"></div>
+        </div>`;
+    }
+
+    function renderSignatoryList(idx: number, query: string) {
+      const list = document.getElementById(`sigDropList_${idx}`);
+      if (!list) return;
+      const q = query.trim().toLowerCase();
+      const filtered = q
+        ? signatoryUserOptions.filter(u => u.nameTh.toLowerCase().includes(q))
+        : signatoryUserOptions;
+      if (!filtered.length) {
+        list.innerHTML = '<div class="px-3 py-2 text-xs text-gray-400">ไม่พบรายชื่อ</div>';
+      } else {
+        list.innerHTML = filtered.slice(0, 50).map(u => {
+          const safeName = u.nameTh.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+          const safePos = (u.positionTitle || "").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+          return `<div class="px-3 py-2 cursor-pointer hover:bg-teal-50 hover:text-teal-700 border-b border-gray-50 last:border-0"
+            onmousedown="onSignatorySelect(${idx},${u.id},'${safeName}','${safePos}')">
+            <div class="text-sm font-medium text-gray-800">${u.nameTh.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+            ${u.positionTitle ? `<div class="text-[10px] text-gray-400 mt-0.5">${u.positionTitle.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>` : ''}
+          </div>`;
+        }).join('');
+      }
+      list.classList.remove('hidden');
+    }
+
+    // ── Expense dropdown helpers ──
+    function buildExpenseDropdown(idx: number, currentName: string, isCustom: boolean, expenseDetailId?: number | null) {
+      if (isCustom) {
+        return `<input type="text" value="${currentName.replace(/"/g, '&quot;')}" onchange="budgetUsages[${idx}].expenseName=this.value" placeholder="ระบุชื่อค่าใช้จ่าย..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/>`;
+      }
+      const escaped = currentName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const hasSelection = !!expenseDetailId;
+      return `
+        <div class="relative" id="expDropWrap_${idx}">
+          <input type="text"
+            id="expDropInput_${idx}"
+            value="${escaped}"
+            oninput="onExpenseInput(${idx},this.value)"
+            onfocus="onExpenseFocus(${idx})"
+            onblur="onExpenseBlur(${idx})"
+            placeholder="ค้นหาหรือพิมพ์ชื่อค่าใช้จ่าย..."
+            autocomplete="off"
+            class="w-full px-3 ${hasSelection ? 'pr-8' : 'pr-3'} py-2 text-sm border ${hasSelection ? 'border-[#006664]/40 bg-teal-50/40' : 'border-gray-200'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"
+          />
+          <button type="button" id="expDropClear_${idx}" onmousedown="onExpenseClear(${idx})"
+            class="${hasSelection ? 'flex' : 'hidden'} absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center w-4 h-4 rounded-full bg-gray-400 hover:bg-rose-400 text-white text-[10px] leading-none cursor-pointer"
+            title="ล้างการเลือก">✕</button>
+          <div id="expDropList_${idx}" class="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 hidden max-h-52 overflow-y-auto text-sm"></div>
+        </div>`;
+    }
+
+    function renderExpenseList(idx: number, query: string) {
+      const list = document.getElementById(`expDropList_${idx}`);
+      if (!list) return;
+      const q = query.trim().toLowerCase();
+      const filtered = q
+        ? expenseDetailOptions.filter(o => o.name.toLowerCase().includes(q))
+        : expenseDetailOptions;
+      if (!filtered.length) {
+        list.innerHTML = '<div class="px-3 py-2 text-xs text-gray-400">ไม่พบรายการ</div>';
+      } else {
+        list.innerHTML = filtered.map(o => {
+          const safe = o.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+          return `<div class="px-3 py-2 cursor-pointer hover:bg-teal-50 hover:text-teal-700" onmousedown="onExpenseSelect(${idx},${o.id},'${safe}')">${safe}</div>`;
+        }).join('');
+      }
+      list.classList.remove('hidden');
+    }
+
+    (window as any).onExpenseInput = (idx: number, value: string) => {
+      budgetUsages[idx].expenseName = value;
+      budgetUsages[idx].expenseDetailId = null;
+      // hide clear button when typing freely
+      const clearBtn = document.getElementById(`expDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.add('hidden');
+      const input = document.getElementById(`expDropInput_${idx}`) as HTMLInputElement;
+      if (input) { input.classList.remove('pr-8', 'border-[#006664]/40', 'bg-teal-50/40'); input.classList.add('pr-3', 'border-gray-200'); }
+      renderExpenseList(idx, value);
+    };
+    (window as any).onExpenseFocus = (idx: number) => {
+      const input = document.getElementById(`expDropInput_${idx}`) as HTMLInputElement;
+      renderExpenseList(idx, input?.value || '');
+    };
+    (window as any).onExpenseBlur = (idx: number) => {
+      setTimeout(() => {
+        const list = document.getElementById(`expDropList_${idx}`);
+        if (list) list.classList.add('hidden');
+      }, 150);
+    };
+    (window as any).onExpenseSelect = (idx: number, detailId: number, name: string) => {
+      budgetUsages[idx].expenseName = name;
+      budgetUsages[idx].expenseDetailId = detailId;
+      const input = document.getElementById(`expDropInput_${idx}`) as HTMLInputElement;
+      if (input) {
+        input.value = name;
+        input.classList.add('pr-8', 'border-[#006664]/40', 'bg-teal-50/40');
+        input.classList.remove('pr-3', 'border-gray-200');
+      }
+      const clearBtn = document.getElementById(`expDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.replace('hidden', 'flex');
+      const list = document.getElementById(`expDropList_${idx}`);
+      if (list) list.classList.add('hidden');
+    };
+    (window as any).onExpenseClear = (idx: number) => {
+      budgetUsages[idx].expenseName = '';
+      budgetUsages[idx].expenseDetailId = null;
+      const input = document.getElementById(`expDropInput_${idx}`) as HTMLInputElement;
+      if (input) {
+        input.value = '';
+        input.classList.remove('pr-8', 'border-[#006664]/40', 'bg-teal-50/40');
+        input.classList.add('pr-3', 'border-gray-200');
+        input.focus();
+      }
+      const clearBtn = document.getElementById(`expDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.replace('flex', 'hidden');
+      renderExpenseList(idx, '');
+    };
+
+    // ── Signatory dropdown handlers ──
+    (window as any).onSignatoryInput = (idx: number, value: string) => {
+      signatories[idx].signatoryName = value;
+      signatories[idx].userId = null;
+      const clearBtn = document.getElementById(`sigDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.add('hidden');
+      const input = document.getElementById(`sigDropInput_${idx}`) as HTMLInputElement;
+      if (input) { input.classList.remove('pr-8', 'border-[#006664]/40', 'bg-teal-50/40'); input.classList.add('pr-3', 'border-gray-200'); }
+      renderSignatoryList(idx, value);
+    };
+    (window as any).onSignatoryFocus = (idx: number) => {
+      const input = document.getElementById(`sigDropInput_${idx}`) as HTMLInputElement;
+      renderSignatoryList(idx, input?.value || '');
+    };
+    (window as any).onSignatoryBlur = (idx: number) => {
+      setTimeout(() => {
+        const list = document.getElementById(`sigDropList_${idx}`);
+        if (list) list.classList.add('hidden');
+      }, 150);
+    };
+    (window as any).onSignatorySelect = (idx: number, userId: number, name: string, positionTitle: string) => {
+      const userOpt = signatoryUserOptions.find(u => u.id === userId);
+      signatories[idx].userId = userId;
+      signatories[idx].signatoryName = name;
+      signatories[idx].positionTitle = positionTitle;
+      signatories[idx].positions = userOpt?.positions || (positionTitle ? [positionTitle] : []);
+      signatories[idx].positionIndex = 0;
+      const input = document.getElementById(`sigDropInput_${idx}`) as HTMLInputElement;
+      if (input) {
+        input.value = name;
+        input.classList.add('pr-8', 'border-[#006664]/40', 'bg-teal-50/40');
+        input.classList.remove('pr-3', 'border-gray-200');
+      }
+      const clearBtn = document.getElementById(`sigDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.replace('hidden', 'flex');
+      const list = document.getElementById(`sigDropList_${idx}`);
+      if (list) list.classList.add('hidden');
+      // auto-fill ตำแหน่ง
+      const posInput = document.getElementById(`sigPos_${idx}`) as HTMLInputElement;
+      if (posInput) posInput.value = positionTitle;
+      // แสดง/ซ่อน ปุ่มสลับตำแหน่ง
+      const toggleBtn = document.getElementById(`sigToggle_${idx}`);
+      const hasMulti = signatories[idx].positions.length > 1;
+      if (toggleBtn) toggleBtn.classList[hasMulti ? 'remove' : 'add']('hidden');
+      if (posInput) { posInput.classList[hasMulti ? 'add' : 'remove']('pr-8'); posInput.classList[hasMulti ? 'remove' : 'add']('pr-3'); }
+    };
+    (window as any).onSignatoryClear = (idx: number) => {
+      signatories[idx].signatoryName = '';
+      signatories[idx].userId = null;
+      signatories[idx].positions = [];
+      signatories[idx].positionIndex = 0;
+      const input = document.getElementById(`sigDropInput_${idx}`) as HTMLInputElement;
+      if (input) {
+        input.value = '';
+        input.classList.remove('pr-8', 'border-[#006664]/40', 'bg-teal-50/40');
+        input.classList.add('pr-3', 'border-gray-200');
+        input.focus();
+      }
+      const clearBtn = document.getElementById(`sigDropClear_${idx}`);
+      if (clearBtn) clearBtn.classList.replace('flex', 'hidden');
+      // ล้างช่องตำแหน่งและซ่อนปุ่มสลับตำแหน่ง
+      signatories[idx].positionTitle = '';
+      const toggleBtn = document.getElementById(`sigToggle_${idx}`);
+      if (toggleBtn) toggleBtn.classList.add('hidden');
+      const posInput = document.getElementById(`sigPos_${idx}`) as HTMLInputElement;
+      if (posInput) { posInput.value = ''; posInput.classList.remove('pr-8'); posInput.classList.add('pr-3'); }
+      renderSignatoryList(idx, '');
+    };
+    (window as any).onTogglePosition = (idx: number) => {
+      const s = signatories[idx];
+      if (!s.positions || s.positions.length <= 1) return;
+      s.positionIndex = ((s.positionIndex || 0) + 1) % s.positions.length;
+      s.positionTitle = s.positions[s.positionIndex];
+      const posInput = document.getElementById(`sigPos_${idx}`) as HTMLInputElement;
+      if (posInput) posInput.value = s.positionTitle;
+    };
+
+    // ── Sub-item dropdown helpers ──
+    function buildSubDropdown(mainIdx: number, subIdx: number, currentName: string, subDetailId?: number | null, mainDetailId?: number | null) {
+      const escaped = currentName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const hasSelection = !!subDetailId;
+      const key = `${mainIdx}_${subIdx}`;
+      return `
+        <div class="relative" id="subDropWrap_${key}">
+          <input type="text"
+            id="subDropInput_${key}"
+            value="${escaped}"
+            oninput="onSubInput(${mainIdx},${subIdx},this.value)"
+            onfocus="onSubFocus(${mainIdx},${subIdx},${mainDetailId ?? 'null'})"
+            onblur="onSubBlur(${mainIdx},${subIdx})"
+            placeholder="ค้นหาหรือพิมพ์ชื่อค่าใช้จ่ายย่อย..."
+            autocomplete="off"
+            class="w-full px-2 ${hasSelection ? 'pr-7' : 'pr-2'} py-1.5 text-xs border ${hasSelection ? 'border-[#006664]/40 bg-teal-50/40' : 'border-gray-200'} rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"
+          />
+          <button type="button" id="subDropClear_${key}" onmousedown="onSubClear(${mainIdx},${subIdx},${mainDetailId ?? 'null'})"
+            class="${hasSelection ? 'flex' : 'hidden'} absolute right-1.5 top-1/2 -translate-y-1/2 items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-400 hover:bg-rose-400 text-white text-[9px] leading-none cursor-pointer"
+            title="ล้างการเลือก">✕</button>
+          <div id="subDropList_${key}" class="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 hidden max-h-48 overflow-y-auto text-xs"></div>
+        </div>`;
+    }
+
+    function renderSubList(mainIdx: number, subIdx: number, query: string, mainDetailId: number | null) {
+      const key = `${mainIdx}_${subIdx}`;
+      const list = document.getElementById(`subDropList_${key}`);
+      if (!list) return;
+      const pool = mainDetailId
+        ? subExpenseDetailOptions.filter(o => o.parentId === mainDetailId)
+        : subExpenseDetailOptions;
+      const q = query.trim().toLowerCase();
+      const filtered = q ? pool.filter(o => o.name.toLowerCase().includes(q)) : pool;
+      if (!filtered.length) {
+        list.innerHTML = mainDetailId
+          ? '<div class="px-3 py-2 text-gray-400">ไม่พบรายการย่อยภายใต้หัวข้อหลักนี้</div>'
+          : '<div class="px-3 py-2 text-gray-400">ไม่พบรายการ</div>';
+      } else {
+        list.innerHTML = filtered.map(o => {
+          const safe = o.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+          return `<div class="px-3 py-2 cursor-pointer hover:bg-teal-50 hover:text-teal-700" onmousedown="onSubSelect(${mainIdx},${subIdx},${o.id},'${safe}')">${safe}</div>`;
+        }).join('');
+      }
+      list.classList.remove('hidden');
+    }
+
+    (window as any).onSubInput = (mainIdx: number, subIdx: number, value: string) => {
+      budgetUsages[mainIdx].subItems[subIdx].expenseName = value;
+      budgetUsages[mainIdx].subItems[subIdx].expenseDetailId = null;
+      const key = `${mainIdx}_${subIdx}`;
+      const clearBtn = document.getElementById(`subDropClear_${key}`);
+      if (clearBtn) clearBtn.classList.add('hidden');
+      const input = document.getElementById(`subDropInput_${key}`) as HTMLInputElement;
+      if (input) { input.classList.remove('pr-7','border-[#006664]/40','bg-teal-50/40'); input.classList.add('pr-2','border-gray-200'); }
+      const mainDetailId = budgetUsages[mainIdx].expenseDetailId ?? null;
+      renderSubList(mainIdx, subIdx, value, mainDetailId);
+    };
+    (window as any).onSubFocus = (mainIdx: number, subIdx: number, mainDetailId: number | null) => {
+      const key = `${mainIdx}_${subIdx}`;
+      const input = document.getElementById(`subDropInput_${key}`) as HTMLInputElement;
+      renderSubList(mainIdx, subIdx, input?.value || '', mainDetailId);
+    };
+    (window as any).onSubBlur = (mainIdx: number, subIdx: number) => {
+      setTimeout(() => {
+        const list = document.getElementById(`subDropList_${mainIdx}_${subIdx}`);
+        if (list) list.classList.add('hidden');
+      }, 150);
+    };
+    (window as any).onSubSelect = (mainIdx: number, subIdx: number, detailId: number, name: string) => {
+      budgetUsages[mainIdx].subItems[subIdx].expenseName = name;
+      budgetUsages[mainIdx].subItems[subIdx].expenseDetailId = detailId;
+      const key = `${mainIdx}_${subIdx}`;
+      const input = document.getElementById(`subDropInput_${key}`) as HTMLInputElement;
+      if (input) {
+        input.value = name;
+        input.classList.add('pr-7','border-[#006664]/40','bg-teal-50/40');
+        input.classList.remove('pr-2','border-gray-200');
+      }
+      const clearBtn = document.getElementById(`subDropClear_${key}`);
+      if (clearBtn) clearBtn.classList.replace('hidden','flex');
+      const list = document.getElementById(`subDropList_${key}`);
+      if (list) list.classList.add('hidden');
+    };
+    (window as any).onSubClear = (mainIdx: number, subIdx: number, mainDetailId: number | null) => {
+      budgetUsages[mainIdx].subItems[subIdx].expenseName = '';
+      budgetUsages[mainIdx].subItems[subIdx].expenseDetailId = null;
+      const key = `${mainIdx}_${subIdx}`;
+      const input = document.getElementById(`subDropInput_${key}`) as HTMLInputElement;
+      if (input) {
+        input.value = '';
+        input.classList.remove('pr-7','border-[#006664]/40','bg-teal-50/40');
+        input.classList.add('pr-2','border-gray-200');
+        input.focus();
+      }
+      const clearBtn = document.getElementById(`subDropClear_${key}`);
+      if (clearBtn) clearBtn.classList.replace('flex','hidden');
+      renderSubList(mainIdx, subIdx, '', mainDetailId);
+    };
 
     function renderBudgetUsages() {
       const c = document.getElementById("budgetUsageList")!;
@@ -1171,18 +1685,61 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
         return;
       }
       c.innerHTML = budgetUsages
-        .map(
-          (bu: any, idx: number) => `
+        .map((bu: any, idx: number) => {
+          if (bu.expenseType === "custom") {
+            const isCollapsed = !!bu.collapsed;
+            return `
+        <div class="rounded-lg border border-amber-200 bg-amber-50/20 p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-gray-500">ค่าใช้จ่ายหลัก #${idx + 1} <span class="text-amber-600">(กำหนดเอง)</span></span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="toggleBudgetCollapse(${idx})" class="flex items-center gap-1 px-2 py-1 text-[11px] rounded border border-gray-300 text-gray-500 hover:bg-gray-100 cursor-pointer transition-colors">
+                ${isCollapsed
+                  ? `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>แสดง`
+                  : `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>ซ่อน`}
+              </button>
+              <button onclick="removeBudgetUsage(${idx})" class="flex items-center gap-1 px-2 py-1 text-[11px] rounded border border-rose-200 text-rose-400 hover:bg-rose-50 hover:border-rose-400 cursor-pointer transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>ลบ
+              </button>
+            </div>
+          </div>
+          <div class="${isCollapsed ? 'hidden' : ''} mt-3">
+            <div class="grid gap-3" style="grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr">
+              <div><label class="block text-xs font-medium text-gray-600 mb-1">ชื่อค่าใช้จ่าย</label>
+                <input type="text" value="${(bu.expenseName || "").replace(/"/g, '&quot;')}" onchange="budgetUsages[${idx}].expenseName=this.value" placeholder="ระบุชื่อค่าใช้จ่าย..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              <div><label class="block text-xs font-medium text-gray-600 mb-1">จำนวนเงิน (บาท/หน่วย)</label>
+                <input type="text" inputmode="decimal" id="mainAmtInput_${idx}" value="${fmtAmt(bu.amount)}" onfocus="this.value=budgetUsages[${idx}].amount||''" oninput="numOnly(this);budgetUsages[${idx}].amount=this.value;updateBudgetCards();updateCustomNet(${idx});" onblur="budgetUsages[${idx}].amount=this.value.replace(/,/g,'');this.value=fmtAmt(this.value);updateBudgetCards();updateCustomNet(${idx});" placeholder="0.00" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              <div><label class="block text-xs font-medium text-gray-600 mb-1">จำนวน (หน่วย)</label>
+                <input type="number" min="0" value="${bu.personnelCount || ""}" oninput="budgetUsages[${idx}].personnelCount=parseInt(this.value)||null;updateBudgetCards();updateCustomNet(${idx});" placeholder="0" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              <div><label class="block text-xs font-medium text-gray-600 mb-1">หน่วย (ตัวคูณ)</label>
+                <select onchange="budgetUsages[${idx}].unitType=this.value" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664] bg-white">
+                  <option value="">-- เลือกหน่วย --</option>
+                  <option value="คน" ${bu.unitType === "คน" ? "selected" : ""}>คน</option>
+                  <option value="ชั่วโมง" ${bu.unitType === "ชั่วโมง" ? "selected" : ""}>ชั่วโมง</option>
+                  <option value="วัน" ${bu.unitType === "วัน" ? "selected" : ""}>วัน</option>
+                  <option value="รายการ" ${bu.unitType === "รายการ" ? "selected" : ""}>รายการ</option>
+                </select></div>
+              <div><label class="block text-xs font-medium text-gray-600 mb-1">หมายเหตุ</label>
+                <input type="text" value="${(bu.remark || "").replace(/"/g, '&quot;')}" onchange="budgetUsages[${idx}].remark=this.value" placeholder="หมายเหตุ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+            </div>
+            <div class="mt-2 flex justify-end items-center gap-2 border-t border-amber-100 pt-2">
+              <span class="text-xs text-gray-400">จำนวนเงิน/หน่วย × จำนวน =</span>
+              <span id="customNet_${idx}" class="text-sm font-semibold text-[#006664]">${formatBaht(getEffectiveAmount(bu))} บาท</span>
+            </div>
+          </div>
+        </div>`;
+          }
+          return `
         <div class="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-gray-500">ค่าใช้จ่ายหลัก #${idx + 1} ${bu.expenseType === "custom" ? '<span class="text-amber-600">(กำหนดเอง)</span>' : ""}</span>
+            <span class="text-xs font-semibold text-gray-500">ค่าใช้จ่ายหลัก #${idx + 1}</span>
             <button onclick="removeBudgetUsage(${idx})" class="text-rose-400 hover:text-rose-600 text-xs cursor-pointer">ลบ</button>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+          <div class="grid gap-3 mb-3" style="grid-template-columns: 2fr 0.8fr 1.8fr">
             <div><label class="block text-xs font-medium text-gray-600 mb-1">หัวข้อค่าใช้จ่ายหลัก</label>
-              <input type="text" value="${bu.expenseName || ""}" onchange="budgetUsages[${idx}].expenseName=this.value" placeholder="ระบุชื่อค่าใช้จ่าย..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              ${buildExpenseDropdown(idx, bu.expenseName || "", false, bu.expenseDetailId)}</div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">จำนวนเงิน (รวม)</label>
-              <input type="text" inputmode="decimal" value="${bu.amount || ""}" onchange="budgetUsages[${idx}].amount=this.value;updateBudgetCards()" placeholder="0.00" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              <input type="text" readonly tabindex="-1" id="mainAmtInput_${idx}" value="${fmtAmt(bu.amount)}" placeholder="0.00" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md bg-gray-50 text-gray-500 cursor-default select-none focus:outline-none"/></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">วิธีการคำนวณ</label>
               <input type="text" value="${bu.calculationMethod || ""}" onchange="budgetUsages[${idx}].calculationMethod=this.value" placeholder="ระบุวิธีคำนวณ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
           </div>
@@ -1192,32 +1749,32 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
             <div><label class="block text-xs font-medium text-gray-600 mb-1">หมายเหตุ</label>
               <input type="text" value="${bu.remark || ""}" onchange="budgetUsages[${idx}].remark=this.value" placeholder="หมายเหตุ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
           </div>
-          <div class="mt-3 pl-4 border-l-2 border-teal-200">
+          <div class="mt-3 pl-4 border-l-2 border-[#b2bb1e]">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] font-semibold text-gray-400 uppercase">ค่าใช้จ่ายย่อย</span>
-              <button onclick="addSubItem(${idx})" class="text-[10px] text-teal-600 hover:text-teal-800 font-semibold cursor-pointer">+ เพิ่มย่อย</button>
+              <button onclick="addSubItem(${idx})" class="text-[10px] border border-teal-600 px-4 py-1 rounded-md text-teal-600 hover:text-teal-800 font-semibold cursor-pointer">+ เพิ่มย่อย</button>
             </div>
             <div class="space-y-2">
               ${(bu.subItems || [])
                 .map(
                   (sub: any, sIdx: number) => `
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end rounded-md bg-white p-2 border border-gray-100">
+              <div class="grid gap-2 items-end rounded-md bg-white p-2 border border-gray-100" style="grid-template-columns: 2fr 1fr 2fr auto">
                 <div><label class="block text-[10px] font-medium text-gray-500 mb-0.5">ชื่อค่าใช้จ่ายย่อย</label>
-                  <input type="text" value="${sub.expenseName || ""}" onchange="budgetUsages[${idx}].subItems[${sIdx}].expenseName=this.value" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"/></div>
+                  ${buildSubDropdown(idx, sIdx, sub.expenseName || "", sub.expenseDetailId, bu.expenseDetailId)}</div>
                 <div><label class="block text-[10px] font-medium text-gray-500 mb-0.5">จำนวนเงิน</label>
-                  <input type="text" inputmode="decimal" value="${sub.amount || ""}" onchange="budgetUsages[${idx}].subItems[${sIdx}].amount=this.value" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"/></div>
-                <div class="flex gap-2 items-end">
-                  <div class="flex-1"><label class="block text-[10px] font-medium text-gray-500 mb-0.5">หมายเหตุ</label>
-                    <input type="text" value="${sub.remark || ""}" onchange="budgetUsages[${idx}].subItems[${sIdx}].remark=this.value" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"/></div>
-                  <button onclick="removeSubItem(${idx},${sIdx})" class="text-rose-400 hover:text-rose-600 text-xs pb-1 cursor-pointer">✕</button>
+                  <input type="text" inputmode="decimal" value="${fmtAmt(sub.amount)}" onfocus="this.value=budgetUsages[${idx}].subItems[${sIdx}].amount||''" oninput="numOnly(this);budgetUsages[${idx}].subItems[${sIdx}].amount=this.value;sumSubItems(${idx});" onblur="budgetUsages[${idx}].subItems[${sIdx}].amount=this.value.replace(/,/g,'');this.value=fmtAmt(this.value);sumSubItems(${idx});" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"/></div>
+                <div><label class="block text-[10px] font-medium text-gray-500 mb-0.5">หมายเหตุ</label>
+                  <input type="text" value="${sub.remark || ""}" onchange="budgetUsages[${idx}].subItems[${sIdx}].remark=this.value" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-[#006664]/30"/></div>
+                <div class="flex items-end pb-0.5">
+                  <button onclick="removeSubItem(${idx},${sIdx})" class="border border-rose-400 px-1 py-1 text-rose-400 hover:text-rose-600 text-xs cursor-pointer">✕</button>
                 </div>
               </div>`,
                 )
                 .join("")}
             </div>
           </div>
-        </div>`,
-        )
+        </div>`;
+        })
         .join("");
       updateBudgetCards();
     }
@@ -1238,23 +1795,74 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
             <button onclick="removeSignatory(${idx})" class="text-rose-400 hover:text-rose-600 text-xs cursor-pointer">ลบ</button>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">ชื่อผู้บริหาร</label>
-              <input type="text" value="${s.signatoryName || ""}" onchange="signatories[${idx}].signatoryName=this.value" placeholder="พิมพ์ชื่อ..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">ชื่อบุคลากร</label>
+              ${buildSignatoryDropdown(idx, s.signatoryName || "", s.userId)}</div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">ตำแหน่ง</label>
-              <input type="text" value="${s.positionTitle || ""}" onchange="signatories[${idx}].positionTitle=this.value" placeholder="ระบุตำแหน่ง..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/></div>
+              <div class="relative">
+                <input type="text" id="sigPos_${idx}" value="${(s.positionTitle || "").replace(/"/g, '&quot;')}" onchange="signatories[${idx}].positionTitle=this.value" placeholder="ระบุตำแหน่ง..." class="w-full px-3 ${(s.positions && s.positions.length > 1) ? 'pr-9' : 'pr-3'} py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#006664]/30 focus:border-[#006664]"/>
+                <button type="button" id="sigToggle_${idx}" onclick="onTogglePosition(${idx})"
+                  title="สลับตำแหน่ง (${s.positions ? s.positions.length : 0} ตำแหน่ง)"
+                  class="${(s.positions && s.positions.length > 1) ? 'flex' : 'hidden'} absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center w-5 h-5 rounded-full text-white cursor-pointer hover:opacity-80 transition-opacity"
+                  style="background: linear-gradient(135deg, #006664, #B2BB1E)">
+                  <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                </button>
+              </div></div>
           </div>
         </div>`,
         )
         .join("");
     }
 
+    function getTotalFunding(): number {
+      return fundingSources.reduce((sum, f) => {
+        return sum + (parseFloat(String(f.amount || 0).replace(/,/g, "")) || 0);
+      }, 0);
+    }
+
+    function getEffectiveAmount(bu: any): number {
+      const amt = parseFloat(String(bu.amount || 0).replace(/,/g, "")) || 0;
+      if (bu.expenseType === "custom") {
+        const qty = parseInt(String(bu.personnelCount || 0)) || 0;
+        return amt * qty;
+      }
+      return amt;
+    }
+
     function updateBudgetCards() {
-      const initial = parseFloat(String(projectData?.initialBudget || 0));
+      const initial = getTotalFunding();
       document.getElementById("budgetCardInitial")!.textContent =
         `${formatBaht(initial)} บาท`;
+
+      // Funding breakdown list
+      const listEl = document.getElementById("budgetCardFundingList");
+      if (listEl) {
+        if (!fundingSources.length) {
+          listEl.innerHTML = '';
+        } else {
+          let otherCount = 0;
+          const rows = fundingSources
+            .filter((f: any) => f.fundingGroup === "main" ||
+              (parseFloat(String(f.amount || 0).replace(/,/g, "")) || 0) > 0 ||
+              (f.fundingName && f.fundingName.trim()))
+            .map((f: any) => {
+              let label: string;
+              if (f.fundingGroup === "main") label = "แหล่งเงินหลัก";
+              else if (f.fundingGroup === "supplement") label = "แหล่งเงินเสริม";
+              else { otherCount++; label = `แหล่งเงินอื่นๆ${otherCount > 1 ? " #" + otherCount : ""}`; }
+              const name = f.fundingName ? f.fundingName : "—";
+              const amt = parseFloat(String(f.amount || 0).replace(/,/g, "")) || 0;
+              return `<div class="flex items-center justify-between gap-2">
+                <span class="text-[10px] text-gray-500 truncate"><span class="font-medium text-gray-600">${label}</span>: ${name}</span>
+                <span class="text-[10px] font-semibold text-[#006664] whitespace-nowrap">${formatBaht(amt)}</span>
+              </div>`;
+            });
+          listEl.innerHTML = rows.join("");
+        }
+      }
+
       let totalUsed = 0;
       budgetUsages.forEach((bu: any) => {
-        totalUsed += parseFloat(String(bu.amount || 0));
+        totalUsed += getEffectiveAmount(bu);
       });
       document.getElementById("budgetCardUsed")!.textContent =
         `${formatBaht(totalUsed)} บาท`;
@@ -1263,6 +1871,13 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
       remEl.textContent = `${formatBaht(remaining)} บาท`;
       remEl.className = `text-lg font-bold ${remaining < 0 ? "text-rose-600" : "text-amber-700"}`;
     }
+
+    function updateCustomNet(idx: number) {
+      const net = getEffectiveAmount(budgetUsages[idx]);
+      const el = document.getElementById(`customNet_${idx}`);
+      if (el) el.textContent = `${formatBaht(net)} บาท`;
+    }
+    (window as any).updateCustomNet = updateCustomNet;
 
     function renderSummary() {
       const c = document.getElementById("summaryContent")!;
@@ -1358,15 +1973,17 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
     };
     (window as any).addSubItem = (idx: number) => {
       if (!budgetUsages[idx].subItems) budgetUsages[idx].subItems = [];
-      budgetUsages[idx].subItems.push({
-        expenseName: "",
-        amount: "",
-        remark: "",
-      });
+      const isCustom = budgetUsages[idx].expenseType === "custom";
+      budgetUsages[idx].subItems.push(
+        isCustom
+          ? { expenseName: "", amount: "", remark: "", personnelCount: null, unitType: "" }
+          : { expenseName: "", amount: "", remark: "", expenseDetailId: null }
+      );
       renderBudgetUsages();
     };
     (window as any).removeSubItem = (mainIdx: number, subIdx: number) => {
       budgetUsages[mainIdx].subItems.splice(subIdx, 1);
+      sumSubItems(mainIdx);
       renderBudgetUsages();
     };
     (window as any).updateBudgetCards = updateBudgetCards;
@@ -1380,11 +1997,39 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
       }
 
       try {
-        const res = await (window as any).apiFetch(
-          `${API}/api/projects/${projectId}/implementation`,
-        );
+        const [res, expRes, usersRes] = await Promise.all([
+          (window as any).apiFetch(
+            `${API}/api/projects/${projectId}/implementation`,
+          ),
+          (window as any).apiFetch(`${API}/api/projects/budget-expense-options`),
+          (window as any).apiFetch(`${API}/api/users`),
+        ]);
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+        const expData = await expRes.json();
+        if (expData.success && Array.isArray(expData.data)) {
+          expenseDetailOptions = expData.data.filter((o: any) => o.detailType === "main");
+          subExpenseDetailOptions = expData.data
+            .filter((o: any) => o.detailType === "sub")
+            .map((o: any) => ({ id: o.id, name: o.name, parentId: o.parentId }));
+        }
+        const usersData = await usersRes.json();
+        if (usersData.success && Array.isArray(usersData.data)) {
+          signatoryUserOptions = usersData.data
+            .filter((u: any) => u.isActive !== false)
+            .map((u: any) => {
+              const affs: any[] = u.affiliations || [];
+              const primaryAff = affs.find((a: any) => a.isPrimary === true) || affs[0];
+              // รวบรวมตำแหน่งทั้งหมด (unique, ไม่ว่าง) เรียง primary ก่อน
+              const positions: string[] = [];
+              if (primaryAff?.positionTitle) positions.push(primaryAff.positionTitle);
+              affs.forEach((a: any) => {
+                if (a.positionTitle && !positions.includes(a.positionTitle)) positions.push(a.positionTitle);
+              });
+              return { id: u.id, nameTh: u.nameTh || "", positionTitle: primaryAff?.positionTitle || "", positions };
+            })
+            .sort((a: any, b: any) => a.nameTh.localeCompare(b.nameTh, "th"));
+        }
 
         projectData = data.data.project;
         implData = data.data.implementation;
@@ -1505,24 +2150,31 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
                 necessityReason: m.necessityReason || "",
                 remark: m.remark || "",
                 personnelCount: m.personnelCount,
+                unitType: m.unitType || "",
                 subItems: subs.map((s: any) => ({
                   expenseName: s.expenseName || "",
                   amount: s.amount || "",
                   remark: s.remark || "",
                   expenseDetailId: s.expenseDetailId,
+                  personnelCount: s.personnelCount ?? null,
+                  unitType: s.unitType || "",
                 })),
               });
             });
           }
           if (implData.signatories?.length) {
             signatories.length = 0;
-            implData.signatories.forEach((s: any) =>
+            implData.signatories.forEach((s: any) => {
+              const userOpt = signatoryUserOptions.find(u => u.id === s.userId);
+              const positions = userOpt?.positions || (s.positionTitle ? [s.positionTitle] : []);
               signatories.push({
                 userId: s.userId,
                 signatoryName: s.signatoryName || "",
                 positionTitle: s.positionTitle || "",
-              }),
-            );
+                positions,
+                positionIndex: 0,
+              });
+            });
           }
         }
 
@@ -1539,6 +2191,24 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
             amount: "0",
             fundingType: "",
           });
+        }
+
+        if (signatories.length === 0) {
+          [1, 2, 3].forEach(() =>
+            signatories.push({ userId: null, signatoryName: "", positionTitle: "", positions: [], positionIndex: 0 })
+          );
+        }
+
+        if (workPlans.length === 0) {
+          workPlans.push({
+            title: "",
+            description: "",
+            startDate: "",
+            endDate: "",
+            responsiblePerson: "",
+            status: "pending",
+            isCollapsed: false,
+          } as any);
         }
 
         renderOperators();
@@ -1600,10 +2270,9 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
           expenseType: "custom",
           expenseName: "",
           amount: "",
-          calculationMethod: "",
-          necessityReason: "",
           remark: "",
           personnelCount: null,
+          unitType: "",
           subItems: [],
         });
         renderBudgetUsages();
@@ -1615,6 +2284,8 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
           userId: null,
           signatoryName: "",
           positionTitle: "",
+          positions: [],
+          positionIndex: 0,
         });
         renderSignatories();
       });
@@ -1628,6 +2299,15 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
         spinner.classList.remove("hidden");
         btnText.textContent = "กำลังบันทึก...";
         try {
+          const filteredOperators = operators.filter((op) => op.operatorName && op.operatorName.trim());
+          const filteredFunding = fundingSources
+            .filter((f, idx) => idx === 0 || (f.fundingName && f.fundingName.trim()))
+            .map((f) => ({
+              ...f,
+              amount: parseFloat(String(f.amount || 0)) || 0,
+            }));
+          const filteredWorkPlans = workPlans.filter((w) => w.title && w.title.trim());
+
           const res = await (window as any).apiFetch(
             `${API}/api/projects/${projectId}/implementation/step1`,
             {
@@ -1660,17 +2340,26 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
                 province:
                   (document.getElementById("province") as HTMLInputElement)
                     .value || null,
-                operators,
-                fundingSources: fundingSources.map((f) => ({
-                  ...f,
-                  amount: parseFloat(String(f.amount || 0)) || 0,
-                })),
-                workPlans: workPlans.filter((w) => w.title.trim()),
+                operators: filteredOperators,
+                fundingSources: filteredFunding,
+                workPlans: filteredWorkPlans,
               }),
             },
           );
           const data = await res.json();
           if (!data.success) throw new Error(data.message);
+
+          // Update local state to filtered version
+          operators.length = 0;
+          operators.push(...filteredOperators);
+          fundingSources.length = 0;
+          fundingSources.push(...filteredFunding);
+          workPlans.length = 0;
+          workPlans.push(...filteredWorkPlans);
+          renderOperators();
+          renderFunding();
+          renderWorkPlans();
+
           (window as any).showToast?.("บันทึกขั้นตอนที่ 1 สำเร็จ");
           setStep(2);
         } catch (e: any) {
@@ -1686,6 +2375,20 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
       .getElementById("btnStep2Next")!
       .addEventListener("click", async () => {
         try {
+          const filteredBudget = budgetUsages
+            .filter((bu: any) => bu.expenseName && bu.expenseName.trim())
+            .map((bu: any) => ({
+              ...bu,
+              amount: parseFloat(String(bu.amount || 0)) || 0,
+              subItems: (bu.subItems || [])
+                .filter((s: any) => s.expenseName && s.expenseName.trim())
+                .map((s: any) => ({
+                  ...s,
+                  amount: parseFloat(String(s.amount || 0)) || 0,
+                })),
+            }));
+          const filteredSignatories = signatories.filter((s) => s.signatoryName && s.signatoryName.trim());
+
           const res = await (window as any).apiFetch(
             `${API}/api/projects/${projectId}/implementation/step2`,
             {
@@ -1703,20 +2406,22 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
                       "expectedOutcome",
                     ) as HTMLTextAreaElement
                   ).value || null,
-                budgetUsages: budgetUsages.map((bu: any) => ({
-                  ...bu,
-                  amount: parseFloat(String(bu.amount || 0)) || 0,
-                  subItems: (bu.subItems || []).map((s: any) => ({
-                    ...s,
-                    amount: parseFloat(String(s.amount || 0)) || 0,
-                  })),
-                })),
-                signatories,
+                budgetUsages: filteredBudget,
+                signatories: filteredSignatories,
               }),
             },
           );
           const data = await res.json();
           if (!data.success) throw new Error(data.message);
+
+          // Update local state and UI
+          budgetUsages.length = 0;
+          budgetUsages.push(...filteredBudget);
+          signatories.length = 0;
+          signatories.push(...filteredSignatories);
+          renderBudgetUsages();
+          renderSignatories();
+
           (window as any).showToast?.("บันทึกขั้นตอนที่ 2 สำเร็จ");
           setStep(3);
         } catch (e: any) {
@@ -1784,6 +2489,24 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
 
       const sdVal = sdEl.value;
       const edVal = edEl.value;
+
+      const headerBox = document.getElementById('headerProjectDateBox');
+      const headerSd = document.getElementById('headerProjectStartDate');
+      const headerEd = document.getElementById('headerProjectEndDate');
+
+      if (sdVal && edVal) {
+        if (headerBox) {
+          headerBox.classList.remove('hidden');
+          headerBox.classList.add('flex', 'flex-col', 'sm:flex-row');
+        }
+        if (headerSd) headerSd.textContent = formatThaiDate(sdVal);
+        if (headerEd) headerEd.textContent = formatThaiDate(edVal);
+      } else {
+        if (headerBox) {
+          headerBox.classList.add('hidden');
+          headerBox.classList.remove('flex', 'flex-col', 'sm:flex-row');
+        }
+      }
 
       if (!sdVal && !edVal) {
         panel.classList.add('hidden');
@@ -1895,6 +2618,8 @@ import AuthLayout from "../../layouts/AuthenticatedLayout.astro";
         isMobile: false,
         buttons: ['today', 'clear'],
       };
+
+      (window as any).__airPickerOpts = sharedOpts;
 
       (window as any).__startPicker = new ADP('#startDateDisplay', {
         ...sharedOpts,
